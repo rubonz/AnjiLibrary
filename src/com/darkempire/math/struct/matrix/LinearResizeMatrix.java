@@ -1,0 +1,418 @@
+package com.darkempire.math.struct.matrix;
+
+import com.darkempire.math.struct.Number;
+import com.darkempire.math.struct.function.interfaces.FLinearMatrixAndIndexToLinear;
+import com.darkempire.math.struct.function.interfaces.FMatrixIndexToLinear;
+
+import java.util.Arrays;
+
+import static java.lang.Math.abs;
+
+/**
+ * Create in 11:55
+ * Created by siredvin on 21.12.13.
+ */
+public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> extends LinearMatrix<T> {
+    private T[] arr;
+    private int columnCount;
+    private int rowCount;
+
+    //region Конструктори
+
+    /**
+     * Конструювання матриці фіксованного розміру
+     *
+     * @param columnCount кількість колонок
+     * @param rowCount    кількість рядків
+     * @param arr         масив, які зберігає двувимірну матрицю
+     */
+    private LinearResizeMatrix(int rowCount, int columnCount, T[] arr) {
+        this.columnCount = columnCount;
+        this.rowCount = rowCount;
+        this.arr = arr;
+    }
+    //endregionи
+
+    //region Геттери
+
+    /**
+     * Отримання елементу як примітивного типу з матриці
+     * Зауважимо, що це матриця, що розтягується, отже всі невказані елементи нульові.
+     *
+     * @param columnIndex індекс колонки
+     * @param rowIndex    індекс рядку
+     * @return значення поля
+     * @see LinearMatrix<T>
+     */
+    @Override
+    public T get(int rowIndex, int columnIndex) {
+        if (columnIndex > columnCount - 1 || rowIndex > rowCount - 1)
+            return arr[0].getZero();
+        return arr[columnIndex + rowIndex * columnCount];
+    }
+
+    @Override
+    protected T get(int index) {
+        return arr[index];
+    }
+
+    /**
+     * @return кількість колонок
+     * @see IMatrix
+     */
+    @Override
+    public int getColumnCount() {
+        return columnCount;
+    }
+
+    /**
+     * @return кількість рядків
+     * @see LinearMatrix<T>
+     */
+    @Override
+    public int getRowCount() {
+        return rowCount;
+    }
+    //endregion
+
+    //region Сеттери
+
+    /**
+     * Запис елементу, заданого як примітивний тип, у матрицю
+     *
+     * @param columnIndex індекс колонки
+     * @param rowIndex    індекс рядку
+     * @param value       значення
+     * @see LinearMatrix<T>
+     */
+    @Override
+    public void set(int rowIndex, int columnIndex, T value) {
+        if (columnIndex > columnCount - 1 || rowIndex > rowCount - 1)
+            return;
+        arr[columnIndex + rowIndex * columnCount] = value;
+    }
+
+    @Override
+    protected void set(int index, T value) {
+        arr[index] = value;
+    }
+
+    //endregion
+
+    //region Системні функції
+
+    /**
+     * Реалізує глибоке копіювання матриці фіксованної розмірності
+     *
+     * @return Глибоку копію об’єкту
+     */
+    @Override
+    public LinearResizeMatrix<T> clone() {
+        T[] array = arr.clone();
+        for (int i = 0; i < array.length; i++) {
+            array[i] = array[i].deepcopy();
+        }
+        return createInstance(rowCount, columnCount, array);
+    }
+
+    /**
+     * Генерує хеш-код для матриці
+     *
+     * @return хеш-код
+     */
+    @Override
+    public int hashCode() {
+        int result = Arrays.hashCode(arr);
+        result = 31 * result + columnCount;
+        result = 31 * result + rowCount;
+        return result;
+    }
+
+    /**
+     * Виводить до табличного виду без табуляції
+     *
+     * @return текстове зображення матриці
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+                sb.append(arr[columnIndex + rowIndex * columnCount]);
+                sb.append(',');
+            }
+            sb.deleteCharAt(sb.length() - 1);
+            sb.append('\n');
+        }
+        return sb.toString();
+    }
+    //endregion
+
+    //region Заповнювачі рядків
+    @Override
+    public LinearResizeMatrix<T> fillRow(int rowIndex, T value) {
+        rowIndex *= columnCount;
+        for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+            arr[rowIndex] = value.deepcopy();
+            rowIndex++;
+        }
+        return this;
+    }
+
+    @Override
+    public LinearResizeMatrix<T> fillRow(int rowIndex, FMatrixIndexToLinear<T> function) {
+        int pos = rowIndex * columnCount;
+        for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+            arr[pos] = function.calc(rowIndex, columnIndex);
+            pos++;
+        }
+        return this;
+    }
+
+    @Override
+    public LinearResizeMatrix<T> fillRow(int rowIndex, FLinearMatrixAndIndexToLinear<T> function) {
+        int pos = rowIndex * columnCount;
+        for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+            arr[pos] = function.calc(this, rowIndex, columnIndex);
+            pos++;
+        }
+        return this;
+    }
+    //endregion
+
+    //region Заповнювачі стовпчиків
+    @Override
+    public LinearResizeMatrix<T> fillColumn(int columnIndex, T value) {
+        int pos = columnIndex;
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            arr[pos] = value.deepcopy();
+            pos += columnCount;
+        }
+        return this;
+    }
+
+    @Override
+    public LinearResizeMatrix<T> fillColumn(int columnIndex, FMatrixIndexToLinear<T> function) {
+        int pos = columnIndex;
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            arr[pos] = function.calc(rowIndex, columnIndex);
+            pos += columnCount;
+        }
+        return this;
+    }
+
+    @Override
+    public LinearResizeMatrix<T> fillColumn(int columnIndex, FLinearMatrixAndIndexToLinear<T> function) {
+        int pos = columnIndex;
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            arr[pos] = function.calc(this, rowIndex, columnIndex);
+            pos += columnCount;
+        }
+        return this;
+    }
+    //endregion
+
+    //region Арифметичні операції з присвоєнням
+    @Override
+    public LinearResizeMatrix<T> inegate() {
+        for (T anArr : arr) {
+            anArr.inegate();
+        }
+        return this;
+    }
+
+    @Override
+    public LinearResizeMatrix<T> iadd(LinearMatrix<T> doubleMatrix) {
+        if (columnCount != doubleMatrix.getColumnCount() || rowCount != doubleMatrix.getRowCount()) {
+            int newColumnCount = Math.max(columnCount, doubleMatrix.getColumnCount());
+            int newRowCount = Math.max(rowCount, doubleMatrix.getRowCount());
+            T[] nArr = (T[]) new Number[newColumnCount * newRowCount];
+            for (int columnIndex = 0; columnIndex < newColumnCount; columnIndex++) {
+                for (int rowIndex = 0; rowIndex < newRowCount; rowIndex++) {
+                    nArr[columnIndex + rowIndex * newColumnCount] = get(rowIndex, columnIndex).iadd(doubleMatrix.get(rowIndex, columnIndex));
+                }
+            }
+            this.arr = nArr;
+            return this;
+        }
+
+        for (int i = 0; i < arr.length; i++) {
+            arr[i].iadd(doubleMatrix.get(i));
+        }
+        return this;
+    }
+
+    @Override
+    public LinearResizeMatrix<T> isubtract(LinearMatrix<T> doubleMatrix) {
+        if (columnCount != doubleMatrix.getColumnCount() || rowCount != doubleMatrix.getRowCount()) {
+            int newColumnCount = Math.max(columnCount, doubleMatrix.getColumnCount());
+            int newRowCount = Math.max(rowCount, doubleMatrix.getRowCount());
+            T[] nArr = (T[]) new Number[newColumnCount * newRowCount];
+            for (int columnIndex = 0; columnIndex < newColumnCount; columnIndex++) {
+                for (int rowIndex = 0; rowIndex < newRowCount; rowIndex++) {
+                    nArr[columnIndex + rowIndex * newColumnCount] = get(rowIndex, columnIndex).isubtract(doubleMatrix.get(rowIndex, columnIndex));
+                }
+            }
+            this.arr = nArr;
+            return this;
+        }
+        for (int i = 0; i < arr.length; i++) {
+            arr[i].isubtract(doubleMatrix.get(i));
+        }
+        return this;
+    }
+
+    public LinearResizeMatrix<T> iprod(T lambda) {
+        for (T anArr : arr) {
+            anArr.imultiply(lambda);
+        }
+        return this;
+    }
+
+    public LinearResizeMatrix<T> iprod(LinearResizeMatrix<T> doubleMatrix) {
+        if (columnCount != doubleMatrix.columnCount || rowCount != doubleMatrix.rowCount) {
+            int newColumnCount = Math.max(columnCount, doubleMatrix.columnCount);
+            int newRowCount = Math.max(rowCount, doubleMatrix.rowCount);
+            T[] nArr = (T[]) new Number[newColumnCount * newRowCount];
+            for (int columnIndex = 0; columnIndex < newColumnCount; columnIndex++) {
+                for (int rowIndex = 0; rowIndex < newRowCount; rowIndex++) {
+                    nArr[columnIndex + rowIndex * newColumnCount] = get(rowIndex, columnIndex).imultiply(doubleMatrix.get(rowIndex, columnIndex));
+                }
+            }
+            this.arr = nArr;
+            return this;
+        }
+        for (int i = 0; i < arr.length; i++) {
+            arr[i].imultiply(doubleMatrix.arr[i]);
+        }
+        return this;
+    }
+
+    @Override
+    public LinearResizeMatrix<T> itranspose() {
+        if (columnCount != rowCount) {
+            T[] nArr = (T[]) new Number[columnCount * rowCount];
+            for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+                for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+                    nArr[rowIndex + columnIndex * rowCount] = get(rowIndex, columnIndex);
+                }
+            }
+            this.arr = nArr;
+            int temp = columnCount;
+            columnCount = rowCount;
+            rowCount = temp;
+            return this;
+        }
+        for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+            for (int rowIndex = columnIndex + 1; rowIndex < rowCount; rowIndex++) {
+                T temp = get(rowIndex, columnIndex);
+                set(rowIndex, columnIndex, get(rowIndex, columnIndex));
+                set(rowIndex, columnIndex, temp);
+            }
+        }
+        return this;
+    }
+    //endregion
+
+    //region Арифметичні операції
+    @Override
+    public LinearResizeMatrix<T> add(LinearMatrix<T> doubleMatrix) {
+        int newColumnCount = Math.max(columnCount, doubleMatrix.getColumnCount());
+        int newRowCount = Math.max(rowCount, doubleMatrix.getRowCount());
+        T[] nArr = (T[]) new Number[newColumnCount * newRowCount];
+        for (int columnIndex = 0; columnIndex < newColumnCount; columnIndex++) {
+            for (int rowIndex = 0; rowIndex < newRowCount; rowIndex++) {
+                nArr[columnIndex + rowIndex * newColumnCount] = get(rowIndex, columnIndex).add(doubleMatrix.get(rowIndex, columnIndex));
+            }
+        }
+        return new LinearResizeMatrix<T>(newRowCount, newColumnCount, nArr);
+    }
+
+    @Override
+    public LinearResizeMatrix<T> subtract(LinearMatrix<T> doubleMatrix) {
+        int newColumnCount = Math.max(columnCount, doubleMatrix.getColumnCount());
+        int newRowCount = Math.max(rowCount, doubleMatrix.getRowCount());
+        T[] nArr = (T[]) new Number[newColumnCount * newRowCount];
+        for (int columnIndex = 0; columnIndex < newColumnCount; columnIndex++) {
+            for (int rowIndex = 0; rowIndex < newRowCount; rowIndex++) {
+                nArr[columnIndex + rowIndex * newColumnCount] = get(rowIndex, columnIndex).subtract(doubleMatrix.get(rowIndex, columnIndex));
+            }
+        }
+        return new LinearResizeMatrix<T>(newRowCount, newColumnCount, nArr);
+    }
+
+    @Override
+    public LinearResizeMatrix<T> negate() {
+        T[] nArr = (T[]) new Number[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            nArr[i] = arr[i].negate();
+        }
+        return new LinearResizeMatrix<T>(rowCount, columnCount, nArr);
+    }
+
+
+    @Override
+    public LinearResizeMatrix<T> prod(T lambda) {
+        T[] nArr = (T[]) new Number[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            nArr[i] = lambda.multiply(arr[i]);
+        }
+        return new LinearResizeMatrix<T>(rowCount, columnCount, nArr);
+    }
+
+
+    @Override
+    public LinearResizeMatrix<T> transpose() {
+        LinearResizeMatrix<T> matrix = createInstance(columnCount, rowCount, arr);
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+                matrix.set(columnIndex, rowIndex, get(rowIndex, columnIndex).deepcopy());
+            }
+        }
+        return matrix;
+    }
+
+    public LinearResizeMatrix<T> prod(LinearMatrix<T> doubleMatrix) {
+        int newColumnCount = Math.max(columnCount, doubleMatrix.getColumnCount());
+        int newRowCount = Math.max(rowCount, doubleMatrix.getRowCount());
+        T[] nArr = (T[]) new Number[newColumnCount * newRowCount];
+        for (int columnIndex = 0; columnIndex < newColumnCount; columnIndex++) {
+            for (int rowIndex = 0; rowIndex < newRowCount; rowIndex++) {
+                nArr[columnIndex + rowIndex * newColumnCount] = get(rowIndex, columnIndex).multiply(doubleMatrix.get(rowIndex, columnIndex));
+            }
+        }
+        return new LinearResizeMatrix<T>(newRowCount, newColumnCount, nArr);
+    }
+
+    @Override
+    public LinearMatrix<T> multy(LinearMatrix<T> doubleMatrix) {
+        if (columnCount != doubleMatrix.getRowCount())
+            throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MULTY_MISMATCH);
+        LinearResizeMatrix<T> result = LinearResizeMatrix.createInstance(rowCount, doubleMatrix.getColumnCount());
+        int columnCount = doubleMatrix.getColumnCount();
+        for (int i = 0; i < rowCount; i++) {
+            for (int j = 0; j < columnCount; j++) {
+                T temp = get(i, 0).multiply(doubleMatrix.get(0, j));
+                for (int k = 1; k < this.columnCount; k++) {
+                    temp.iadd(get(i, k).multiply(doubleMatrix.get(k, j)));
+                }
+                result.set(i, j, temp);
+            }
+        }
+        return result;
+    }
+    //endregion
+
+    //region Створення матриці
+    public static <T extends Number<T>> LinearResizeMatrix<T> createInstance(int rowCount, int columnCount, T[] array) {
+        if (columnCount * rowCount != array.length)
+            throw new ArrayIndexOutOfBoundsException();
+        return new LinearResizeMatrix<T>(rowCount, columnCount, array);
+    }
+
+    public static <T extends Number<T>> LinearResizeMatrix<T> createInstance(int rowCount, int columnCount) {
+        T[] array = (T[]) new Number[columnCount * rowCount];
+        return createInstance(rowCount, columnCount, array);
+    }
+    //endregion
+}

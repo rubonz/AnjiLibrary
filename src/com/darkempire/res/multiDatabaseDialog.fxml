@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.darkempire.anjifx.dialog.database.MultiDatabaseDialogController">
+    <children><HBox fx:id="searchBox" spacing="5.0">
+<children><ChoiceBox fx:id="attributeBox" prefWidth="150.0" /><ChoiceBox fx:id="operationBox" prefWidth="150.0" /><TextField fx:id="paramTextBox" /><DatePicker fx:id="paramDateBox" />
+</children>
+<padding>
+<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+</padding></HBox>
+        <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0">
+            <columns>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+        </TableView>
+        <HBox alignment="CENTER_RIGHT" spacing="5.0">
+            <children>
+                <Button fx:id="addButton" mnemonicParsing="false" onAction="#addButtonAction" text="%anjifx.monolog.addbutton" />
+                <Button fx:id="confirmButton" defaultButton="true" mnemonicParsing="false" onAction="#confirmButtonAction" text="%anjifx.monolog.okbutton" />
+                <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" onAction="#cancelButtonAction" text="%anjifx.monolog.cancelbutton" />
+            </children>
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </padding>
+        </HBox>
+    </children>
+</VBox>

@@ -1,0 +1,81 @@
+.long-spin-box{
+    -fx-skin: "com.darkempire.internal.anjifx.scene.skin.LongSpinBoxSkin";
+    -fx-background-color: -fx-shadow-highlight-color, -fx-text-box-border, -fx-control-inner-background;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 3, 2, 2;
+    -fx-padding: 2 2 2 2;
+}
+
+.long-spin-box-focused {
+    -fx-background-color: -fx-focus-color, -fx-text-box-border, -fx-control-inner-background;
+    -fx-background-insets: -0.4, 1, 2;
+    -fx-background-radius: 3.4, 2, 2;
+}
+
+.long-spin-box:disabled {
+    -fx-opacity: -fx-disabled-opacity;
+}
+
+.long-spin-box .arrow-button {
+    -fx-background-color: -fx-text-box-border, -fx-body-color;
+    -fx-background-insets: 0 0 0 -1, 0;
+    -fx-padding: 1;
+}
+
+.long-spin-box .arrow-button:focused {
+    -fx-color: -fx-focused-base;
+}
+
+.long-spin-box .arrow-button:hover {
+    -fx-color: -fx-hover-base;
+}
+
+.long-spin-box .arrow-button:pressed {
+    -fx-color: -fx-pressed-base;
+}
+
+.long-spin-box .spinner-arrow {
+    -fx-stroke: gray;
+    -fx-stroke-width: 2;
+}
+
+.double-spin-box{
+    -fx-skin: "com.darkempire.internal.anjifx.scene.skin.DoubleSpinBoxSkin";
+    -fx-background-color: -fx-shadow-highlight-color, -fx-text-box-border, -fx-control-inner-background;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 3, 2, 2;
+    -fx-padding: 2 2 2 2;
+}
+
+.double-spin-box-focused {
+    -fx-background-color: -fx-focus-color, -fx-text-box-border, -fx-control-inner-background;
+    -fx-background-insets: -0.4, 1, 2;
+    -fx-background-radius: 3.4, 2, 2;
+}
+
+.double-spin-box:disabled {
+    -fx-opacity: -fx-disabled-opacity;
+}
+
+.double-spin-box .arrow-button {
+    -fx-background-color: -fx-text-box-border, -fx-body-color;
+    -fx-background-insets: 0 0 0 -1, 0;
+    -fx-padding: 1;
+}
+
+.double-spin-box .arrow-button:focused {
+    -fx-color: -fx-focused-base;
+}
+
+.double-spin-box .arrow-button:hover {
+    -fx-color: -fx-hover-base;
+}
+
+.double-spin-box .arrow-button:pressed {
+    -fx-color: -fx-pressed-base;
+}
+
+.double-spin-box .spinner-arrow {
+    -fx-stroke: gray;
+    -fx-stroke-width: 2;
+}

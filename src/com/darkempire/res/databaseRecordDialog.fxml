@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox minWidth="250.0" spacing="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.darkempire.anjifx.dialog.database.DatabaseRecordEditController">
+    <children>
+        <VBox fx:id="propertiesPane"/>
+        <HBox alignment="CENTER_RIGHT" spacing="5.0">
+            <children>
+                <Button alignment="CENTER" contentDisplay="CENTER" layoutX="104.0" layoutY="80.0"
+                        mnemonicParsing="false" onAction="#onAddAction" text="%anjifx.core.content.add" defaultButton="true"/>
+                <Button layoutX="95.0" layoutY="105.0" mnemonicParsing="false" onAction="#onCancelAction" cancelButton="true"
+                        text="%anjifx.core.content.cancel"/>
+            </children>
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+            </padding>
+        </HBox>
+    </children>
+</VBox>

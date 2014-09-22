@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.darkempire.anjifx.dialog.database.DatabaseDialogController">
+    <children>
+        <ListView fx:id="listView" maxHeight="300.0" VBox.vgrow="SOMETIMES" />
+        <HBox alignment="CENTER_RIGHT" spacing="5.0">
+            <children>
+                <Button fx:id="addButton" mnemonicParsing="false" onAction="#addButtonAction" text="%anjifx.monolog.addbutton" />
+                <Button fx:id="confirmButton" defaultButton="true" mnemonicParsing="false" onAction="#confirmButtonAction" text="%anjifx.monolog.okbutton" />
+                <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" onAction="#cancelButtonAction" text="%anjifx.monolog.cancelbutton" />
+            </children>
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </padding>
+        </HBox>
+    </children>
+</VBox>

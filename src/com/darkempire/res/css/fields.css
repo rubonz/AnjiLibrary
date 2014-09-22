@@ -1,0 +1,45 @@
+.long-field {
+    -fx-skin: "com.darkempire.internal.anjifx.scene.skin.LongFieldSkin";
+    -fx-background-color: -fx-shadow-highlight-color, -fx-text-box-border, -fx-control-inner-background;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 3, 2, 2;
+    -fx-padding: 2 2 2 2;
+}
+
+.long-field .number-text-field {
+    -fx-background-insets: 0;
+    -fx-padding: 1 3 1 0;
+}
+
+.long-field-focused {
+    -fx-background-color: -fx-focus-color, -fx-text-box-border, -fx-control-inner-background;
+    -fx-background-insets: -0.4, 1, 2;
+    -fx-background-radius: 3.4, 2, 2;
+}
+
+.long-field:disabled {
+    -fx-opacity: -fx-disabled-opacity;
+}
+
+.double-field {
+    -fx-skin: "com.darkempire.internal.anjifx.scene.skin.DoubleFieldSkin";
+    -fx-background-color: -fx-shadow-highlight-color, -fx-text-box-border, -fx-control-inner-background;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 3, 2, 2;
+    -fx-padding: 2 2 2 2;
+}
+
+.double-field .number-text-field {
+    -fx-background-insets: 0;
+    -fx-padding: 1 3 1 0;
+}
+
+.double-field-focused {
+    -fx-background-color: -fx-focus-color, -fx-text-box-border, -fx-control-inner-background;
+    -fx-background-insets: -0.4, 1, 2;
+    -fx-background-radius: 3.4, 2, 2;
+}
+
+.double-field:disabled {
+    -fx-opacity: -fx-disabled-opacity;
+}

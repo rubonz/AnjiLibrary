@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" xmlns:fx="http://javafx.com/fxml" fx:controller="com.darkempire.anji.core.contents.dialog.DialogSimpleController">
+  <children>
+    <ScrollPane hbarPolicy="NEVER" pannable="false" prefHeight="200.0" prefWidth="300.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <content>
+        <VBox fx:id="contentBox" prefHeight="155.0" prefWidth="285.0000999999975" />
+      </content>
+    </ScrollPane>
+    <TilePane alignment="CENTER_RIGHT" hgap="5.0" layoutX="1.0" layoutY="170.0" prefHeight="30.0" prefWidth="299.0000999999975">
+      <children>
+        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="%anji.core.content.add" />
+        <Button mnemonicParsing="false" text="%anji.core.content.cancel" />
+      </children>
+      <padding>
+        <Insets left="5.0" right="5.0" />
+      </padding>
+    </TilePane>
+  </children>
+</AnchorPane>
