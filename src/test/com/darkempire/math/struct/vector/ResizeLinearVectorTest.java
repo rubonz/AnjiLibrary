@@ -2,7 +2,7 @@ package test.com.darkempire.math.struct.vector;
 
 import com.darkempire.math.struct.number.Fraction;
 import com.darkempire.math.struct.vector.LinearResizeVector;
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;

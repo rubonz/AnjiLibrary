@@ -23,7 +23,7 @@ public class LongField extends TextField {
         super();
         //setStyle(null);
         //setFocusTraversable(true);
-        //getStyleClass().add("long-field");
+        getStyleClass().add("long-field");
         valueProperty = new AnjiLongProperty(this, "value", v);
         numberFormatProperty = new AnjiObjectProperty<>(this, "numberFormat", NumberFormat.getIntegerInstance());
         setText(getNumberFormat().format(getValue()));
@@ -89,6 +89,6 @@ public class LongField extends TextField {
 
     @Override
     protected String getUserAgentStylesheet() {
-        return getClass().getResource("/com/com.darkempire/res/css/fields.css").toExternalForm();
+        return getClass().getResource("/com/darkempire/res/css/fields.css").toExternalForm();
     }
 }

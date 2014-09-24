@@ -15,7 +15,6 @@ import java.util.Random;
  * Created by siredvin on 31.05.14.
  */
 public class MathMain {
-    private int result = 3;
 
     public static void main(String[] args) {
         KernelLink ml = null;

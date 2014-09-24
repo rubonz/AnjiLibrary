@@ -28,6 +28,5 @@ public final class Cleaner {
         Cache.anji_clear();
         //Утіліти
         AnjiImageCache.anji_clear();
-        System.gc();
     }
 }

@@ -266,10 +266,10 @@ public class Fraction extends Number implements com.darkempire.math.struct.Numbe
         Fraction temp = null;
         switch (strings.length) {
             case 1:
-                temp = new Fraction(Integer.valueOf(strings[0]));
+                temp = new Fraction(Integer.parseInt(strings[0]));
                 break;
             case 2:
-                temp = new Fraction(Integer.valueOf(strings[0]), Integer.valueOf(strings[1]));
+                temp = new Fraction(Integer.parseInt(strings[0]), Integer.valueOf(strings[1]));
                 break;
         }
         return temp;

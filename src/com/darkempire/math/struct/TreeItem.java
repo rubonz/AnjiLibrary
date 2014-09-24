@@ -11,7 +11,7 @@ import java.util.Iterator;
  * Time: 15:37
  * To change this template use File | Settings | File Templates.
  */
-public class TreeItem<T extends Serializable> implements Iterable<TreeItem<T>>, Serializable {
+public class TreeItem<T> implements Iterable<TreeItem<T>> {
     private transient TreeItem<T> parent;
     private T value;
     private ArrayList<TreeItem<T>> list;

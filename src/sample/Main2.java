@@ -10,7 +10,6 @@ import com.darkempire.math.struct.number.Fraction;
  * Created by siredvin on 22.04.14.
  */
 public class Main2 {
-    private Class s;
 
     public static void main(String[] args) {
 // Code below doesn't work for 0 and NaN - just check before

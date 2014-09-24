@@ -37,9 +37,6 @@ public class MultiDatabaseDialog {
         }
         scene = new Scene(pane);
         controller.setData(analyzer, dbTable, fk, fields);
-        if (isBlockCancel) {
-            controller.blockCancel();
-        }
     }
 
     public MultiDatabaseDialog(String title, DatabaseAnalyzer analyzer, DatabaseAnalyzer.DBTable_impl dbTable, DatabaseAnalyzer.DBAttribute_impl... attribute) {
@@ -54,9 +51,6 @@ public class MultiDatabaseDialog {
         }
         scene = new Scene(pane);
         controller.setData(analyzer, dbTable, attribute);
-        if (isBlockCancel) {
-            controller.blockCancel();
-        }
     }
 
     public MultiDatabaseDialog(String title, DatabaseAnalyzer analyzer, DatabaseAnalyzer.DBTable_impl dbTable, Collection<DatabaseAnalyzer.DBAttribute_impl> fields) {
@@ -71,9 +65,6 @@ public class MultiDatabaseDialog {
         }
         scene = new Scene(pane);
         controller.setData(analyzer, dbTable, fields);
-        if (isBlockCancel) {
-            controller.blockCancel();
-        }
     }
 
     public MultiDatabaseDialog(String title, DatabaseAnalyzer analyzer, DatabaseAnalyzer.DBTable_impl dbTable, Collection<DatabaseAnalyzer.DBAttribute_impl> fields, Map<String, Predicate> filterMap) {
@@ -88,9 +79,6 @@ public class MultiDatabaseDialog {
         }
         scene = new Scene(pane);
         controller.setData(analyzer, dbTable, fields, filterMap);
-        if (isBlockCancel) {
-            controller.blockCancel();
-        }
     }
 
     public void setTitle(String title) {
@@ -120,6 +108,12 @@ public class MultiDatabaseDialog {
 
     public void blockCancel() {
         isBlockCancel = true;
+        controller.blockCancel();
+    }
+
+    public void unblockCancel() {
+        isBlockCancel = false;
+        controller.unblockCancel();
     }
 
     public boolean isBroken() {
@@ -128,5 +122,9 @@ public class MultiDatabaseDialog {
 
     public void setSearchable(boolean searchable) {
         controller.setSearchable(searchable);
+    }
+
+    public boolean isBlockCancel() {
+        return isBlockCancel;
     }
 }

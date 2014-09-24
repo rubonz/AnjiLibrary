@@ -13,7 +13,7 @@ import static java.lang.Math.random;
  * To change this template use File | Settings | File Templates.
  */
 public class StochasticCharType implements ICharType {
-    private class ProbabilisticCharType {
+    private static class ProbabilisticCharType {
         private ILSystem.CharType charType;
         private double p;
 

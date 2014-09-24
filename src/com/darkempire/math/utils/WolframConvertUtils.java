@@ -42,7 +42,6 @@ public final class WolframConvertUtils {
     }
 
     public static DoubleFixedVector convertResultToDoubleFixedVector(String result) {
-        Log.log(Log.texIndex, result);
         result = result.replace("{", "").replace("}", "");
         String[] numbers = result.split(",");
         DoubleFixedVector vector = new DoubleFixedVector(numbers.length);

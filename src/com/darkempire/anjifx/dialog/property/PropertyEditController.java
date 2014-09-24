@@ -89,6 +89,7 @@ public class PropertyEditController extends GridPane implements Initializable {
                 field = comboBox;
                 break;
             case FLOAT_TYPE:
+                //TODO: це просто лажа
                 AnjiFloatProperty floatProperty = (AnjiFloatProperty) c;
                 DoubleField text = new DoubleField(floatProperty.getValue());
                 field = text;
@@ -111,6 +112,7 @@ public class PropertyEditController extends GridPane implements Initializable {
                 booleanBean.bind(booleanTextFieldEditor.selectedProperty());
                 break;
             case INT_TYPE:
+                //TODO: це просто лажа
                 AnjiIntegerProperty integerProperty = (AnjiIntegerProperty) c;
                 LongField longField = new LongField();
                 longField.setValue(integerProperty.getValue().longValue());

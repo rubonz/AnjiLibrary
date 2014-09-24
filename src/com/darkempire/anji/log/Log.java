@@ -257,6 +257,48 @@ public final class Log {
     }
     //endregion
 
+    //region Керування видимістю
+    public static void allowConsoleOut(int index, int channel_index, boolean value) {
+        log.allowConsoleOut(index, channel_index, value);
+    }
+
+    public static void allowConsoleErr(int index, int channel_index, boolean value) {
+        log.allowConsoleErr(index, channel_index, value);
+    }
+
+    public static int getOutIndex(PrintStream stream) {
+        return log.getOutIndex(stream);
+    }
+
+    public static int getErrIndex(PrintStream stream) {
+        return log.getErrIndex(stream);
+    }
+
+    public static int getConsoleOutIndex() {
+        return log.getConsoleOutIndex();
+    }
+
+    public static int getConsoleErrIndex() {
+        return log.getConsoleErrIndex();
+    }
+
+    public static int getDefaultLogOutIndex() {
+        return log.getDefaultLogOutIndex();
+    }
+
+    public static int getDefaultLogErrIndex() {
+        return log.getDefaultLogErrIndex();
+    }
+
+    public static int getTimeLogOutIndex() {
+        return log.getTimeLogOutIndex();
+    }
+
+    public static int getTimeLogErrIndex() {
+        return log.getTimeLogErrIndex();
+    }
+    //endregion
+
     @Deprecated
     @AnjiInternal
     @PreDestroy
@@ -283,6 +325,13 @@ public final class Log {
         initStartChannel();
     }
 
+    public static void initChannelControlLog() {
+        if (log != null) {
+            log.anji_clear();
+        }
+        log = new ChannelControlLog();
+        initStartChannel();
+    }
     private static void initStartChannel() {
         addString("Anji Core");//0
         addString("Anji Debug");//1

@@ -313,6 +313,10 @@ public class MultiDatabaseDialogController {
         cancelButton.setDisable(true);
     }
 
+    public void unblockCancel() {
+        cancelButton.setDisable(false);
+    }
+
     @SuppressWarnings("unchecked")
     private void parseAttribute(DatabaseAnalyzer.DBAttribute_impl dbAttribute) {
         if (analyzer.isDomain(dbAttribute.id)) {
@@ -332,7 +336,7 @@ public class MultiDatabaseDialogController {
         return isBroken;
     }
 
-    private class MultiDatabaseDialog_impl implements Callback<TableColumn.CellDataFeatures, ObservableValue> {
+    private static class MultiDatabaseDialog_impl implements Callback<TableColumn.CellDataFeatures, ObservableValue> {
         private Field field;
 
         private MultiDatabaseDialog_impl(Field field) {
@@ -382,7 +386,7 @@ public class MultiDatabaseDialogController {
      * Клас переводу з домену у рядок
      * Нагадую, що домени нумеруються з 1
      */
-    private class MultiDatabaseDialog_transform implements ITransform<Integer, String> {
+    private static class MultiDatabaseDialog_transform implements ITransform<Integer, String> {
         private List<String> stringList;
 
         private MultiDatabaseDialog_transform(List<String> stringList) {

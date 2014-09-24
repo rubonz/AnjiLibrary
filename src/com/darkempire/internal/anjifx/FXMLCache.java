@@ -13,12 +13,12 @@ import java.util.Map;
 public class FXMLCache implements Clearable {
     public static enum FXMLType {
         MONOLOG_ALERT, SIMPLE_PROPERTY, PROGRESS_MONOLOG, DATABASE_DIALOG, DATABASE_RECORD_DIALOG, MULTI_DATABASE_DIALOG;
-        private static final String MONOLOG_ALERT_FXML = "/com/com.darkempire/res/alertDialog.fxml";
-        private static final String SIMPLE_PROPERTY_FXML = "/com/com.darkempire/res/contentDialog.fxml";
-        private static final String PROGRESS_MONOLOG_FXML = "/com/com.darkempire/res/progressDialog.fxml";
-        private static final String DATABASE_DIALOG_FXML = "/com/com.darkempire/res/databaseDialog.fxml";
-        private static final String DATABASE_RECORD_DIALOG_FXML = "/com/com.darkempire/res/databaseRecordDialog.fxml";
-        private static final String MULTI_DATABASE_DIALOG_FXML = "/com/com.darkempire/res/multiDatabaseDialog.fxml";
+        private static final String MONOLOG_ALERT_FXML = "/com/darkempire/res/alertDialog.fxml";
+        private static final String SIMPLE_PROPERTY_FXML = "/com/darkempire/res/contentDialog.fxml";
+        private static final String PROGRESS_MONOLOG_FXML = "/com/darkempire/res/progressDialog.fxml";
+        private static final String DATABASE_DIALOG_FXML = "/com/darkempire/res/databaseDialog.fxml";
+        private static final String DATABASE_RECORD_DIALOG_FXML = "/com/darkempire/res/databaseRecordDialog.fxml";
+        private static final String MULTI_DATABASE_DIALOG_FXML = "/com/darkempire/res/multiDatabaseDialog.fxml";
 
         public String getPath() {
             String result = null;

@@ -12,11 +12,11 @@ import java.util.Map;
 public class ImageCache implements Clearable {
     public static enum ImageType {
         MONOLOG_ACCEPT, MONOLOG_ERROR, MONOLOG_INFO, MONOLOG_QUESTION, PROGRESS_ICON;
-        private static final String MONOLOG_ACCEPT_IMAGE = "/com/com.darkempire/res/image/Monolog-accept.jpg";
-        private static final String MONOLOG_ERROR_IMAGE = "/com/com.darkempire/res/image/Monolog-error.jpg";
-        private static final String MONOLOG_INFO_IMAGE = "/com/com.darkempire/res/image/Monolog-info.jpg";
-        private static final String MONOLOG_QUESTION_IMAGE = "/com/com.darkempire/res/image/Monolog-question.jpg";
-        private static final String PROGRESS_ICON_IMAGE = "/com/com.darkempire/res/image/Progress-icon.png";
+        private static final String MONOLOG_ACCEPT_IMAGE = "/com/darkempire/res/image/Monolog-accept.jpg";
+        private static final String MONOLOG_ERROR_IMAGE = "/com/darkempire/res/image/Monolog-error.jpg";
+        private static final String MONOLOG_INFO_IMAGE = "/com/darkempire/res/image/Monolog-info.jpg";
+        private static final String MONOLOG_QUESTION_IMAGE = "/com/darkempire/res/image/Monolog-question.jpg";
+        private static final String PROGRESS_ICON_IMAGE = "/com/darkempire/res/image/Progress-icon.png";
 
         public String getPath() {
             String result = "";

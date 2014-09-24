@@ -56,7 +56,7 @@ public final class SimplexSolverMain {
         } catch (IOException e) {
             Log.err(Log.debugIndex, e);
         }
-        if (process.isAlive()) {
+        if (process != null && process.isAlive()) {
             Log.log(Log.debugIndex, "Run2");
         }
         try {

@@ -120,8 +120,6 @@ public interface ILog {
     //endregion
 
     //region Автоматичне генерування файлів-логів
-    public boolean isSupportAutoLog();
-
     public void appendNewTimeDateLog();
 
     public void appendDefaultLog();
@@ -136,4 +134,27 @@ public interface ILog {
 
     public void addConsoleError();
     //endregion
+
+    //region Керування видимістю
+    public void allowConsoleOut(int index, int channel_index, boolean value);
+
+    public void allowConsoleErr(int index, int channel_index, boolean value);
+
+    public int getOutIndex(PrintStream stream);
+
+    public int getErrIndex(PrintStream stream);
+
+    public int getConsoleOutIndex();
+
+    public int getConsoleErrIndex();
+
+    public int getDefaultLogOutIndex();
+
+    public int getDefaultLogErrIndex();
+
+    public int getTimeLogOutIndex();
+
+    public int getTimeLogErrIndex();
+    //endregion
+
 }

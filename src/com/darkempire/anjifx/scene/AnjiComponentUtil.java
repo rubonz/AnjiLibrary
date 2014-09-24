@@ -28,6 +28,6 @@ public final class AnjiComponentUtil {
     }
 
     public static void loadCss(Scene scene) {
-        scene.getStylesheets().add("/com/com.darkempire/res/css/group.css");
+        scene.getStylesheets().add("/com/darkempire/res/css/group.css");
     }
 }

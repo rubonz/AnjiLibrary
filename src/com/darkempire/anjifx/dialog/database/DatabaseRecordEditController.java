@@ -352,7 +352,7 @@ public class DatabaseRecordEditController extends GridPane implements Initializa
         return content;
     }
 
-    private class TemperantTransform implements ITransform<String, Integer> {
+    private static class TemperantTransform implements ITransform<String, Integer> {
         private List<String> collection;
 
         private TemperantTransform(List<String> collection) {

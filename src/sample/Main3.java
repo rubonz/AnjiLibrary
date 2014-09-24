@@ -16,7 +16,6 @@ import static com.darkempire.math.operator.matrix.LinearMatrixTransformOperator.
  * Created by siredvin on 23.06.14.
  */
 public class Main3 {
-    private int next;
 
     public static void main(String[] args) throws FileNotFoundException {
         /*DoubleMatrix m = DoubleFixedMatrix.createInstance(3, 3, new double[]{1, 2, 3, 6, 4, 0, 7, 0, -1});

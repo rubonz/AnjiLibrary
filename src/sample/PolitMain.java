@@ -16,7 +16,6 @@ import java.util.Scanner;
  * Created by siredvin on 30.05.14.
  */
 public class PolitMain {
-    private Class cl = null;
 
     public static void main(String[] args) throws FileNotFoundException {
         TeXEventWriter out = new TeXEventWriter(System.out, MathMachine.numberFormat);

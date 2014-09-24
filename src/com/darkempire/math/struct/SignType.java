@@ -8,7 +8,7 @@ public enum SignType {
 
     @Override
     public String toString() {
-        String temp = null;
+        String temp = "";
         switch (this) {
             case GREAT_THEN:
                 temp = ">";

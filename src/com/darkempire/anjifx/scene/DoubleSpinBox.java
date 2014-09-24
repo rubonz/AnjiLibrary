@@ -72,6 +72,6 @@ public class DoubleSpinBox extends Control {
 
     @Override
     protected String getUserAgentStylesheet() {
-        return getClass().getResource("/com/com.darkempire/res/css/spinbox.css").toExternalForm();
+        return getClass().getResource("/com/darkempire/res/css/spinbox.css").toExternalForm();
     }
 }

@@ -13,7 +13,7 @@ import static java.lang.Math.random;
  * To change this template use File | Settings | File Templates.
  */
 public class StochasticRule implements IRule {
-    private class ProbabilisticRule {
+    private static class ProbabilisticRule {
         private double p;
         private String rule;
 

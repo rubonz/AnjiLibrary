@@ -1,6 +1,7 @@
 package com.darkempire.anji.log;
 
 import com.darkempire.internal.anji.AnjiInternal;
+import com.darkempire.internal.anji.LocalHolder;
 
 import java.io.PrintStream;
 import java.time.LocalDateTime;
@@ -14,14 +15,14 @@ import java.util.List;
  * Created by siredvin on 05.09.14.
  */
 public class SimpleLog implements ILog {
-    private List<String> configList = new ArrayList<>();
-    private List<PrintStream> out = new LinkedList<>();
-    private List<PrintStream> err = new LinkedList<>();
-    private List<DateTimeFormatter> logDateTimeFormat;
-    private BitSet allowSet = new BitSet();
-    private BitSet hidePrefix = new BitSet();
-    private BitSet showTime = new BitSet();
-    private BitSet newLineAfterPrefix = new BitSet();
+    protected List<String> configList = new ArrayList<>();
+    protected List<PrintStream> out = new LinkedList<>();
+    protected List<PrintStream> err = new LinkedList<>();
+    protected List<DateTimeFormatter> logDateTimeFormat;
+    protected BitSet allowSet = new BitSet();
+    protected BitSet hidePrefix = new BitSet();
+    protected BitSet showTime = new BitSet();
+    protected BitSet newLineAfterPrefix = new BitSet();
 
     public SimpleLog() {
         out.add(System.out);
@@ -284,90 +285,90 @@ public class SimpleLog implements ILog {
     //endregion
 
     //region Внутрішня частника (print)
-    private void impl_print(int index, String text, Iterable<PrintStream> streamIterable) {
+    protected void impl_print(int index, String text, List<PrintStream> streamList) {
         if (allowSet.get(index)) {
             String name = configList.get(index);
-            for (PrintStream stream : streamIterable) {
+            for (PrintStream stream : streamList) {
                 impl_prefix(name, stream);
                 stream.println(text);
             }
         }
     }
 
-    private void impl_print(int index, Object o, Iterable<PrintStream> streamIterable) {
+    protected void impl_print(int index, Object o, List<PrintStream> streamList) {
         if (allowSet.get(index)) {
             String name = configList.get(index);
-            for (PrintStream stream : streamIterable) {
+            for (PrintStream stream : streamList) {
                 impl_prefix(name, stream);
                 stream.println(o);
             }
         }
     }
 
-    private void impl_print(int index, int x, Iterable<PrintStream> streamIterable) {
+    protected void impl_print(int index, int x, List<PrintStream> streamList) {
         if (allowSet.get(index)) {
             String name = configList.get(index);
-            for (PrintStream stream : streamIterable) {
+            for (PrintStream stream : streamList) {
                 impl_prefix(name, stream);
                 stream.println(x);
             }
         }
     }
 
-    private void impl_print(int index, long x, Iterable<PrintStream> streamIterable) {
+    protected void impl_print(int index, long x, List<PrintStream> streamList) {
         if (allowSet.get(index)) {
             String name = configList.get(index);
-            for (PrintStream stream : streamIterable) {
+            for (PrintStream stream : streamList) {
                 impl_prefix(name, stream);
                 stream.println(x);
             }
         }
     }
 
-    private void impl_print(int index, byte x, Iterable<PrintStream> streamIterable) {
+    protected void impl_print(int index, byte x, List<PrintStream> streamList) {
         if (allowSet.get(index)) {
             String name = configList.get(index);
-            for (PrintStream stream : streamIterable) {
+            for (PrintStream stream : streamList) {
                 impl_prefix(name, stream);
                 stream.println(x);
             }
         }
     }
 
-    private void impl_print(int index, char x, Iterable<PrintStream> streamIterable) {
+    protected void impl_print(int index, char x, List<PrintStream> streamList) {
         if (allowSet.get(index)) {
             String name = configList.get(index);
-            for (PrintStream stream : streamIterable) {
+            for (PrintStream stream : streamList) {
                 impl_prefix(name, stream);
                 stream.println(x);
             }
         }
     }
 
-    private void impl_print(int index, float x, Iterable<PrintStream> streamIterable) {
+    protected void impl_print(int index, float x, List<PrintStream> streamList) {
         if (allowSet.get(index)) {
             String name = configList.get(index);
-            for (PrintStream stream : streamIterable) {
+            for (PrintStream stream : streamList) {
                 impl_prefix(name, stream);
                 stream.println(x);
             }
         }
     }
 
-    private void impl_print(int index, double x, Iterable<PrintStream> streamIterable) {
+    protected void impl_print(int index, double x, List<PrintStream> streamList) {
         if (allowSet.get(index)) {
             String name = configList.get(index);
-            for (PrintStream stream : streamIterable) {
+            for (PrintStream stream : streamList) {
                 impl_prefix(name, stream);
                 stream.println(x);
             }
         }
     }
 
-    private void impl_print(int index, boolean x, Iterable<PrintStream> streamIterable) {
+    protected void impl_print(int index, boolean x, List<PrintStream> streamList) {
         if (allowSet.get(index)) {
             String name = configList.get(index);
-            for (PrintStream stream : streamIterable) {
+            for (PrintStream stream : streamList) {
                 impl_prefix(name, stream);
                 stream.println(x);
             }
@@ -376,10 +377,10 @@ public class SimpleLog implements ILog {
     //endregion
 
     //region Внутрішня частина (prints)
-    private void impl_prints(int index, Iterable<PrintStream> streamIterable, String... x) {
+    protected void impl_prints(int index, List<PrintStream> streamList, String... x) {
         if (allowSet.get(index)) {
             String name = configList.get(index);
-            for (PrintStream stream : streamIterable) {
+            for (PrintStream stream : streamList) {
                 impl_prefix(name, stream);
                 for (String o : x) {
                     stream.print(o);
@@ -390,10 +391,10 @@ public class SimpleLog implements ILog {
         }
     }
 
-    private void impl_prints(int index, Iterable<PrintStream> streamIterable, Object... objects) {
+    protected void impl_prints(int index, List<PrintStream> streamList, Object... objects) {
         if (allowSet.get(index)) {
             String name = configList.get(index);
-            for (PrintStream stream : streamIterable) {
+            for (PrintStream stream : streamList) {
                 impl_prefix(name, stream);
                 for (Object o : objects) {
                     stream.print(o);
@@ -404,10 +405,10 @@ public class SimpleLog implements ILog {
         }
     }
 
-    private void impl_prints(int index, Iterable<PrintStream> streamIterable, int... x) {
+    protected void impl_prints(int index, List<PrintStream> streamList, int... x) {
         if (allowSet.get(index)) {
             String name = configList.get(index);
-            for (PrintStream stream : streamIterable) {
+            for (PrintStream stream : streamList) {
                 impl_prefix(name, stream);
                 for (int o : x) {
                     stream.print(o);
@@ -418,10 +419,10 @@ public class SimpleLog implements ILog {
         }
     }
 
-    private void impl_prints(int index, Iterable<PrintStream> streamIterable, long... x) {
+    protected void impl_prints(int index, List<PrintStream> streamList, long... x) {
         if (allowSet.get(index)) {
             String name = configList.get(index);
-            for (PrintStream stream : streamIterable) {
+            for (PrintStream stream : streamList) {
                 impl_prefix(name, stream);
                 for (long o : x) {
                     stream.print(o);
@@ -432,10 +433,10 @@ public class SimpleLog implements ILog {
         }
     }
 
-    private void impl_prints(int index, Iterable<PrintStream> streamIterable, byte... x) {
+    protected void impl_prints(int index, List<PrintStream> streamList, byte... x) {
         if (allowSet.get(index)) {
             String name = configList.get(index);
-            for (PrintStream stream : streamIterable) {
+            for (PrintStream stream : streamList) {
                 impl_prefix(name, stream);
                 for (byte o : x) {
                     stream.print(o);
@@ -446,10 +447,10 @@ public class SimpleLog implements ILog {
         }
     }
 
-    private void impl_prints(int index, Iterable<PrintStream> streamIterable, float... x) {
+    protected void impl_prints(int index, List<PrintStream> streamList, float... x) {
         if (allowSet.get(index)) {
             String name = configList.get(index);
-            for (PrintStream stream : streamIterable) {
+            for (PrintStream stream : streamList) {
                 impl_prefix(name, stream);
                 for (float o : x) {
                     stream.print(o);
@@ -460,10 +461,10 @@ public class SimpleLog implements ILog {
         }
     }
 
-    private void impl_prints(int index, Iterable<PrintStream> streamIterable, char... x) {
+    protected void impl_prints(int index, List<PrintStream> streamList, char... x) {
         if (allowSet.get(index)) {
             String name = configList.get(index);
-            for (PrintStream stream : streamIterable) {
+            for (PrintStream stream : streamList) {
                 impl_prefix(name, stream);
                 for (float o : x) {
                     stream.print(o);
@@ -474,10 +475,10 @@ public class SimpleLog implements ILog {
         }
     }
 
-    private void impl_prints(int index, Iterable<PrintStream> streamIterable, double... x) {
+    protected void impl_prints(int index, List<PrintStream> streamList, double... x) {
         if (allowSet.get(index)) {
             String name = configList.get(index);
-            for (PrintStream stream : streamIterable) {
+            for (PrintStream stream : streamList) {
                 impl_prefix(name, stream);
                 for (double o : x) {
                     stream.print(o);
@@ -488,10 +489,10 @@ public class SimpleLog implements ILog {
         }
     }
 
-    private void impl_prints(int index, Iterable<PrintStream> streamIterable, boolean... x) {
+    protected void impl_prints(int index, List<PrintStream> streamList, boolean... x) {
         if (allowSet.get(index)) {
             String name = configList.get(index);
-            for (PrintStream stream : streamIterable) {
+            for (PrintStream stream : streamList) {
                 impl_prefix(name, stream);
                 for (boolean o : x) {
                     stream.print(o);
@@ -504,17 +505,17 @@ public class SimpleLog implements ILog {
     //endregion
 
     //region Внутрішня частина (printf та префікс)
-    private void impl_printf(int index, String format, Iterable<PrintStream> streamIterable, Object... objects) {
+    protected void impl_printf(int index, String format, List<PrintStream> streamList, Object... objects) {
         if (allowSet.get(index)) {
             String name = configList.get(index);
-            for (PrintStream stream : streamIterable) {
+            for (PrintStream stream : streamList) {
                 impl_prefix(name, stream);
                 stream.printf(format, objects);
             }
         }
     }
 
-    private void impl_prefix(String name, PrintStream stream) {
+    protected void impl_prefix(String name, PrintStream stream) {
         int index = configList.indexOf(name);
         if (!hidePrefix.get(index)) {
             stream.print('[');
@@ -562,18 +563,13 @@ public class SimpleLog implements ILog {
 
     //region Автоматичне генерування файлів-логів
     @Override
-    public boolean isSupportAutoLog() {
-        return false;
-    }
-
-    @Override
     public void appendNewTimeDateLog() {
-
+        Log.err(Log.coreIndex, LocalHolder.anji_resourceBundle.getString("anji.log.simplelog.autolog"));
     }
 
     @Override
     public void appendDefaultLog() {
-
+        Log.err(Log.coreIndex, LocalHolder.anji_resourceBundle.getString("anji.log.simplelog.autolog"));
     }
     //endregion
 
@@ -601,6 +597,68 @@ public class SimpleLog implements ILog {
         if (!err.contains(System.err))
             err.add(System.err);
     }
+
     //endregion
+
+    //region Керування видимістю
+    @Override
+    public void allowConsoleOut(int index, int channel_index, boolean value) {
+        Log.err(Log.coreIndex, LocalHolder.anji_resourceBundle.getString("anji.log.simplelog.channelvisible"));
+    }
+
+    @Override
+    public void allowConsoleErr(int index, int channel_index, boolean value) {
+        Log.err(Log.coreIndex, LocalHolder.anji_resourceBundle.getString("anji.log.simplelog.channelvisible"));
+    }
+
+    @Override
+    public int getOutIndex(PrintStream stream) {
+        Log.err(Log.coreIndex, LocalHolder.anji_resourceBundle.getString("anji.log.simplelog.channelvisible"));
+        return -1;
+    }
+
+    @Override
+    public int getErrIndex(PrintStream stream) {
+        Log.err(Log.coreIndex, LocalHolder.anji_resourceBundle.getString("anji.log.simplelog.channelvisible"));
+        return -1;
+    }
+
+    @Override
+    public int getConsoleOutIndex() {
+        Log.err(Log.coreIndex, LocalHolder.anji_resourceBundle.getString("anji.log.simplelog.channelvisible"));
+        return -1;
+    }
+
+    @Override
+    public int getConsoleErrIndex() {
+        Log.err(Log.coreIndex, LocalHolder.anji_resourceBundle.getString("anji.log.simplelog.channelvisible"));
+        return -1;
+    }
+
+    @Override
+    public int getDefaultLogOutIndex() {
+        Log.err(Log.coreIndex, LocalHolder.anji_resourceBundle.getString("anji.log.simplelog.channelvisible"));
+        return -1;
+    }
+
+    @Override
+    public int getDefaultLogErrIndex() {
+        Log.err(Log.coreIndex, LocalHolder.anji_resourceBundle.getString("anji.log.simplelog.channelvisible"));
+        return -1;
+    }
+
+    @Override
+    public int getTimeLogOutIndex() {
+        Log.err(Log.coreIndex, LocalHolder.anji_resourceBundle.getString("anji.log.simplelog.channelvisible"));
+        return -1;
+    }
+
+    @Override
+    public int getTimeLogErrIndex() {
+        Log.err(Log.coreIndex, LocalHolder.anji_resourceBundle.getString("anji.log.simplelog.channelvisible"));
+        return -1;
+    }
+    //endregion
+
 }
 
