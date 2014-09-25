@@ -18,7 +18,7 @@
 }
 
 .long-field:disabled {
-    -fx-opacity: -fx-disabled-opacity;
+    -fx-opacity: 0.5;
 }
 
 .double-field {
@@ -41,5 +41,5 @@
 }
 
 .double-field:disabled {
-    -fx-opacity: -fx-disabled-opacity;
+    -fx-opacity: 0.5;
 }

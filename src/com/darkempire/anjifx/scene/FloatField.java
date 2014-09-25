@@ -1,6 +1,6 @@
 package com.darkempire.anjifx.scene;
 
-import com.darkempire.anjifx.beans.property.AnjiDoubleProperty;
+import com.darkempire.anjifx.beans.property.AnjiFloatProperty;
 import com.darkempire.anjifx.beans.property.AnjiObjectProperty;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.TextField;
@@ -16,17 +16,17 @@ import java.text.ParseException;
  * Time: 19:04
  * To change this template use File | Settings | File Templates.
  */
-public class DoubleField extends TextField {
+public class FloatField extends TextField {
     private static final int DEFAULT_FRACTION_DIGITS = 14;
-    private AnjiDoubleProperty valueProperty;
+    private AnjiFloatProperty valueProperty;
     private AnjiObjectProperty<NumberFormat> numberFormatProperty;
 
     //region Конструктори
-    public DoubleField(double v) {
+    public FloatField(float v) {
         super();
         setStyle(null);
         getStyleClass().add("double-field");
-        valueProperty = new AnjiDoubleProperty(this, "value", v);
+        valueProperty = new AnjiFloatProperty(this, "value", v);
         numberFormatProperty = new AnjiObjectProperty<>(this, "numberFormat", NumberFormat.getNumberInstance());
         numberFormatProperty.getValue().setMaximumFractionDigits(DEFAULT_FRACTION_DIGITS);
         focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -34,17 +34,17 @@ public class DoubleField extends TextField {
                 parse();
             }
         });
-        Bindings.bindBidirectional(textProperty(), valueProperty, new StringConverter<Double>() {
+        Bindings.bindBidirectional(textProperty(), valueProperty, new StringConverter<Float>() {
             @Override
-            public String toString(Double object) {
+            public String toString(Float object) {
                 return getNumberFormat().format(object);
             }
 
             @Override
-            public Double fromString(String string) {
-                double result = valueProperty.get();
+            public Float fromString(String string) {
+                float result = valueProperty.get();
                 try {
-                    result = getNumberFormat().parse(string).doubleValue();
+                    result = getNumberFormat().parse(string).floatValue();
                 } catch (ParseException e) {
                     setText(getNumberFormat().format(result));
                 }
@@ -53,7 +53,7 @@ public class DoubleField extends TextField {
         });
     }
 
-    public DoubleField() {
+    public FloatField() {
         this(0);
     }
     //endregion
@@ -69,7 +69,7 @@ public class DoubleField extends TextField {
     //endregion
 
     //region Сеттери
-    public void setValue(Double value) {
+    public void setValue(Float value) {
         valueProperty.setValue(value);
     }
 
@@ -79,7 +79,7 @@ public class DoubleField extends TextField {
     //endregion
 
     //region Властивості
-    public AnjiDoubleProperty valueProperty() {
+    public AnjiFloatProperty valueProperty() {
         return valueProperty;
     }
 
@@ -90,7 +90,7 @@ public class DoubleField extends TextField {
 
     private void parse() {
         try {
-            Double value = getNumberFormat().parse(getText()).doubleValue();
+            Float value = getNumberFormat().parse(getText()).floatValue();
             setValue(value);
         } catch (ParseException | IllegalArgumentException e) {
             setText(getNumberFormat().format(getValue()));

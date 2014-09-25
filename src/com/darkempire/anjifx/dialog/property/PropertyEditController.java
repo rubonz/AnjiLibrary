@@ -6,10 +6,7 @@ import com.darkempire.anjifx.beans.editor.Vector2DFieldEditor;
 import com.darkempire.anjifx.beans.property.*;
 import com.darkempire.anjifx.beans.property.transform.Transform;
 import com.darkempire.anjifx.beans.wrapper.AnjiWrapper;
-import com.darkempire.anjifx.scene.DoubleField;
-import com.darkempire.anjifx.scene.DoubleSlider;
-import com.darkempire.anjifx.scene.LongField;
-import com.darkempire.anjifx.scene.LongSlider;
+import com.darkempire.anjifx.scene.*;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -89,40 +86,38 @@ public class PropertyEditController extends GridPane implements Initializable {
                 field = comboBox;
                 break;
             case FLOAT_TYPE:
-                //TODO: це просто лажа
                 AnjiFloatProperty floatProperty = (AnjiFloatProperty) c;
-                DoubleField text = new DoubleField(floatProperty.getValue());
-                field = text;
+                FloatField ftext = new FloatField(floatProperty.get());
+                field = ftext;
                 decoratorSet.add(AnjiWrapper.wrap(floatProperty));
-                floatProperty.bind(Transform.transformDoubleToFloat(text.valueProperty()));
+                floatProperty.bind(ftext.valueProperty());
                 break;
             case DOUBLE_TYPE:
                 AnjiDoubleProperty doubleBean = (AnjiDoubleProperty) c;
-                text = new DoubleField(doubleBean.getValue());
-                field = text;
+                DoubleField dtext = new DoubleField(doubleBean.get());
+                field = dtext;
                 decoratorSet.add(AnjiWrapper.wrap(doubleBean));
-                doubleBean.bind(text.valueProperty());
+                doubleBean.bind(dtext.valueProperty());
                 break;
             case BOOLEAN_TYPE:
                 AnjiBooleanProperty booleanBean = (AnjiBooleanProperty) c;
                 CheckBox booleanTextFieldEditor = new CheckBox();
-                booleanTextFieldEditor.setSelected(booleanBean.getValue());
+                booleanTextFieldEditor.setSelected(booleanBean.get());
                 decoratorSet.add(AnjiWrapper.wrap(booleanBean));
                 field = booleanTextFieldEditor;
                 booleanBean.bind(booleanTextFieldEditor.selectedProperty());
                 break;
             case INT_TYPE:
-                //TODO: це просто лажа
                 AnjiIntegerProperty integerProperty = (AnjiIntegerProperty) c;
-                LongField longField = new LongField();
-                longField.setValue(integerProperty.getValue().longValue());
-                field = longField;
+                IntegerField intField = new IntegerField();
+                intField.setValue(integerProperty.get());
+                field = intField;
                 decoratorSet.add(AnjiWrapper.wrap(integerProperty));
-                integerProperty.bind(Transform.transformLongToInt(longField.valueProperty()));
+                integerProperty.bind(intField.valueProperty());
                 break;
             case LONG_TYPE:
                 AnjiLongProperty longProperty = (AnjiLongProperty) c;
-                longField = new LongField();
+                LongField longField = new LongField();
                 longField.setValue(longProperty.getValue());
                 field = longField;
                 decoratorSet.add(AnjiWrapper.wrap(longProperty));

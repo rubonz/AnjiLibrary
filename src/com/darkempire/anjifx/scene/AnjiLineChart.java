@@ -82,10 +82,10 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
             Label label = (Label) node;
             Color temp = colorValues.get(i).getValue();
             if (temp.getOpacity() == 1) {
-                label.getGraphic().setStyle("-fx-background-color:" + AnjiFXStringConverter.colorToRGBString(temp) + ";");
+                label.getGraphic().setStyle(String.format("-fx-background-color:%s;", AnjiFXStringConverter.colorToRGBString(temp)));
             } else {
                 temp = Color.color(temp.getRed(), temp.getGreen(), temp.getBlue(), 1);
-                label.getGraphic().setStyle("-fx-background-color:" + AnjiFXStringConverter.colorToRGBString(temp) + ",white;");
+                label.getGraphic().setStyle(String.format("-fx-background-color:%s,white;", AnjiFXStringConverter.colorToRGBString(temp)));
             }
             i++;
         }

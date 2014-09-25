@@ -2,7 +2,9 @@ package com.darkempire.anjifx.scene;
 
 import com.darkempire.anjifx.beans.property.AnjiLongProperty;
 import com.darkempire.anjifx.beans.property.AnjiObjectProperty;
+import javafx.beans.binding.Bindings;
 import javafx.scene.control.TextField;
+import javafx.util.StringConverter;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -14,30 +16,48 @@ import java.text.ParseException;
  * Time: 19:04
  * To change this template use File | Settings | File Templates.
  */
-//TODO:а ось тут потрібно дуже гарно подумати, як цю штуку переробити. Оскільки фокуси воно не ловить і взагалі нічого не робить. Це якась маячня!
 public class LongField extends TextField {
     private AnjiLongProperty valueProperty;
     private AnjiObjectProperty<NumberFormat> numberFormatProperty;
 
+    //region Конструктори
     public LongField(long v) {
         super();
-        //setStyle(null);
-        //setFocusTraversable(true);
+        setStyle(null);
+        setFocusTraversable(true);
         getStyleClass().add("long-field");
         valueProperty = new AnjiLongProperty(this, "value", v);
         numberFormatProperty = new AnjiObjectProperty<>(this, "numberFormat", NumberFormat.getIntegerInstance());
         setText(getNumberFormat().format(getValue()));
-        valueProperty().addListener((observable, oldValue, newValue) -> {
-            setText(getNumberFormat().format(newValue));
-            positionCaret(getText().length());
-        });
-        setOnAction(event -> parse());
         focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 parse();
             }
         });
+        Bindings.bindBidirectional(textProperty(), valueProperty, new StringConverter<Long>() {
+            @Override
+            public String toString(Long object) {
+                return getNumberFormat().format(object);
+            }
+
+            @Override
+            public Long fromString(String string) {
+                long result = valueProperty.get();
+                try {
+                    result = getNumberFormat().parse(string).longValue();
+                } catch (ParseException e) {
+                    setText(getNumberFormat().format(result));
+                }
+                return result;
+            }
+        });
     }
+
+
+    public LongField() {
+        this(0);
+    }
+    //endregion
 
     private void parse() {
         try {
@@ -49,13 +69,7 @@ public class LongField extends TextField {
         }
     }
 
-    public LongField() {
-        this(0);
-    }
-
-    /**
-     * ************Getters**************
-     */
+    //region Геттери
     public long getValue() {
         return valueProperty.get();
     }
@@ -64,10 +78,9 @@ public class LongField extends TextField {
     public NumberFormat getNumberFormat() {
         return numberFormatProperty.getValue();
     }
+    //endregion
 
-    /**
-     * ************Setters**************
-     */
+    //region Сеттери
     public void setValue(Long value) {
         valueProperty.setValue(value);
     }
@@ -75,10 +88,9 @@ public class LongField extends TextField {
     public void setNumberFormat(NumberFormat numberFormat) {
         numberFormatProperty.setValue(numberFormat);
     }
+    //endregion
 
-    /**
-     * ************Property**************
-     */
+    //region Властивості
     public AnjiLongProperty valueProperty() {
         return valueProperty;
     }
@@ -86,6 +98,7 @@ public class LongField extends TextField {
     public AnjiObjectProperty<NumberFormat> numberFormatProperty() {
         return numberFormatProperty;
     }
+    //endregion
 
     @Override
     protected String getUserAgentStylesheet() {
