@@ -123,25 +123,6 @@ public class BooleanFixedMatrix extends BooleanMatrix {
         result = 31 * result + rowCount;
         return result;
     }
-
-    /**
-     * Виводить до табличного виду без табуляції
-     *
-     * @return текстове зображення матриці
-     */
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-            for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
-                sb.append(arr[columnIndex + rowIndex * columnCount]);
-                sb.append(',');
-            }
-            sb.deleteCharAt(sb.length() - 1);
-            sb.append('\n');
-        }
-        return sb.toString();
-    }
     //endregion
 
     //region Заповнювачі

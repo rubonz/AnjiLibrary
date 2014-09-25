@@ -47,22 +47,6 @@ public abstract class BooleanMatrixSlice extends BooleanMatrix {
 
     //region Системні методи
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        int rowCount = getRowCount();
-        int columnCount = getColumnCount();
-        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-            for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
-                sb.append(get(rowIndex, columnIndex));
-                sb.append(',');
-            }
-            sb.deleteCharAt(sb.length() - 1);
-            sb.append('\n');
-        }
-        return sb.toString();
-    }
-
-    @Override
     public BooleanMatrix clone() {
         int rowCount = getRowCount();
         int columnCount = getColumnCount();

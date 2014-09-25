@@ -1,5 +1,7 @@
 package com.darkempire.math.struct.vector;
 
+import com.darkempire.math.exception.MatrixSizeException;
+
 /**
  * Created by siredvin on 16.09.14.
  */
@@ -64,41 +66,86 @@ public class DoubleSliceVector extends DoubleVector {
 
     @Override
     public DoubleVector clone() {
-        return null;//TODO:обробити
+        int size = getSize();
+        DoubleVector result = new DoubleFixedVector(size);
+        for (int i = 0; i < size; i++) {
+            result.set(i, get(i));
+        }
+        return result;
     }
 
     @Override
     public DoubleVector prod(double lambda) {
-        return null;//TODO:обробити
+        int size = getSize();
+        DoubleVector result = new DoubleFixedVector(size);
+        for (int i = 0; i < size; i++) {
+            result.set(i, get(i) * lambda);
+        }
+        return result;
     }
 
     @Override
     public DoubleVector inegate() {
-        return null;//TODO:обробити
+        int size = getSize();
+        for (int i = 0; i < size; i++) {
+            set(i, -get(i));
+        }
+        return this;
     }
 
     @Override
     public DoubleVector iadd(DoubleVector doubleVector) {
-        return null;//TODO:обробити
+        int size = getSize();
+        if (doubleVector.getSize() != size)
+            throw new MatrixSizeException(MatrixSizeException.MATRIX_SIZE_MISMATCH);
+        for (int i = 0; i < size; i++) {
+            set(i, doubleVector.get(i) + get(i));
+        }
+        return this;
     }
 
     @Override
     public DoubleVector isubtract(DoubleVector doubleVector) {
-        return null;//TODO:обробити
+        int size = getSize();
+        if (doubleVector.getSize() != size)
+            throw new MatrixSizeException(MatrixSizeException.MATRIX_SIZE_MISMATCH);
+        for (int i = 0; i < size; i++) {
+            set(i, doubleVector.get(i) - get(i));
+        }
+        return this;
     }
 
     @Override
     public DoubleVector add(DoubleVector doubleVector) {
-        return null;//TODO:обробити
+        int size = getSize();
+        if (doubleVector.getSize() != size)
+            throw new MatrixSizeException(MatrixSizeException.MATRIX_SIZE_MISMATCH);
+        DoubleVector result = new DoubleFixedVector(size);
+        for (int i = 0; i < size; i++) {
+            result.set(i, doubleVector.get(i) + get(i));
+        }
+        return result;
     }
 
     @Override
     public DoubleVector subtract(DoubleVector doubleVector) {
-        return null;//TODO:обробити
+        int size = getSize();
+        if (doubleVector.getSize() != size)
+            throw new MatrixSizeException(MatrixSizeException.MATRIX_SIZE_MISMATCH);
+        DoubleVector result = new DoubleFixedVector(size);
+        for (int i = 0; i < size; i++) {
+            result.set(i, doubleVector.get(i) - get(i));
+        }
+        return result;
     }
 
     @Override
     public DoubleVector negate() {
-        return null;//TODO:обробити
+        int size = getSize();
+        DoubleVector result = new DoubleFixedVector(size);
+        for (int i = 0; i < size; i++) {
+            result.set(i, -get(i));
+        }
+        return result;
     }
 }

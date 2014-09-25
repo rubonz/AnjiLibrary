@@ -176,6 +176,28 @@ public abstract class BooleanMatrix implements IMatrix<BooleanMatrix, Boolean>, 
 
     @Override
     public abstract BooleanMatrix clone();
+
+    /**
+     * Виводить до табличного виду без табуляції
+     *
+     * @return текстове зображення матриці
+     */
+    @Override
+    public String toString() {
+        int rowCount = getRowCount();
+        int columnCount = getColumnCount();
+        StringBuilder sb = new StringBuilder();
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+                sb.append(get(rowIndex, columnIndex));
+                sb.append(",\t");
+            }
+            sb.deleteCharAt(sb.length() - 1);
+            sb.deleteCharAt(sb.length() - 1);
+            sb.append(";\n");
+        }
+        return sb.toString();
+    }
     //endregion
 
     //region Операції переставлення місцями

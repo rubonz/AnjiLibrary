@@ -586,7 +586,6 @@ public abstract class DoubleMatrix implements IMatrix<DoubleMatrix, Double>, IDo
      */
     @Override
     public String toString() {
-        //TODO:перепилити у всіх матрицях метод ToString
         StringBuilder sb = new StringBuilder();
         int rowCount = getRowCount();
         int columnCount = getColumnCount();
