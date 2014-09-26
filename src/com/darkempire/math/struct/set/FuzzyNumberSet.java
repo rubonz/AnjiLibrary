@@ -19,7 +19,7 @@ public class FuzzyNumberSet implements FuzzySetOperable<FuzzyNumberSet>, IDouble
         p = new double[count];
     }
 
-    public FuzzyNumberSet(double[] p) {
+    public FuzzyNumberSet(double... p) {
         this.p = p;
     }
     //endregion

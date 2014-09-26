@@ -5,8 +5,8 @@ import com.darkempire.anji.document.tex.TeXEventWriter;
 import com.darkempire.anji.document.tex.TeXTableObject;
 import com.darkempire.anji.document.tex.util.TeXTableUtil;
 import com.darkempire.anji.log.Log;
-import com.darkempire.math.struct.matrix.DoubleFixedMatrix;
 import com.darkempire.math.struct.set.FuzzyNumberSet;
+import com.darkempire.math.struct.set.NumberSet;
 
 /**
  * Create in 13:05
@@ -18,9 +18,14 @@ public class Test1 {
         TeXDocumentManager documentManager = new TeXDocumentManager(System.out);
         Log.removeConsoleLog();
         Log.setHidePrefix(Log.debugIndex, true);
+        Log.log(Log.debugIndex, "start");
         Test1 test = new Test1();
-        test.task1(new FuzzyNumberSet(new double[]{1, 0.9, 0.3, 0.9, 0.1, 0.1, 0.4, 0.1, 0.8, 0.4, 0.5, 0}),
-                new FuzzyNumberSet(new double[]{0.2, 0.6, 0.2, 0.6, 0.7, 0, 0.3, 0.4, 0.6, 0.9, 0.7, 0.6}), documentManager.getEventWriter());
+        /*test.task1(new FuzzyNumberSet(new double[]{1, 0.9, 0.3, 0.9, 0.1, 0.1, 0.4, 0.1, 0.8, 0.4, 0.5, 0}),
+                new FuzzyNumberSet(new double[]{0.2, 0.6, 0.2, 0.6, 0.7, 0, 0.3, 0.4, 0.6, 0.9, 0.7, 0.6}), documentManager.getEventWriter());*/
+        test.task3(new FuzzyNumberSet(0.2, 0.3, 0.7, 0.4, 0.6, 0.9, 0.2, 0.1, 0.9, 0.3),
+                new FuzzyNumberSet(0.3, 0.3, 0.6, 0, 0.5, 0.2, 0.4, 0.7, 0.3, 0.3),
+                new FuzzyNumberSet(0.8, 0, 0.1, 0.2, 0.9, 0.8, 0.7, 0.9, 0.2, 0.1),
+                documentManager.getEventWriter(), 0.4, 0.1, 0.5, 0.4);
     }
 
     public void task1(FuzzyNumberSet setA, FuzzyNumberSet setB, TeXEventWriter out) {
@@ -44,7 +49,7 @@ public class Test1 {
         out.closeEnvironment();
     }
 
-    /*public void task2(FuzzyNumberSet setA, FuzzyNumberSet setB, TeXEventWriter out, double al2, double... als) {
+    public void task2(FuzzyNumberSet setA, FuzzyNumberSet setB, TeXEventWriter out, double al2, double... als) {
         out.center();
         out.text("Завдання №2");
         out.closeEnvironment();
@@ -70,35 +75,39 @@ public class Test1 {
         setB1 = setB.levelSet(als[0]);
         setB2 = setB.levelSet(als[1]);
         setB3 = setB.levelSet(als[2]);
-        out.createTabular(1 + setA.getSize(), true).row("X", out.generateHeader("x", setA.getSize()))
-                .row("$A$", setA)
-                .row("$B$", setB)
-                .row("$A_{" + out.getNumberFormat().format(als[0]) + "}$", setA1)
-                .row("$B_{" + out.getNumberFormat().format(als[0]) + "}$", setB1)
-                .row("$A_{" + out.getNumberFormat().format(als[1]) + "}$", setA2)
-                .row("$B_{" + out.getNumberFormat().format(als[1]) + "}$", setB2)
-                .row("$A_{" + out.getNumberFormat().format(als[2]) + "}$", setA3)
-                .row("$B_{" + out.getNumberFormat().format(als[2]) + "}$", setB3).closeTabular();
-        out.closeEnvironment();
+        TeXTableObject table = TeXTableUtil.matrix("X", TeXTableUtil.generateHeader("x", setA.getSize()),
+                new String[]{"$A$", "$B$", "$A_{" + out.getNumberFormat().format(als[0]) + "}$",
+                        "$B_{" + out.getNumberFormat().format(als[0]) + "}$",
+                        "$A_{" + out.getNumberFormat().format(als[1]) + "}$",
+                        "$B_{" + out.getNumberFormat().format(als[1]) + "}$",
+                        "$A_{" + out.getNumberFormat().format(als[2]) + "}$",
+                        "$B_{" + out.getNumberFormat().format(als[2]) + "}$"},
+                setA, setB, setA1, setB1, setA2, setB2, setA3, setB3);
+        table.write(out);
         out.text("Для виконання другого завдання спочатку необхідно знайти потрібні множини і після цього знайти їх множини рівня.");
         out.center();
         setA1 = setA.levelSet(al2);
         setB1 = setB.levelSet(al2);
         FuzzyNumberSet unionAB = setA.union(setB), interAB = setA.intersection(setB);
         NumberSet unionAB1 = unionAB.levelSet(al2), interAB1 = interAB.levelSet(al2);
-        out.createTabular(setA.getSize() + 1, true).row("X", out.generateHeader("x", setA.getSize()))
-                .row("$A$", setA)
-                .row("$B$", setB)
-                .row("$A\\cup B$", unionAB)
-                .row("$A\\cap B$", interAB)
-                .row("$A_{" + out.getNumberFormat().format(al2) + "}$", setA1)
-                .row("$B_{" + out.getNumberFormat().format(al2) + "}$", setB1)
-                .row("$A_{" + out.getNumberFormat().format(al2) + "}\\cup B_{" + out.getNumberFormat().format(al2) + "}$", setA1.union(setB1))
-                .row("$\\cb{A\\cup B}_{" + out.getNumberFormat().format(al2) + "}$", unionAB1)
-                .row("$A_{" + out.getNumberFormat().format(al2) + "}\\cap B_{" + out.getNumberFormat().format(al2) + "}$", setA1.intersection(setB2))
-                .row("$\\cb{A\\cap B}_{" + out.getNumberFormat().format(al2) + "}$", interAB1).closeTabular();
+        table = TeXTableUtil.matrix("X", TeXTableUtil.generateHeader("x", setA.getSize()),
+                new String[]{
+                        "$A$",
+                        "$B$",
+                        "$A\\cup B$",
+                        "$A\\cap B$",
+                        "$A_{" + out.getNumberFormat().format(al2) + "}$",
+                        "$B_{" + out.getNumberFormat().format(al2) + "}$",
+                        "$A_{" + out.getNumberFormat().format(al2) + "}\\cup B_{" + out.getNumberFormat().format(al2) + "}$",
+                        "$\\cb{A\\cup B}_{" + out.getNumberFormat().format(al2) + "}$",
+                        "$A_{" + out.getNumberFormat().format(al2) + "}\\cap B_{" + out.getNumberFormat().format(al2) + "}$",
+                        "$\\cb{A\\cap B}_{" + out.getNumberFormat().format(al2) + "}$"
+                },
+                setA, setB, unionAB, interAB, setA1, setB1, setA1.union(setB1), unionAB1, setA1.intersection(setB2), interAB1);
+        table.write(out);
         out.closeEnvironment();
     }
+
 
     public void task3(FuzzyNumberSet setA, FuzzyNumberSet setB, FuzzyNumberSet setC, TeXEventWriter out, double l1, double l2, double l3, double al) {
         out.center().text("Завдання №3").closeEnvironment()
@@ -112,7 +121,8 @@ public class Test1 {
         NumberSet setA1 = setA.levelSet(al), setB1 = setB.levelSet(al), setC1 = setC.levelSet(al);
         FuzzyNumberSet setABCunion = FuzzyNumberSet.pUnion(setA, setB, setC), setABCintersection = FuzzyNumberSet.pIntersection(setA, setB, setC);
         out.center();
-        out.createTabular(setA.getSize() + 1, true).row("X", out.generateHeader("x", setA.getSize()))
+        TeXTableObject tableObject = TeXTableUtil.rowFlow()
+                .row("X", TeXTableUtil.generateHeader("x", setA.getSize()))
                 .row("$A$", setA)
                 .row("$B$", setB)
                 .row("$C$", setC)
@@ -125,10 +135,12 @@ public class Test1 {
                 .row("$\\cb{A\\cup B\\cup C}_{" + out.getNumberFormat().format(al) + "}$", setABCunion.levelSet(al))
                 .row("$A_{" + out.getNumberFormat().format(al) + "}\\cup B_{" + out.getNumberFormat().format(al) + "}\\cup C_{" + out.getNumberFormat().format(al) + "}$", NumberSet.union(setA1, setB1, setC1))
                 .row("$\\cb{A\\cap B\\cap C}_{" + out.getNumberFormat().format(al) + "}$", setABCintersection.levelSet(al))
-                .row("$A_{" + out.getNumberFormat().format(al) + "}\\cap B_{" + out.getNumberFormat().format(al) + "}\\cap C_{" + out.getNumberFormat().format(al) + "}$", NumberSet.intersetion(setA1, setB1, setC1)).closeTabular();
+                .row("$A_{" + out.getNumberFormat().format(al) + "}\\cap B_{" + out.getNumberFormat().format(al) + "}\\cap C_{" + out.getNumberFormat().format(al) + "}$", NumberSet.intersection(setA1, setB1, setC1))
+                .compile();
+        tableObject.write(out);
         out.closeEnvironment();
     }
-
+/*
     public void task6(FuzzyRelationMatrix matrix, TeXEventWriter out) {
         out.center().text("Завдання №6").closeEnvironment().text("Перевірити, чи є відношення $R$ задане таблицею транзитивним.").center();
         out.matrix(matrix, "X").closeEnvironment().text("Відомо, що відношення називається транзитивним, якщо його композиція є підмножиною $R$.").newline()

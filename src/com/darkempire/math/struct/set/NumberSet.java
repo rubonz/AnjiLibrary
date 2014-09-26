@@ -11,18 +11,27 @@ import java.util.BitSet;
  */
 public class NumberSet implements SetOperable<NumberSet>, IDoubleVectorProvider {
     private BitSet set;
+    private int size;
 
     //region Конструктори
     public NumberSet() {
         set = new BitSet();
+        size = 0;
     }
 
     public NumberSet(int count) {
         set = new BitSet(count);
+        size = count;
     }
 
     public NumberSet(BitSet set) {
         this.set = set;
+        size = set.length();
+    }
+
+    public NumberSet(BitSet set, int size) {
+        this.set = set;
+        this.size = size;
     }
     //endregion
 
@@ -38,12 +47,14 @@ public class NumberSet implements SetOperable<NumberSet>, IDoubleVectorProvider 
 
     @Override
     public int getSize() {
-        return set.length();
+        return size;
     }
     //endregion
 
     //region Сеттери
     public void set(int index, boolean exists) {
+        if (size < index)
+            size = index;
         set.set(index, exists);
     }
     //endregion
@@ -52,12 +63,14 @@ public class NumberSet implements SetOperable<NumberSet>, IDoubleVectorProvider 
     @Override
     public NumberSet iunion(NumberSet numberSet) {
         set.or(numberSet.set);
+        size = Math.min(size, numberSet.getSize());
         return this;
     }
 
     @Override
     public NumberSet iintersection(NumberSet numberSet) {
         set.and(numberSet.set);
+        size = Math.min(size, numberSet.getSize());
         return this;
     }
 
@@ -73,6 +86,7 @@ public class NumberSet implements SetOperable<NumberSet>, IDoubleVectorProvider 
     @Override
     public NumberSet isetminus(NumberSet numberSet) {
         set.andNot(numberSet.set);
+        size = Math.min(size, numberSet.getSize());
         return this;
     }
     //endregion
@@ -82,14 +96,14 @@ public class NumberSet implements SetOperable<NumberSet>, IDoubleVectorProvider 
     public NumberSet union(NumberSet numberSet) {
         BitSet set = (BitSet) this.set.clone();
         set.or(numberSet.set);
-        return new NumberSet(set);
+        return new NumberSet(set, Math.max(size, numberSet.getSize()));
     }
 
     @Override
     public NumberSet intersection(NumberSet numberSet) {
         BitSet set = (BitSet) this.set.clone();
         set.and(numberSet.set);
-        return new NumberSet(set);
+        return new NumberSet(set, Math.max(size, numberSet.getSize()));
     }
 
     @Override
@@ -99,14 +113,14 @@ public class NumberSet implements SetOperable<NumberSet>, IDoubleVectorProvider 
         for (int i = 0; i < size; i++) {
             set.set(i, !set.get(i));
         }
-        return new NumberSet(set);
+        return new NumberSet(set, size);
     }
 
     @Override
     public NumberSet setminus(NumberSet numberSet) {
         BitSet set = (BitSet) this.set.clone();
         set.andNot(numberSet.set);
-        return new NumberSet(set);
+        return new NumberSet(set, Math.max(size, numberSet.getSize()));
     }
     //endregion
 
@@ -114,7 +128,6 @@ public class NumberSet implements SetOperable<NumberSet>, IDoubleVectorProvider 
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
-        int size = set.length();
         s.append("{");
         for (int i = 0; i < size; i++) {
             if (set.get(i)) {
@@ -147,18 +160,28 @@ public class NumberSet implements SetOperable<NumberSet>, IDoubleVectorProvider 
     //region Статичні операції над множинами для багатьох множин відразу
     public static NumberSet union(NumberSet... sets) {
         BitSet temp = new BitSet();
+        int size = 0;
         for (NumberSet set : sets) {
+            int temp_size = set.getSize();
+            if (temp_size > size) {
+                size = temp_size;
+            }
             temp.or(set.set);
         }
-        return new NumberSet(temp);
+        return new NumberSet(temp, size);
     }
 
-    public static NumberSet intersetion(NumberSet... sets) {
+    public static NumberSet intersection(NumberSet... sets) {
         BitSet temp = new BitSet();
+        int size = 0;
         for (NumberSet set : sets) {
+            int temp_size = set.getSize();
+            if (temp_size > size) {
+                size = temp_size;
+            }
             temp.and(set.set);
         }
-        return new NumberSet(temp);
+        return new NumberSet(temp, size);
     }
     //endregion
 }

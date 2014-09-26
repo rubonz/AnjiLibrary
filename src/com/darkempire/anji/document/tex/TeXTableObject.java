@@ -169,7 +169,7 @@ public class TeXTableObject implements ITeXObject {
     }
     //endregion
 
-    //endregion
+    //endregionre
 
     //region Заповнення стовпчиків
 
@@ -352,6 +352,26 @@ public class TeXTableObject implements ITeXObject {
         return this;
     }
     //endregion
+    //endregion
+
+    //region Заповнення іменованих рядків
+    public TeXTableObject row(int rowIndex, String name, IVectorProvider v) {
+        tableMatrix.setEl(rowIndex, 0, name);
+        int columnCount = tableMatrix.getColumnCount();
+        for (int columnIndex = 1; columnIndex < columnCount; columnIndex++) {
+            tableMatrix.setEl(rowIndex, columnIndex, v.get(columnIndex - 1).toString());
+        }
+        return this;
+    }
+
+    public TeXTableObject row(int rowIndex, String name, IDoubleVectorProvider v) {
+        tableMatrix.setEl(rowIndex, 0, name);
+        int columnCount = tableMatrix.getColumnCount();
+        for (int columnIndex = 1; columnIndex < columnCount; columnIndex++) {
+            tableMatrix.setEl(rowIndex, columnIndex, numberFormat.format(v.get(columnIndex - 1)));
+        }
+        return this;
+    }
     //endregion
 
     @Override
