@@ -268,11 +268,12 @@ public class FuzzyNumberSet implements FuzzySetOperable<FuzzyNumberSet>, IDouble
         StringBuilder s = new StringBuilder();
         s.append("{");
         for (int i = 0; i < p.length; i++) {
-            s.append("(");
+            /*s.append("(");
             s.append(i);
-            s.append(",");
+            s.append("|");*/
             s.append(MathMachine.numberFormat.format(p[i]));
-            s.append("),");
+            //s.append("),");
+            s.append(';');
         }
         Util.removeLastChar(s);
         s.append("}");

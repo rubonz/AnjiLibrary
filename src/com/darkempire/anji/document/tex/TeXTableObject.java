@@ -1,5 +1,7 @@
 package com.darkempire.anji.document.tex;
 
+import com.darkempire.anji.log.Log;
+import com.darkempire.math.MathMachine;
 import com.darkempire.math.struct.matrix.*;
 import com.darkempire.math.struct.vector.IndexFixedVector;
 import com.darkempire.math.struct.vector.IDoubleVectorProvider;
@@ -13,12 +15,10 @@ import static com.darkempire.anji.util.AnjiStringUtil.generateCharString;
 /**
  * Created by siredvin on 10.07.14.
  */
-//TODO:витягти усі методи заповнення таблиці сюди
 public class TeXTableObject implements ITeXObject {
     private NumberFormat numberFormat;
     private Matrix<String> tableMatrix;
     private IndexVector verticalLines;
-    //TODO:потім замінити на IndexMatrix, можливо
     private BooleanMatrix horizontalLines;
     private char[] tableVector;
 
@@ -26,6 +26,7 @@ public class TeXTableObject implements ITeXObject {
     public TeXTableObject(int rowCount, int columnCount) {
         tableMatrix = Matrix.createInstance(rowCount, columnCount, new String[rowCount * columnCount]);
         verticalLines = new IndexFixedVector(columnCount + 1);
+        numberFormat = MathMachine.numberFormat;
         horizontalLines = BooleanFixedMatrix.createInstance(rowCount + 1, columnCount);
         tableVector = new char[columnCount];
         for (int i = 0; i < columnCount; i++) {
@@ -65,7 +66,7 @@ public class TeXTableObject implements ITeXObject {
     //region Заповнення рядків
 
     //region Заповнення рядків масивом рядків
-    public TeXTableObject row(int rowIndex, Object... strings) {
+    public TeXTableObject row(int rowIndex, Object[] strings) {
         int columnCount = Math.min(tableMatrix.getColumnCount(), strings.length);
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             tableMatrix.setEl(rowIndex, columnIndex, strings[columnIndex].toString());
@@ -73,18 +74,42 @@ public class TeXTableObject implements ITeXObject {
         return this;
     }
 
-    public TeXTableObject row(int rowIndex, int columnStart, Object... strings) {
-        int columnCount = Math.min(tableMatrix.getColumnCount() - columnStart, strings.length);
+    public TeXTableObject row(int rowIndex, int columnStart, Object[] strings) {
+        int columnCount = Math.min(tableMatrix.getColumnCount() - columnStart, strings.length) + 1;
         for (int columnIndex = columnStart; columnIndex < columnCount; columnIndex++) {
-            tableMatrix.setEl(rowIndex, columnIndex, strings[columnIndex].toString());
+            tableMatrix.setEl(rowIndex, columnIndex, strings[columnIndex - columnStart].toString());
         }
         return this;
     }
 
-    public TeXTableObject row(int rowIndex, int columnStart, int columnEnd, Object... strings) {
+    public TeXTableObject row(int rowIndex, int columnStart, int columnEnd, Object[] strings) {
         columnEnd++;
         for (int columnIndex = columnStart; columnIndex < columnEnd; columnIndex++) {
-            tableMatrix.setEl(rowIndex, columnIndex, strings[columnIndex].toString());
+            tableMatrix.setEl(rowIndex, columnIndex, strings[columnIndex - columnStart].toString());
+        }
+        return this;
+    }
+
+    public TeXTableObject row(int rowIndex, String... strings) {
+        int columnCount = Math.min(tableMatrix.getColumnCount(), strings.length);
+        for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+            tableMatrix.setEl(rowIndex, columnIndex, strings[columnIndex]);
+        }
+        return this;
+    }
+
+    public TeXTableObject row(int rowIndex, int columnStart, String... strings) {
+        int columnCount = Math.min(tableMatrix.getColumnCount() - columnStart, strings.length) + 1;
+        for (int columnIndex = columnStart; columnIndex < columnCount; columnIndex++) {
+            tableMatrix.setEl(rowIndex, columnIndex, strings[columnIndex - columnStart]);
+        }
+        return this;
+    }
+
+    public TeXTableObject row(int rowIndex, int columnStart, int columnEnd, String... strings) {
+        columnEnd++;
+        for (int columnIndex = columnStart; columnIndex < columnEnd; columnIndex++) {
+            tableMatrix.setEl(rowIndex, columnIndex, strings[columnIndex - columnStart]);
         }
         return this;
     }
@@ -100,9 +125,9 @@ public class TeXTableObject implements ITeXObject {
     }
 
     public TeXTableObject row(int rowIndex, int columnStart, IVectorProvider set) {
-        int columnCount = Math.min(tableMatrix.getColumnCount() - columnStart, set.getSize());
+        int columnCount = Math.min(tableMatrix.getColumnCount() - columnStart, set.getSize()) + 1;
         for (int columnIndex = columnStart; columnIndex < columnCount; columnIndex++) {
-            tableMatrix.setEl(rowIndex, columnIndex, set.get(columnIndex).toString());
+            tableMatrix.setEl(rowIndex, columnIndex, set.get(columnIndex - columnStart).toString());
         }
         return this;
     }
@@ -110,7 +135,7 @@ public class TeXTableObject implements ITeXObject {
     public TeXTableObject row(int rowIndex, int columnStart, int columnEnd, IVectorProvider set) {
         columnEnd++;
         for (int columnIndex = columnStart; columnIndex < columnEnd; columnIndex++) {
-            tableMatrix.setEl(rowIndex, columnIndex, set.get(columnIndex).toString());
+            tableMatrix.setEl(rowIndex, columnIndex, set.get(columnIndex - columnStart).toString());
         }
         return this;
     }
@@ -127,9 +152,10 @@ public class TeXTableObject implements ITeXObject {
     }
 
     public TeXTableObject row(int rowIndex, int columnStart, IDoubleVectorProvider set) {
-        int columnCount = Math.min(tableMatrix.getColumnCount() - columnStart, set.getSize());
+        int columnCount = Math.min(tableMatrix.getColumnCount() - columnStart, set.getSize()) + 1;
+        Log.log(Log.debugIndex, set);
         for (int columnIndex = columnStart; columnIndex < columnCount; columnIndex++) {
-            tableMatrix.setEl(rowIndex, columnIndex, numberFormat.format(set.get(columnIndex)));
+            tableMatrix.setEl(rowIndex, columnIndex, numberFormat.format(set.get(columnIndex - columnStart)));
         }
         return this;
     }
@@ -137,7 +163,7 @@ public class TeXTableObject implements ITeXObject {
     public TeXTableObject row(int rowIndex, int columnStart, int columnEnd, IDoubleVectorProvider set) {
         columnEnd++;
         for (int columnIndex = columnStart; columnIndex < columnEnd; columnIndex++) {
-            tableMatrix.setEl(rowIndex, columnIndex, numberFormat.format(set.get(columnIndex)));
+            tableMatrix.setEl(rowIndex, columnIndex, numberFormat.format(set.get(columnIndex - columnStart)));
         }
         return this;
     }
@@ -148,7 +174,7 @@ public class TeXTableObject implements ITeXObject {
     //region Заповнення стовпчиків
 
     //region Заповнення стовпчиків масивом рядків
-    public TeXTableObject column(int columnIndex, Object... strings) {
+    public TeXTableObject column(int columnIndex, Object[] strings) {
         int rowCount = Math.min(tableMatrix.getRowCount(), strings.length);
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             tableMatrix.setEl(rowIndex, columnIndex, strings[rowIndex].toString());
@@ -156,37 +182,60 @@ public class TeXTableObject implements ITeXObject {
         return this;
     }
 
-    public TeXTableObject column(int columnIndex, int rowStart, Object... strings) {
-        int rowCount = Math.min(tableMatrix.getRowCount() - rowStart, strings.length);
+    public TeXTableObject column(int columnIndex, int rowStart, Object[] strings) {
+        int rowCount = Math.min(tableMatrix.getRowCount() - rowStart, strings.length) + 1;
         for (int rowIndex = rowStart; rowIndex < rowCount; rowIndex++) {
-            tableMatrix.setEl(rowIndex, columnIndex, strings[rowIndex].toString());
+            tableMatrix.setEl(rowIndex, columnIndex, strings[rowIndex - rowStart].toString());
         }
         return this;
     }
 
-    public TeXTableObject column(int columnIndex, int rowStart, int rowEnd, Object... strings) {
+    public TeXTableObject column(int columnIndex, int rowStart, int rowEnd, Object[] strings) {
         rowEnd++;
         for (int rowIndex = rowStart; rowIndex < rowEnd; rowIndex++) {
-            tableMatrix.setEl(rowIndex, columnIndex, strings[rowIndex].toString());
+            tableMatrix.setEl(rowIndex, columnIndex, strings[rowIndex - rowStart].toString());
+        }
+        return this;
+    }
+
+    public TeXTableObject column(int columnIndex, String... strings) {
+        int rowCount = Math.min(tableMatrix.getRowCount(), strings.length);
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            tableMatrix.setEl(rowIndex, columnIndex, strings[rowIndex]);
+        }
+        return this;
+    }
+
+    public TeXTableObject column(int columnIndex, int rowStart, String... strings) {
+        int rowCount = Math.min(tableMatrix.getRowCount() - rowStart, strings.length) + 1;
+        for (int rowIndex = rowStart; rowIndex < rowCount; rowIndex++) {
+            tableMatrix.setEl(rowIndex, columnIndex, strings[rowIndex - rowStart]);
+        }
+        return this;
+    }
+
+    public TeXTableObject column(int columnIndex, int rowStart, int rowEnd, String... strings) {
+        rowEnd++;
+        for (int rowIndex = rowStart; rowIndex < rowEnd; rowIndex++) {
+            tableMatrix.setEl(rowIndex, columnIndex, strings[rowIndex - rowStart]);
         }
         return this;
     }
     //endregion
 
-
     //region Заповнення стовпчиків векторами зі строками
     public TeXTableObject column(int columnIndex, IVectorProvider strings) {
         int rowCount = Math.min(tableMatrix.getRowCount(), strings.getSize());
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-            tableMatrix.setEl(rowIndex, columnIndex, strings.get(columnIndex).toString());
+            tableMatrix.setEl(rowIndex, columnIndex, strings.get(rowIndex).toString());
         }
         return this;
     }
 
     public TeXTableObject column(int columnIndex, int rowStart, IVectorProvider strings) {
-        int rowCount = Math.min(tableMatrix.getRowCount() - rowStart, strings.getSize());
+        int rowCount = Math.min(tableMatrix.getRowCount() - rowStart, strings.getSize()) + 1;
         for (int rowIndex = rowStart; rowIndex < rowCount; rowIndex++) {
-            tableMatrix.setEl(rowIndex, columnIndex, strings.get(columnIndex).toString());
+            tableMatrix.setEl(rowIndex, columnIndex, strings.get(rowIndex - rowStart).toString());
         }
         return this;
     }
@@ -194,7 +243,7 @@ public class TeXTableObject implements ITeXObject {
     public TeXTableObject column(int columnIndex, int rowStart, int rowEnd, IVectorProvider strings) {
         rowEnd++;
         for (int rowIndex = rowStart; rowIndex < rowEnd; rowIndex++) {
-            tableMatrix.setEl(rowIndex, columnIndex, strings.get(columnIndex).toString());
+            tableMatrix.setEl(rowIndex, columnIndex, strings.get(rowIndex - rowStart).toString());
         }
         return this;
     }
@@ -205,15 +254,15 @@ public class TeXTableObject implements ITeXObject {
     public TeXTableObject column(int columnIndex, IDoubleVectorProvider set) {
         int rowCount = Math.min(tableMatrix.getColumnCount(), set.getSize());
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-            tableMatrix.setEl(rowIndex, columnIndex, numberFormat.format(set.get(columnIndex)));
+            tableMatrix.setEl(rowIndex, columnIndex, numberFormat.format(set.get(rowIndex)));
         }
         return this;
     }
 
     public TeXTableObject column(int columnIndex, int rowStart, IDoubleVectorProvider set) {
-        int rowCount = Math.min(tableMatrix.getColumnCount() - rowStart, set.getSize());
+        int rowCount = Math.min(tableMatrix.getColumnCount() - rowStart, set.getSize()) + 1;
         for (int rowIndex = rowStart; rowIndex < rowCount; rowIndex++) {
-            tableMatrix.setEl(rowIndex, columnIndex, numberFormat.format(set.get(columnIndex)));
+            tableMatrix.setEl(rowIndex, columnIndex, numberFormat.format(set.get(rowIndex - rowStart)));
         }
         return this;
     }
@@ -221,7 +270,7 @@ public class TeXTableObject implements ITeXObject {
     public TeXTableObject column(int columnIndex, int rowStart, int rowEnd, IDoubleVectorProvider set) {
         rowEnd++;
         for (int rowIndex = rowStart; rowIndex < rowEnd; rowIndex++) {
-            tableMatrix.setEl(rowIndex, columnIndex, numberFormat.format(set.get(columnIndex)));
+            tableMatrix.setEl(rowIndex, columnIndex, numberFormat.format(set.get(rowIndex - rowStart)));
         }
         return this;
     }

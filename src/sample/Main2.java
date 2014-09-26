@@ -19,7 +19,6 @@ public class Main2 {
         Fraction temp = new Fraction(-0.155f);
         System.out.println(temp);
         System.out.println(temp.doubleValue());
-
         TeXDocumentManager manager = new TeXDocumentManager(System.out);
         TeXEventWriter out = manager.getEventWriter();
         TeXTableObject table = new TeXTableObject(3, 3).row(0, "t", "t", "t")

@@ -19,16 +19,17 @@ public class TeXEventWriter {
     private NumberFormat numberFormat;
 
     private Stack<String> environmentStack;
-    //Внутрішні флаги3
+
+    //region Флаги
     /**
      * Флаг відповідає за те, чи потрібний символ переходу на нову лінію
      */
     private boolean isNeedNewline;
-    //Зовнішні флаги
     /**
      * Флаг, який вказує на те, чи додавати \hline після кожного рядка в таблиці
      */
     private boolean isAddHline;
+    //endregion
 
     public TeXEventWriter(PrintStream out, NumberFormat numberFormat) {
         this.out = out;
@@ -50,7 +51,7 @@ public class TeXEventWriter {
         return numberFormat;
     }
 
-    //Загальні команди
+    //region Створення команд
     public TeXEventWriter comm(String comm) {
         generateTabular();
         out.print("\\");
@@ -120,8 +121,9 @@ public class TeXEventWriter {
         }
         return this;
     }
+    //endregion
 
-    //Розділ окремих команд
+    //region Окремі команди
     public TeXEventWriter usePackage(String name) {
         return commP("usepackage", name);
     }
@@ -149,8 +151,9 @@ public class TeXEventWriter {
     public TeXEventWriter input(String name) {
         return icommP("input", name);
     }
+    //endregion
 
-    //Розділ оточень
+    //region Створення оточень
     public TeXEventWriter openEnvironment(String environment) {
         generateTabular();
         out.print("\\begin{");
@@ -207,8 +210,9 @@ public class TeXEventWriter {
         out.println("}");
         return this;
     }
+    //endregion
 
-    //Стандартні оточення
+    //region Окремі оточення
     public TeXEventWriter center() {
         openEnvironment("center");
         return this;
@@ -268,8 +272,9 @@ public class TeXEventWriter {
         openEnvironment("description");
         return this;
     }
+    //endregion
 
-    //Розділ введення нового тексту
+    //region Додавання нового тексту з нового рядку
     public TeXEventWriter text(String x) {
         generateTabular();
         append(x);
@@ -381,8 +386,9 @@ public class TeXEventWriter {
         isNeedNewline = true;
         return this;
     }
+    //endregion
 
-    //Розділ додавання тексту
+    //region Додавання тексту без табулювання
     public TeXEventWriter append(String text) {
         out.print(text);
         return this;
@@ -491,63 +497,9 @@ public class TeXEventWriter {
         }
         return this;
     }
+    //endregion
 
-    //Математичний введення
-    public TeXEventWriter matrix(DoubleMatrix m) {
-        matrix(m, "A", generateHeader("x", m.getColumnCount()), generateRows("x", m.getRowCount()));
-        return this;
-    }
-
-    public TeXEventWriter matrix(DoubleMatrix m, String name) {
-        matrix(m, name, generateHeader("x", m.getColumnCount()), generateRows("x", m.getRowCount()));
-        return this;
-    }
-
-    public TeXEventWriter matrix(DoubleMatrix m, String name, String header) {
-        matrix(m, name, header, generateRows("x", m.getRowCount()));
-        return this;
-    }
-
-    public TeXEventWriter matrix(DoubleMatrix m, String name, String header, String... rowsHeader) {
-        int rowCount = m.getRowCount();
-        int columnCount = m.getColumnCount();
-        if (rowsHeader.length != rowCount) {
-            throw new MatrixSizeException(MatrixSizeException.MATRIX_SIZE_MISMATCH);
-        }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("|c||");
-        for (int i = 0; i < columnCount; i++) {
-            sb.append("c|");
-        }
-        openEnvironment("tabular", null, sb.toString());
-        if (isAddHline) {
-            hline();
-        }
-        text(name);
-        append("&");
-        append(header);
-        newline();
-        hline();
-        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-            text(rowsHeader[rowIndex]);
-            append("&");
-            for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
-                append(getNumberFormat().format(m.get(rowIndex, columnIndex)));
-                if (columnCount != columnIndex + 1)
-                    append("&");
-            }
-            newline();
-            if (isAddHline) {
-                hline();
-            }
-        }
-        closeEnvironment();
-        newline();
-        return this;
-    }
-
-
+    //region Команди форматування таблиці
     public TeXEventWriter hline() {
         return text("\\hline");
     }
@@ -559,9 +511,9 @@ public class TeXEventWriter {
         append(end);
         return append('}');
     }
+    //endregion
 
-
-    //Допоміжні внутрішні функції
+    //region Внутрішнє форматування
     private TeXEventWriter generateTabular() {
         if (isNeedNewline) {
             out.println();
@@ -584,29 +536,9 @@ public class TeXEventWriter {
         }
         return this;
     }
+    //endregion
 
-    //Допоміжні зовнішні функції
-    public String[] generateRows(String t, int count) {
-        String[] result = new String[count];
-        for (int i = 0; i < count; i++) {
-            result[i] = "$" + t + "_{" + (i + 1) + "}$";
-        }
-        return result;
-    }
-
-    public String generateHeader(String t, int count) {
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < count; i++) {
-            builder.append("$");
-            builder.append(t);
-            builder.append("_{");
-            builder.append(i + 1);
-            builder.append("}$&");
-        }
-        Util.removeLastChar(builder);
-        return builder.toString();
-    }
-
+    //region Операція над оточеннями
     public String closeNamedEnvironment() {
         generateTabularm1();
         String environment = environmentStack.pop();
@@ -623,4 +555,5 @@ public class TeXEventWriter {
     protected Stack<String> getEnvironmentStack() {
         return environmentStack;
     }
+    //endregion
 }

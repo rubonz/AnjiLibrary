@@ -1,6 +1,12 @@
 package sample;
 
+import com.darkempire.anji.document.tex.TeXDocumentManager;
+import com.darkempire.anji.document.tex.TeXEventWriter;
+import com.darkempire.anji.document.tex.TeXTableObject;
+import com.darkempire.anji.document.tex.util.TeXTableUtil;
+import com.darkempire.anji.log.Log;
 import com.darkempire.math.struct.matrix.DoubleFixedMatrix;
+import com.darkempire.math.struct.set.FuzzyNumberSet;
 
 /**
  * Create in 13:05
@@ -8,9 +14,16 @@ import com.darkempire.math.struct.matrix.DoubleFixedMatrix;
  */
 public class Test1 {
     public static void main(String[] args) {
-        DoubleFixedMatrix matrix = DoubleFixedMatrix.createInstance(3, 3, new double[]{-4, 3, 6, 5, -10, 4, -9, -1, 1});
+        //DoubleFixedMatrix matrix = DoubleFixedMatrix.createInstance(3, 3, new double[]{-4, 3, 6, 5, -10, 4, -9, -1, 1});
+        TeXDocumentManager documentManager = new TeXDocumentManager(System.out);
+        Log.removeConsoleLog();
+        Log.setHidePrefix(Log.debugIndex, true);
+        Test1 test = new Test1();
+        test.task1(new FuzzyNumberSet(new double[]{1, 0.9, 0.3, 0.9, 0.1, 0.1, 0.4, 0.1, 0.8, 0.4, 0.5, 0}),
+                new FuzzyNumberSet(new double[]{0.2, 0.6, 0.2, 0.6, 0.7, 0, 0.3, 0.4, 0.6, 0.9, 0.7, 0.6}), documentManager.getEventWriter());
     }
-    /*public void task1(FuzzyNumberSet setA, FuzzyNumberSet setB, TeXEventWriter out) {
+
+    public void task1(FuzzyNumberSet setA, FuzzyNumberSet setB, TeXEventWriter out) {
         out.center();
         out.text("Завдання №1");
         out.closeEnvironment();
@@ -24,21 +37,14 @@ public class Test1 {
         FuzzyNumberSet orAB = setA.or(setB);
         FuzzyNumberSet andAb = setA.and(setB);
         FuzzyNumberSet orunionABB = unionAB.or(setB);
-        out.createTabular(1 + setA.getSize(), true).row("X", out.generateHeader("x", setA.getSize()))
-                .row("$A$", setA)
-                .row("$B$", setB)
-                .row("$A\\cup B$", unionAB)
-                .row("$A\\cap B$", interAB)
-                .row("$\\overline A$", notA)
-                .row("$\\overline B$", notB)
-                .row("$A\\setminus B$", setminusAB)
-                .row("$A\\overline\\cup B$", orAB)
-                .row("$A\\overline\\cap B$", andAb)
-                .row("$\\cb{A\\cup B}\\overline\\cup B$", orunionABB).closeTabular();
+        TeXTableObject table = TeXTableUtil.matrix("X", TeXTableUtil.generateHeader("x", setA.getSize()), new String[]{"$A$", "$B$", "$A\\cup B$", "$A\\cap B$", "$\\overline A$", "$\\overline B$", "$A\\setminus B$",
+                        "$A\\overline\\cup B$", "$A\\overline\\cap B$", "$\\cb{A\\cup B}\\overline\\cup B$"},
+                setA, setB, unionAB, interAB, notA, notB, setminusAB, orAB, andAb, orunionABB);
+        table.write(out);
         out.closeEnvironment();
     }
 
-    public void task2(FuzzyNumberSet setA, FuzzyNumberSet setB, TeXEventWriter out, double al2, double... als) {
+    /*public void task2(FuzzyNumberSet setA, FuzzyNumberSet setB, TeXEventWriter out, double al2, double... als) {
         out.center();
         out.text("Завдання №2");
         out.closeEnvironment();
