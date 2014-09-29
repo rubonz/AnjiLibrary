@@ -60,7 +60,7 @@ public class IntegerField extends TextField {
 
     private void parse() {
         try {
-            Integer value = (Integer) getNumberFormat().parse(getText());
+            Integer value = getNumberFormat().parse(getText()).intValue();
             setValue(value);
         } catch (ParseException | IllegalArgumentException e) {
             setText(getNumberFormat().format(getValue()));

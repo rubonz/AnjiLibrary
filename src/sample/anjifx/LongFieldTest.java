@@ -1,5 +1,6 @@
 package sample.anjifx;
 
+import com.darkempire.anjifx.beans.property.AnjiIntegerProperty;
 import com.darkempire.anjifx.beans.property.AnjiLongProperty;
 import com.darkempire.anjifx.dialog.DialogUtil;
 import javafx.application.Application;
@@ -12,7 +13,7 @@ public class LongFieldTest extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        AnjiLongProperty property = new AnjiLongProperty("Test", 20);
+        AnjiIntegerProperty property = new AnjiIntegerProperty("Test", 20);
         DialogUtil.createDialog(property).show();
         primaryStage.close();
     }

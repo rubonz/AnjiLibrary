@@ -68,7 +68,7 @@ public class IntegerFieldSkin extends SkinBase<IntegerField> {
 
     private void parse() {
         try {
-            Integer value = (Integer) control.getNumberFormat().parse(textField.getText());
+            Integer value = control.getNumberFormat().parse(textField.getText()).intValue();
             control.setValue(value);
         } catch (ParseException | IllegalArgumentException e) {
             textField.setText(control.getNumberFormat().format(control.getValue()));

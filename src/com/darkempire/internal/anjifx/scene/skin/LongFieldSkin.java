@@ -67,7 +67,7 @@ public class LongFieldSkin extends SkinBase<LongField> {
 
     private void parse() {
         try {
-            Long value = (Long) control.getNumberFormat().parse(textField.getText());
+            Long value = control.getNumberFormat().parse(textField.getText()).longValue();
             control.setValue(value);
         } catch (ParseException | IllegalArgumentException e) {
             textField.setText(control.getNumberFormat().format(control.getValue()));

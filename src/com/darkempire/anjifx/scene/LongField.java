@@ -61,7 +61,7 @@ public class LongField extends TextField {
 
     private void parse() {
         try {
-            Long value = (Long) getNumberFormat().parse(getText());
+            Long value = getNumberFormat().parse(getText()).longValue();
             setValue(value);
         } catch (ParseException | IllegalArgumentException e) {
             setText(getNumberFormat().format(getValue()));
