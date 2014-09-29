@@ -1,6 +1,6 @@
 package com.darkempire.math.struct.function.interfaces;
 
-import com.darkempire.math.struct.vector.ILinearVectorProvider;
+import com.darkempire.math.struct.vector.INumberVectorProvider;
 
 /**
  * Create in 23:42
@@ -8,5 +8,5 @@ import com.darkempire.math.struct.vector.ILinearVectorProvider;
  */
 @FunctionalInterface
 public interface FLinearVectorAndIndexToLinear<T extends com.darkempire.math.struct.Number<T>> {
-    public T calc(ILinearVectorProvider<T> provider, int index);
+    public T calc(INumberVectorProvider<T> provider, int index);
 }

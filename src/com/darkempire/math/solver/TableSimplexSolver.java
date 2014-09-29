@@ -53,7 +53,7 @@ public class TableSimplexSolver {
         }
     }
 
-    public LinearVector<Fraction> solve(SimpleLinearOptimizeTask task) {
+    public NumberVector<Fraction> solve(SimpleLinearOptimizeTask task) {
         //Створення нового завдання
         if (enableLog) {
             Log.log(Log.debugIndex, "Початкове завдання:\n", task);
@@ -121,7 +121,7 @@ public class TableSimplexSolver {
                 tempCoefs[i] = new FractionWithInfinity((float) coefs[i]);
             }
         }
-        LinearVector<FractionWithInfinity> coefVector = new LinearFixedVector<>(tempCoefs);
+        NumberVector<FractionWithInfinity> coefVector = new NumberFixedVector<>(tempCoefs);
         int conditionalCount = conditionalList.size();
         //Складаємо симплекс таблицю
         NumberMatrix<FractionWithInfinity> simplexMatrix = NumberFixedMatrix.createInstance(conditionalCount, variableCount + 1, new FractionWithInfinity[conditionalCount * (variableCount + 1)]);
@@ -163,8 +163,8 @@ public class TableSimplexSolver {
         if (result == 2) {//Якщо розв’язок знайти неможливо
             return null;
         }
-        LinearVector<Fraction> resultVector = new LinearFixedVector<Fraction>(new Fraction[variableCount]);
-        LinearVector<FractionWithInfinity> resultMatrixVector = simplexMatrix.column(0);
+        NumberVector<Fraction> resultVector = new NumberFixedVector<Fraction>(new Fraction[variableCount]);
+        NumberVector<FractionWithInfinity> resultMatrixVector = simplexMatrix.column(0);
         for (int i = 0; i < conditionalCount; i++) {
             resultVector.set(basisVariableIndex.get(i), resultMatrixVector.get(i).getDoublePart());
         }
@@ -179,13 +179,13 @@ public class TableSimplexSolver {
         return resultVector;
     }
 
-    private MatrixIndex findBaseElement(LinearVector<FractionWithInfinity> targetFunction, NumberMatrix<FractionWithInfinity> simplexMatrix, IndexVector basisVariables, int variableCount, int conditionalCount, boolean isMaximize) {
+    private MatrixIndex findBaseElement(NumberVector<FractionWithInfinity> targetFunction, NumberMatrix<FractionWithInfinity> simplexMatrix, IndexVector basisVariables, int variableCount, int conditionalCount, boolean isMaximize) {
         if (enableLog) {
             Log.log(Log.debugIndex, "Базисні змінні:", basisVariables);
             Log.log(Log.debugIndex, "Починаємо шукати базовий елемент");
         }
-        LinearVector<FractionWithInfinity> estimationVector = new LinearFixedVector<>(new FractionWithInfinity[variableCount]);
-        LinearVector<FractionWithInfinity> coefVector = new LinearFixedVector<>(new FractionWithInfinity[conditionalCount]);
+        NumberVector<FractionWithInfinity> estimationVector = new NumberFixedVector<>(new FractionWithInfinity[variableCount]);
+        NumberVector<FractionWithInfinity> coefVector = new NumberFixedVector<>(new FractionWithInfinity[conditionalCount]);
         //Ініціалізуємо вектор коефіцієнтів для базових змінних
         for (int i = 0; i < conditionalCount; i++) {
             coefVector.set(i, targetFunction.get(basisVariables.get(i)));
@@ -237,7 +237,7 @@ public class TableSimplexSolver {
             }
         }
         //Побудуємо вектор оцінок для рядків
-        LinearVector<FractionWithInfinity> rowEstimationVector = new LinearFixedVector<FractionWithInfinity>(new FractionWithInfinity[conditionalCount]);
+        NumberVector<FractionWithInfinity> rowEstimationVector = new NumberFixedVector<FractionWithInfinity>(new FractionWithInfinity[conditionalCount]);
         for (int i = 0; i < conditionalCount; i++) {
             FractionWithInfinity temp = simplexMatrix.get(i, columnIndex + 1);
             if (temp.getDoublePart().getNumerator() > 0 || temp.getM().getNumerator() > 0) {
@@ -284,7 +284,7 @@ public class TableSimplexSolver {
      * @param isMaximize
      * @return Результат ітерації: 0 - знайдений оптимальний розв’язок, 1 - потрібно продовжувати, 2 - розв’язок знайти неможливо
      */
-    private byte simplexMethodIterate(LinearVector<FractionWithInfinity> targetFunction, NumberMatrix<FractionWithInfinity> simplexMatrix, IndexVector basisVariables, int variableCount, int conditionalCount, boolean isMaximize) {
+    private byte simplexMethodIterate(NumberVector<FractionWithInfinity> targetFunction, NumberMatrix<FractionWithInfinity> simplexMatrix, IndexVector basisVariables, int variableCount, int conditionalCount, boolean isMaximize) {
         MatrixIndex newIndex = findBaseElement(targetFunction, simplexMatrix, basisVariables, variableCount, conditionalCount, isMaximize);
         if (newIndex.getColumnIndex() == -1) {
             return 0;

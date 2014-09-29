@@ -9,15 +9,15 @@ import com.darkempire.math.struct.function.interfaces.FLinearVectorAndIndexToLin
  * Create in 10:42
  * Created by siredvin on 25.04.14.
  */
-public abstract class LinearVector<T extends com.darkempire.math.struct.Number<T>> implements LinearCalcable<LinearVector<T>>, ILinearVectorProvider<T> {
+public abstract class NumberVector<T extends com.darkempire.math.struct.Number<T>> implements LinearCalcable<NumberVector<T>>, INumberVectorProvider<T> {
     //region Сеттери
     public abstract void set(int index, T value);
     //endregion
 
     //region Отримання підвекторів
-    public abstract LinearVector<T> subvector(int length);
+    public abstract NumberVector<T> subvector(int length);
 
-    public abstract LinearVector<T> subvector(int startIndex, int length);
+    public abstract NumberVector<T> subvector(int startIndex, int length);
     //endregion
 
     //region Геттери
@@ -28,10 +28,10 @@ public abstract class LinearVector<T extends com.darkempire.math.struct.Number<T
     public abstract int getSize();
     //endregion
 
-    public abstract T scalar(LinearVector<T> vector);
+    public abstract T scalar(NumberVector<T> vector);
 
     //region Заповнення
-    public LinearVector fill(T value) {
+    public NumberVector fill(T value) {
         int size = getSize();
         for (int i = 0; i < size; i++) {
             set(i, value.deepcopy());
@@ -39,7 +39,7 @@ public abstract class LinearVector<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public LinearVector<T> fill(FIndexToLinear<T> function) {
+    public NumberVector<T> fill(FIndexToLinear<T> function) {
         int size = getSize();
         for (int i = 0; i < size; i++) {
             set(i, function.calc(i));
@@ -47,7 +47,7 @@ public abstract class LinearVector<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public LinearVector<T> fill(FLinearVectorAndIndexToLinear<T> function) {
+    public NumberVector<T> fill(FLinearVectorAndIndexToLinear<T> function) {
         int size = getSize();
         for (int i = 0; i < size; i++) {
             set(i, function.calc(this, i));
@@ -57,7 +57,7 @@ public abstract class LinearVector<T extends com.darkempire.math.struct.Number<T
     //endregion
 
     //region Заповнення частин векторів
-    public LinearVector<T> fillSubvector(int start, int end, T value) {
+    public NumberVector<T> fillSubvector(int start, int end, T value) {
         end++;
         for (int i = start; i < end; i++) {
             set(i, value.deepcopy());
@@ -65,7 +65,7 @@ public abstract class LinearVector<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public LinearVector<T> fillSubvector(int start, int end, FIndexToLinear<T> function) {
+    public NumberVector<T> fillSubvector(int start, int end, FIndexToLinear<T> function) {
         end++;
         for (int i = start; i < end; i++) {
             set(i, function.calc(i));
@@ -73,7 +73,7 @@ public abstract class LinearVector<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public LinearVector<T> fillSubvector(int start, int end, FLinearVectorAndIndexToLinear<T> function) {
+    public NumberVector<T> fillSubvector(int start, int end, FLinearVectorAndIndexToLinear<T> function) {
         end++;
         for (int i = start; i < end; i++) {
             set(i, function.calc(this, i));
@@ -87,8 +87,8 @@ public abstract class LinearVector<T extends com.darkempire.math.struct.Number<T
     public boolean equals(Object o) {
         if (o == this)
             return true;
-        if (o instanceof LinearVector) {
-            LinearVector vector = (LinearVector) o;
+        if (o instanceof NumberVector) {
+            NumberVector vector = (NumberVector) o;
             if (getSize() != vector.getSize())
                 return false;
             int size = getSize();
@@ -116,6 +116,6 @@ public abstract class LinearVector<T extends com.darkempire.math.struct.Number<T
     }
 
     @Override
-    public abstract LinearVector clone();
+    public abstract NumberVector clone();
     //endregion
 }

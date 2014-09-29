@@ -8,7 +8,7 @@ import com.darkempire.math.struct.matrix.NumberMatrix;
  * Created by siredvin on 25.04.14.
  * За замовучанням створюються нові ResizeLinearVector
  */
-public abstract class LinearMatrixVector<T extends com.darkempire.math.struct.Number<T>> extends LinearVector<T> {
+public abstract class NumberMatrixVector<T extends com.darkempire.math.struct.Number<T>> extends NumberVector<T> {
     //region Сеттери
     @Override
     public abstract void set(int index, T value);
@@ -23,7 +23,7 @@ public abstract class LinearMatrixVector<T extends com.darkempire.math.struct.Nu
     //endregion
 
     @Override
-    public T scalar(LinearVector<T> vector) {
+    public T scalar(NumberVector<T> vector) {
         int size = Math.min(getSize(), vector.getSize());
         T temp = get(0).multiply(vector.get(0));
         for (int i = 1; i < size; i++) {
@@ -34,7 +34,7 @@ public abstract class LinearMatrixVector<T extends com.darkempire.math.struct.Nu
 
     //region Арифметичні операції з присвоєнням
     @Override
-    public LinearVector<T> inegate() {
+    public NumberVector<T> inegate() {
         int size = getSize();
         for (int i = 0; i < size; i++) {
             get(i).inegate();
@@ -43,7 +43,7 @@ public abstract class LinearMatrixVector<T extends com.darkempire.math.struct.Nu
     }
 
     @Override
-    public LinearVector<T> iadd(LinearVector<T> vector) {
+    public NumberVector<T> iadd(NumberVector<T> vector) {
         int size = Math.max(getSize(), vector.getSize());
         for (int i = 0; i < size; i++) {
             get(i).iadd(vector.get(i));
@@ -52,7 +52,7 @@ public abstract class LinearMatrixVector<T extends com.darkempire.math.struct.Nu
     }
 
     @Override
-    public LinearVector<T> isubtract(LinearVector<T> vector) {
+    public NumberVector<T> isubtract(NumberVector<T> vector) {
         int size = Math.max(getSize(), vector.getSize());
         for (int i = 0; i < size; i++) {
             get(i).isubtract(vector.get(i));
@@ -63,41 +63,41 @@ public abstract class LinearMatrixVector<T extends com.darkempire.math.struct.Nu
 
     //region Арифметичні операції
     @Override
-    public LinearVector<T> add(LinearVector<T> vector) {
+    public NumberVector<T> add(NumberVector<T> vector) {
         int size = Math.max(getSize(), vector.getSize());
         T[] p = (T[]) new Number[size];
         for (int i = 0; i < size; i++) {
             p[i] = get(i).add(vector.get(i));
         }
-        return new LinearResizeVector<>(p);
+        return new NumberResizeVector<>(p);
     }
 
     @Override
-    public LinearVector<T> subtract(LinearVector<T> vector) {
+    public NumberVector<T> subtract(NumberVector<T> vector) {
         int size = Math.max(getSize(), vector.getSize());
         T[] p = (T[]) new Number[size];
         for (int i = 0; i < size; i++) {
             p[i] = get(i).subtract(vector.get(i));
         }
-        return new LinearResizeVector<T>(p);
+        return new NumberResizeVector<T>(p);
     }
 
     @Override
-    public LinearVector<T> negate() {
+    public NumberVector<T> negate() {
         T[] p = (T[]) new Number[getSize()];
         for (int i = 0; i < p.length; i++) {
             p[i] = get(i).negate();
         }
-        return new LinearResizeVector<>(p);
+        return new NumberResizeVector<>(p);
     }
     //endregion
 
-    private static class LinearMatrixRow<T extends Number<T>> extends LinearMatrixVector<T> {
+    private static class NumberMatrixRow<T extends Number<T>> extends NumberMatrixVector<T> {
         private NumberMatrix<T> matrix;
         private int rowIndex;
 
         //region Конструктор
-        private LinearMatrixRow(int rowIndex, NumberMatrix<T> matrix) {
+        private NumberMatrixRow(int rowIndex, NumberMatrix<T> matrix) {
             this.matrix = matrix;
             this.rowIndex = rowIndex;
         }
@@ -112,22 +112,22 @@ public abstract class LinearMatrixVector<T extends com.darkempire.math.struct.Nu
 
         //region Отримання підвекторів
         @Override
-        public LinearVector<T> subvector(int length) {
+        public NumberVector<T> subvector(int length) {
             Number[] arr = new Number[length];
             for (int i = 0; i < length; i++) {
                 arr[i] = get(i);
             }
-            return new LinearResizeVector<T>((T[]) arr);
+            return new NumberResizeVector<T>((T[]) arr);
         }
 
         @Override
-        public LinearVector<T> subvector(int startIndex, int length) {
+        public NumberVector<T> subvector(int startIndex, int length) {
             Number[] arr = new Number[length];
             int max = startIndex + length;
             for (int i = startIndex; i < max; i++) {
                 arr[i] = get(i);
             }
-            return new LinearResizeVector<T>((T[]) arr);
+            return new NumberResizeVector<T>((T[]) arr);
         }
         //endregion
 
@@ -144,22 +144,22 @@ public abstract class LinearMatrixVector<T extends com.darkempire.math.struct.Nu
         //endregion
 
         @Override
-        public LinearVector clone() {
+        public NumberVector clone() {
             int length = matrix.getColumnCount();
             Number[] arr = new Number[length];
             for (int i = 0; i < length; i++) {
                 arr[i] = get(i).deepcopy();
             }
-            return new LinearResizeVector<T>((T[]) arr);
+            return new NumberResizeVector<T>((T[]) arr);
         }
     }
 
-    private static class LinearMatrixColumn<T extends Number<T>> extends LinearMatrixVector<T> {
+    private static class NumberMatrixColumn<T extends Number<T>> extends NumberMatrixVector<T> {
         private NumberMatrix<T> matrix;
         private int columnIndex;
 
         //region Конструктор
-        private LinearMatrixColumn(int columnIndex, NumberMatrix<T> matrix) {
+        private NumberMatrixColumn(int columnIndex, NumberMatrix<T> matrix) {
             this.matrix = matrix;
             this.columnIndex = columnIndex;
         }
@@ -174,22 +174,22 @@ public abstract class LinearMatrixVector<T extends com.darkempire.math.struct.Nu
 
         //region Отримання підвекторів
         @Override
-        public LinearVector<T> subvector(int length) {
+        public NumberVector<T> subvector(int length) {
             Number[] arr = new Number[length];
             for (int i = 0; i < length; i++) {
                 arr[i] = get(i);
             }
-            return new LinearResizeVector<T>((T[]) arr);
+            return new NumberResizeVector<T>((T[]) arr);
         }
 
         @Override
-        public LinearVector<T> subvector(int startIndex, int length) {
+        public NumberVector<T> subvector(int startIndex, int length) {
             Number[] arr = new Number[length];
             int max = startIndex + length;
             for (int i = startIndex; i < max; i++) {
                 arr[i] = get(i);
             }
-            return new LinearResizeVector<T>((T[]) arr);
+            return new NumberResizeVector<T>((T[]) arr);
         }
         //endregion
 
@@ -206,23 +206,23 @@ public abstract class LinearMatrixVector<T extends com.darkempire.math.struct.Nu
         //endregion
 
         @Override
-        public LinearVector clone() {
+        public NumberVector clone() {
             int length = matrix.getRowCount();
             Number[] arr = new Number[length];
             for (int i = 0; i < length; i++) {
                 arr[i] = get(i).deepcopy();
             }
-            return new LinearResizeVector<T>((T[]) arr);
+            return new NumberResizeVector<T>((T[]) arr);
         }
     }
 
     //region Отримання частин
-    public static <T extends Number<T>> LinearVector<T> row(int rowIndex, NumberMatrix<T> matrix) {
-        return new LinearMatrixRow<T>(rowIndex, matrix);
+    public static <T extends Number<T>> NumberVector<T> row(int rowIndex, NumberMatrix<T> matrix) {
+        return new NumberMatrixRow<T>(rowIndex, matrix);
     }
 
-    public static <T extends Number<T>> LinearVector<T> column(int columnIndex, NumberMatrix<T> matrix) {
-        return new LinearMatrixColumn<T>(columnIndex, matrix);
+    public static <T extends Number<T>> NumberVector<T> column(int columnIndex, NumberMatrix<T> matrix) {
+        return new NumberMatrixColumn<T>(columnIndex, matrix);
     }
     //endregion
 }

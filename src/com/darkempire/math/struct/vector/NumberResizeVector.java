@@ -6,11 +6,11 @@ import java.util.Arrays;
  * Create in 10:53
  * Created by siredvin on 25.04.14.
  */
-public class LinearResizeVector<T extends com.darkempire.math.struct.Number<T>> extends LinearVector<T> {
+public class NumberResizeVector<T extends com.darkempire.math.struct.Number<T>> extends NumberVector<T> {
     private T[] values;
 
     //region Конструктори
-    public LinearResizeVector(T[] values) {
+    public NumberResizeVector(T[] values) {
         this.values = values;
     }
     //endregion
@@ -26,13 +26,13 @@ public class LinearResizeVector<T extends com.darkempire.math.struct.Number<T>> 
 
     //region Отримання підвекторів
     @Override
-    public LinearVector<T> subvector(int length) {
-        return new LinearResizeVector<T>(Arrays.copyOf(values, length));
+    public NumberVector<T> subvector(int length) {
+        return new NumberResizeVector<T>(Arrays.copyOf(values, length));
     }
 
     @Override
-    public LinearVector<T> subvector(int startIndex, int length) {
-        return new LinearResizeVector<T>(Arrays.copyOfRange(values, startIndex, length + startIndex));
+    public NumberVector<T> subvector(int startIndex, int length) {
+        return new NumberResizeVector<T>(Arrays.copyOfRange(values, startIndex, length + startIndex));
     }
     //endregion
 
@@ -51,7 +51,7 @@ public class LinearResizeVector<T extends com.darkempire.math.struct.Number<T>> 
     //endregion
 
     @Override
-    public T scalar(LinearVector<T> vector) {
+    public T scalar(NumberVector<T> vector) {
         int size = Math.min(values.length, vector.getSize());
         T result = get(0).multiply(vector.get(0));
         for (int i = 1; i < size; i++) {
@@ -62,7 +62,7 @@ public class LinearResizeVector<T extends com.darkempire.math.struct.Number<T>> 
 
     //region Арифметичні операції з присвоєнням
     @Override
-    public LinearVector<T> inegate() {
+    public NumberVector<T> inegate() {
         for (T value : values) {
             value.inegate();
         }
@@ -70,7 +70,7 @@ public class LinearResizeVector<T extends com.darkempire.math.struct.Number<T>> 
     }
 
     @Override
-    public LinearVector<T> iadd(LinearVector<T> resizeLinearVector) {
+    public NumberVector<T> iadd(NumberVector<T> resizeLinearVector) {
         if (resizeLinearVector.getSize() > values.length) {
             T[] temp = Arrays.copyOf(values, resizeLinearVector.getSize());
             for (int i = 0; i < values.length; i++) {
@@ -89,7 +89,7 @@ public class LinearResizeVector<T extends com.darkempire.math.struct.Number<T>> 
     }
 
     @Override
-    public LinearVector<T> isubtract(LinearVector<T> resizeLinearVector) {
+    public NumberVector<T> isubtract(NumberVector<T> resizeLinearVector) {
         if (resizeLinearVector.getSize() > values.length) {
             T[] temp = Arrays.copyOf(values, resizeLinearVector.getSize());
             for (int i = 0; i < values.length; i++) {
@@ -110,40 +110,40 @@ public class LinearResizeVector<T extends com.darkempire.math.struct.Number<T>> 
 
     //region Арифметичні операції
     @Override
-    public LinearVector<T> add(LinearVector<T> resizeLinearVector) {
+    public NumberVector<T> add(NumberVector<T> resizeLinearVector) {
         T[] p = Arrays.copyOf(values, Math.max(values.length, resizeLinearVector.getSize()));
         for (int i = 0; i < p.length; i++) {
             p[i].iadd(resizeLinearVector.get(i));
         }
-        return new LinearResizeVector<>(p);
+        return new NumberResizeVector<>(p);
     }
 
     @Override
-    public LinearVector<T> subtract(LinearVector<T> resizeLinearVector) {
+    public NumberVector<T> subtract(NumberVector<T> resizeLinearVector) {
         T[] p = Arrays.copyOf(values, Math.max(values.length, resizeLinearVector.getSize()));
         for (int i = 0; i < p.length; i++) {
             p[i].isubtract(resizeLinearVector.get(i));
         }
-        return new LinearResizeVector<>(p);
+        return new NumberResizeVector<>(p);
     }
 
     @Override
-    public LinearVector<T> negate() {
+    public NumberVector<T> negate() {
         T[] p = Arrays.copyOf(values, values.length);
         for (int i = 0; i < values.length; i++) {
             p[i].inegate();
         }
-        return new LinearResizeVector<>(p);
+        return new NumberResizeVector<>(p);
     }
     //endregion
 
     @Override
-    public LinearVector clone() {
+    public NumberVector clone() {
         T[] value = values.clone();
         for (int i = 0; i < value.length; i++) {
             value[i] = value[i].deepcopy();
         }
-        return new LinearResizeVector<>(values.clone());
+        return new NumberResizeVector<>(values.clone());
     }
 
 }

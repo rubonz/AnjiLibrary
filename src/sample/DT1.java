@@ -5,6 +5,5 @@ package sample;
  */
 public class DT1 {
     public static void main(String[] args) {
-        //TODO:замінити LinearMatrix на NumberMatrix
     }
 }

@@ -4,8 +4,8 @@ import com.darkempire.math.exception.MatrixSizeException;
 import com.darkempire.math.struct.*;
 import com.darkempire.math.struct.function.interfaces.*;
 import com.darkempire.math.struct.function.interfaces.FMatrixIndexToLinear;
-import com.darkempire.math.struct.vector.LinearMatrixVector;
-import com.darkempire.math.struct.vector.LinearVector;
+import com.darkempire.math.struct.vector.NumberMatrixVector;
+import com.darkempire.math.struct.vector.NumberVector;
 
 import java.util.stream.Stream;
 
@@ -571,26 +571,26 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
     //endregion
 
     //region Дріблення матриць на вектори
-    public LinearVector<T> row(int rowIndex) {
-        return LinearMatrixVector.row(rowIndex, this);
+    public NumberVector<T> row(int rowIndex) {
+        return NumberMatrixVector.row(rowIndex, this);
     }
 
-    public LinearVector<T> column(int columnIndex) {
-        return LinearMatrixVector.column(columnIndex, this);
+    public NumberVector<T> column(int columnIndex) {
+        return NumberMatrixVector.column(columnIndex, this);
     }
 
-    public Stream<LinearVector> rows() {
+    public Stream<NumberVector> rows() {
         int rowCount = getRowCount();
-        LinearVector[] temp = new LinearVector[rowCount];
+        NumberVector[] temp = new NumberVector[rowCount];
         for (int i = 0; i < rowCount; i++) {
             temp[i] = row(i);
         }
         return Stream.of(temp);
     }
 
-    public Stream<LinearVector> columns() {
+    public Stream<NumberVector> columns() {
         int columnCount = getColumnCount();
-        LinearVector[] temp = new LinearVector[columnCount];
+        NumberVector[] temp = new NumberVector[columnCount];
         for (int i = 0; i < columnCount; i++) {
             temp[i] = column(i);
         }
