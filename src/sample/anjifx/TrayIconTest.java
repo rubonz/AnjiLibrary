@@ -1,11 +1,14 @@
 package sample.anjifx;
 
+import com.darkempire.anji.log.Log;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
@@ -28,8 +31,19 @@ public class TrayIconTest extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        Stage stage1 = new Stage();
         primaryStage.initStyle(StageStyle.UNDECORATED);
-        primaryStage.setScene(createScene());
+        ContextMenu menu = createMenu();
+        Platform.setImplicitExit(false);
+        Label l1 = new Label();
+        VBox tempBox = new VBox();
+        l1.setContextMenu(menu);
+        tempBox.getChildren().add(l1);
+        Scene value = new Scene(tempBox);
+        stage1.setScene(value);
+        stage1.setMaxWidth(0);
+        stage1.setMaxHeight(0);
+        stage1.setResizable(false);
         TrayIcon icon = new TrayIcon(Toolkit.getDefaultToolkit().createImage(TrayIconTest.class.getResource("/sample/res/cab_view.png")));
         icon.addMouseListener(new MouseAdapter() {
             @Override
@@ -37,27 +51,27 @@ public class TrayIconTest extends Application {
                 double x = e.getXOnScreen();
                 double y = e.getYOnScreen();
                 Platform.runLater(() -> {
-                    primaryStage.setX(x);
-                    primaryStage.setY(y);
-                    primaryStage.setAlwaysOnTop(true);
-                    primaryStage.show();
+                    menu.show(tempBox, x, y);
                 });
             }
         });
+        stage1.initStyle(StageStyle.TRANSPARENT);
+        l1.setOpacity(0);
+        stage1.setOpacity(0);
+        tempBox.setOpacity(0);
+        stage1.setX(-2);
+        stage1.setY(-2);
+        stage1.initOwner(primaryStage);
+        primaryStage.show();
+        primaryStage.hide();
+        stage1.show();
         SystemTray.getSystemTray().add(icon);
     }
 
-    public Scene createScene() {
-        VBox pane = new VBox();
-        pane.setPadding(new Insets(0, 0, 0, 0));
-        pane.setAlignment(Pos.CENTER);
-        pane.setFillWidth(true);
-        MenuButton l1 = new MenuButton("test1"), l2 = new MenuButton("test2"), l3 = new MenuButton("testtest");
-        configLabel(l1, 1);
-        configLabel(l2, 2);
-        configLabel(l3, 3);
-        pane.getChildren().addAll(l1, l2, l3);
-        return new Scene(pane);
+    public ContextMenu createMenu() {
+        ContextMenu menu = new ContextMenu(new MenuItem("1"), new MenuItem("2"));
+        //menu;
+        return menu;
     }
 
     public void configLabel(MenuButton l, int i) {

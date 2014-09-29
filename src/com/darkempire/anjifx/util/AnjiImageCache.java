@@ -1,6 +1,7 @@
 package com.darkempire.anjifx.util;
 
 import com.darkempire.anji.annotation.AnjiUtil;
+import com.darkempire.internal.anji.AnjiInternal;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public final class AnjiImageCache {
         return imageList.get(index);
     }
 
-    @Deprecated
+    @AnjiInternal
     public static void anji_clear() {
         imageList.clear();
     }

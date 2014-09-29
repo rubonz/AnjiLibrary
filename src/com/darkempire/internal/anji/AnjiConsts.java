@@ -10,5 +10,6 @@ public final class AnjiConsts {
     private AnjiConsts() {
     }
 
+    @AnjiInternal
     public static final File logDir = new File("./logs");
 }

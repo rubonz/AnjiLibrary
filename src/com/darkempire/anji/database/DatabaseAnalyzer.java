@@ -412,6 +412,8 @@ public class DatabaseAnalyzer {
                 resultList.add(property);
             }
             /*Пекло рефлексії закінчилося*/
+            statement.close();
+            resultSet.close();
         } catch (InstantiationException | IllegalAccessException e) {
             Log.error(Log.coreIndex, e);
         }
@@ -461,6 +463,8 @@ public class DatabaseAnalyzer {
                 resultList.add(o);
             }
             /*Пекло рефлексії закінчилося*/
+            statement.close();
+            resultSet.close();
         } catch (InstantiationException | IllegalAccessException e) {
             Log.error(Log.coreIndex, e);
         }
@@ -510,6 +514,8 @@ public class DatabaseAnalyzer {
                 resultList.add(o);
             }
             /*Пекло рефлексії закінчилося*/
+            statement.close();
+            resultSet.close();
         } catch (InstantiationException | IllegalAccessException e) {
             Log.error(Log.coreIndex, e);
         }
@@ -559,6 +565,8 @@ public class DatabaseAnalyzer {
                 resultList.add(o);
             }
             /*Пекло рефлексії закінчилося*/
+            statement.close();
+            resultSet.close();
         } catch (InstantiationException | IllegalAccessException e) {
             Log.error(Log.coreIndex, e);
         }
@@ -600,7 +608,10 @@ public class DatabaseAnalyzer {
             }
 
         }
-        return connection.createStatement().execute(viewSQL);
+        Statement statement = connection.createStatement();
+        boolean result = statement.execute(viewSQL);
+        statement.close();
+        return result;
     }
 
     /**

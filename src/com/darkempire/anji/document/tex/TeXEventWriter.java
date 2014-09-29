@@ -1,9 +1,5 @@
 package com.darkempire.anji.document.tex;
 
-import com.darkempire.anji.util.Util;
-import com.darkempire.math.exception.MatrixSizeException;
-import com.darkempire.math.struct.matrix.DoubleMatrix;
-
 import java.io.PrintStream;
 import java.text.NumberFormat;
 import java.util.Stack;
@@ -25,10 +21,6 @@ public class TeXEventWriter {
      * Флаг відповідає за те, чи потрібний символ переходу на нову лінію
      */
     private boolean isNeedNewline;
-    /**
-     * Флаг, який вказує на те, чи додавати \hline після кожного рядка в таблиці
-     */
-    private boolean isAddHline;
     //endregion
 
     public TeXEventWriter(PrintStream out, NumberFormat numberFormat) {
@@ -36,7 +28,6 @@ public class TeXEventWriter {
         this.numberFormat = numberFormat;
         environmentStack = new Stack<>();
         isNeedNewline = false;
-        isAddHline = true;
     }
 
     public boolean isNeedNewline() {
@@ -554,6 +545,13 @@ public class TeXEventWriter {
 
     protected Stack<String> getEnvironmentStack() {
         return environmentStack;
+    }
+    //endregion
+
+    //region Спеціальні функції
+    public TeXEventWriter write(ITeXObject object) {
+        object.write(this);
+        return this;
     }
     //endregion
 }

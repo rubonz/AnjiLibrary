@@ -106,6 +106,8 @@ public class XMLDatabaseRecoder {
                         columnNode = null;
                     }
                     break;
+                default:
+                    break;
             }
         }
     }

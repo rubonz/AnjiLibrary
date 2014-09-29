@@ -1,32 +1,24 @@
 package sample;
 
-import com.darkempire.anji.document.tex.TeXDocumentManager;
 import com.darkempire.anji.document.tex.TeXEventWriter;
 import com.darkempire.anji.document.tex.TeXTableObject;
 import com.darkempire.anji.document.tex.util.TeXTableUtil;
 import com.darkempire.anji.log.Log;
+import com.darkempire.anji.util.Util;
+import com.darkempire.math.struct.matrix.FuzzyRelationMatrix;
 import com.darkempire.math.struct.set.FuzzyNumberSet;
 import com.darkempire.math.struct.set.NumberSet;
+import com.darkempire.math.utils.SetUtils;
+
+import static com.darkempire.anji.document.tex.util.TeXTableUtil.matrix;
+
+import java.text.NumberFormat;
 
 /**
  * Create in 13:05
  * Created by siredvin on 28.04.14.
  */
 public class Test1 {
-    public static void main(String[] args) {
-        //DoubleFixedMatrix matrix = DoubleFixedMatrix.createInstance(3, 3, new double[]{-4, 3, 6, 5, -10, 4, -9, -1, 1});
-        TeXDocumentManager documentManager = new TeXDocumentManager(System.out);
-        Log.removeConsoleLog();
-        Log.setHidePrefix(Log.debugIndex, true);
-        Log.log(Log.debugIndex, "start");
-        Test1 test = new Test1();
-        /*test.task1(new FuzzyNumberSet(new double[]{1, 0.9, 0.3, 0.9, 0.1, 0.1, 0.4, 0.1, 0.8, 0.4, 0.5, 0}),
-                new FuzzyNumberSet(new double[]{0.2, 0.6, 0.2, 0.6, 0.7, 0, 0.3, 0.4, 0.6, 0.9, 0.7, 0.6}), documentManager.getEventWriter());*/
-        test.task3(new FuzzyNumberSet(0.2, 0.3, 0.7, 0.4, 0.6, 0.9, 0.2, 0.1, 0.9, 0.3),
-                new FuzzyNumberSet(0.3, 0.3, 0.6, 0, 0.5, 0.2, 0.4, 0.7, 0.3, 0.3),
-                new FuzzyNumberSet(0.8, 0, 0.1, 0.2, 0.9, 0.8, 0.7, 0.9, 0.2, 0.1),
-                documentManager.getEventWriter(), 0.4, 0.1, 0.5, 0.4);
-    }
 
     public void task1(FuzzyNumberSet setA, FuzzyNumberSet setB, TeXEventWriter out) {
         out.center();
@@ -140,10 +132,12 @@ public class Test1 {
         tableObject.write(out);
         out.closeEnvironment();
     }
-/*
+
     public void task6(FuzzyRelationMatrix matrix, TeXEventWriter out) {
         out.center().text("Завдання №6").closeEnvironment().text("Перевірити, чи є відношення $R$ задане таблицею транзитивним.").center();
-        out.matrix(matrix, "X").closeEnvironment().text("Відомо, що відношення називається транзитивним, якщо його композиція є підмножиною $R$.").newline()
+        TeXTableObject table = TeXTableUtil.matrix(matrix, "X");
+
+        out.write(table).closeEnvironment().text("Відомо, що відношення називається транзитивним, якщо його композиція є підмножиною $R$.").newline()
                 .text("Є три способи композиції відношення $A$ та $B$:").openEnvironment("description")
                 .item("Максимінна").append("$\\sup\\limits_{z} \\min\\set{\\mu_A(x,z),\\mu_B(z,y)}$")
                 .item("Мінімаксна").append("$\\min\\limits_{z} \\max\\set{\\mu_A(x,z),\\mu_B(z,y)}$")
@@ -151,21 +145,22 @@ public class Test1 {
                 .text("Побудуємо таблицю для максимінної композиції:").center();
         FuzzyRelationMatrix minmaxC = matrix.minmaxC(), maxminC = matrix.maxminC(), maxmultC = matrix.maxmultC();
         boolean maxmin = SetUtils.isSubset(maxminC, matrix), minmax = SetUtils.isSubset(minmaxC, matrix), maxmult = SetUtils.isSubset(maxmultC, matrix);
-        out.matrix(maxminC, "$R\\ast R$").closeEnvironment();
+
+        out.write(TeXTableUtil.matrix(maxminC, "$R\\ast R$")).closeEnvironment();
         if (maxmin) {
             out.text("Отже, відношення транзитивне за максимінною композіцією");
         } else {
             out.text("Отже, якщо використовувати у якості композиції максимінну, то відношення не буде транзитивним.");
         }
         out.newline().text("Побудуємо таблицю для мінімаксної композиції:").center();
-        out.matrix(minmaxC, "$R\\circ R$").closeEnvironment();
+        out.write(TeXTableUtil.matrix(minmaxC, "$R\\circ R$")).closeEnvironment();
         if (minmax) {
             out.text("Отже, відношення транзитивне за мінімаксною композіцією");
         } else {
             out.text("Отже, якщо використовувати у якості композиції мінімаксну, то відношення не буде транзитивним.");
         }
         out.newline().text("Побудуємо таблицю для максимультиплікативної композиції").center();
-        out.matrix(maxmultC, "$R \\cdot R$").closeEnvironment();
+        out.write(TeXTableUtil.matrix(maxmultC, "$R \\cdot R$")).closeEnvironment();
         if (minmax) {
             out.text("Отже, відношення транзитивне за максимультиплікативною композіцією");
         } else {
@@ -176,38 +171,38 @@ public class Test1 {
     public void task7(FuzzyRelationMatrix A, FuzzyRelationMatrix B, TeXEventWriter out) {
         out.center().text("Завдання №7").closeEnvironment().text("Для нечітких відношень $A$ та $B$ побудувати: $A\\cup B,A\\cap B,\\overline A,\\overline B,A\\setminus B,A^{-1},B^{-1},A \\oplus B$")
                 .center();
-        out.matrix(A, "A").matrix(B, "B").closeEnvironment().text("Знайдемо об’єднання та перетин. Вони знаходяться за формулами:")
+        out.write(matrix(A, "A")).write(matrix(B, "B")).closeEnvironment().text("Знайдемо об’єднання та перетин. Вони знаходяться за формулами:")
                 .openEnvironment("eqnarray*").text("&\\mu_{A\\cup B} (x,y) = \\max\\set{\\mu_A(x,y),\\mu_B(x,y)}")
                 .newline().text("&\\mu_{A\\cap B} (x,y) = \\min\\set{\\mu_A(x,y),\\mu_B(x,y)}").closeEnvironment().center();
-        out.matrix(A.union(B), "$A\\cup B$").matrix(A.intersection(B), "$A\\cap B$").closeEnvironment().text("Знайдемо доповнення, які знаходяться за формулою:")
+        out.write(matrix(A.union(B), "$A\\cup B$")).write(matrix(A.intersection(B), "$A\\cap B$")).closeEnvironment().text("Знайдемо доповнення, які знаходяться за формулою:")
                 .openEnvironment("equation*").text("\\mu_{\\overline A} (x,y) = 1 - \\mu_A(x,y)").closeEnvironment().center();
-        out.matrix(A.negate(), "$\\overline A$").matrix(B.negate(), "$\\overline B$").closeEnvironment()
+        out.write(matrix(A.negate(), "$\\overline A$")).write(matrix(B.negate(), "$\\overline B$")).closeEnvironment()
                 .text("Знайдемо $A\\setminus B$ за такою формулою:").openEnvironment("equation*").text("\\mu_{A\\setminus B} (x,y) =\\max\\set{\\mu_A(x,y) -\\mu_B(x,y),0}")
                 .closeEnvironment().center();
-        out.matrix(A.setminus(B), "$A\\setminus B$").closeEnvironment().text("Знайдемо зворотні відношення до $A$ та $B$ за такою формулою:")
+        out.write(matrix(A.setminus(B), "$A\\setminus B$")).closeEnvironment().text("Знайдемо зворотні відношення до $A$ та $B$ за такою формулою:")
                 .openEnvironment("equation*").text("\\mu_{A^{-1}}(x,y) = \\mu_A(y,x)").closeEnvironment().center();
-        out.matrix(A.transpose(), "$A^{-1}$").matrix(B.transpose(), "$B^{-1}$").closeEnvironment().text("Знайдемо суму за модулем для $A$ і $B$ за формулою:")
+        out.write(matrix(A.transpose(), "$A^{-1}$")).write(matrix(B.transpose(), "$B^{-1}$")).closeEnvironment().text("Знайдемо суму за модулем для $A$ і $B$ за формулою:")
                 .openEnvironment("equation*").text("\\mu_{A\\oplus B} (x,y) = \\mu_{\\cb{A\\cap\\overline B} \\cup \\cb{\\overline A \\cap B}}(x,y) = \\max\\set{\\min\\set{\\mu_A(x,y),\\mu_{\\overline B}(x,y)},\\min\\set{\\mu_{\\overline A}(x,y),\\mu_B(x,y)}}")
                 .closeEnvironment().center();
-        out.matrix(A.xor(B), "$A\\oplus B$").closeEnvironment();
+        out.write(matrix(A.xor(B), "$A\\oplus B$")).closeEnvironment();
     }
 
     public void task8(FuzzyRelationMatrix A, FuzzyRelationMatrix B, TeXEventWriter out) {
         out.center().text("Завдання №8").closeEnvironment().text("Задані нечіткі відношення $A$ та $B$. Необхідно знайти між ними максиміну, мінімаксну та максимультиплікативну композицію.")
                 .center();
-        String[] xRows = out.generateRows("x", A.getRowCount());
-        String zColumns = out.generateHeader("z", B.getColumnCount());
-        out.matrix(A, "A", out.generateHeader("y", A.getColumnCount()), xRows).
-                matrix(B, "B", zColumns, out.generateRows("y", B.getRowCount())).closeEnvironment();
+        String[] xRows = TeXTableUtil.generateHeader("x", A.getRowCount());
+        String[] zColumns = TeXTableUtil.generateHeader("z", B.getColumnCount());
+        out.write(matrix(A, "A", TeXTableUtil.generateHeader("y", A.getColumnCount()), xRows)).
+                write(matrix(B, "B", zColumns, TeXTableUtil.generateHeader("y", B.getRowCount()))).closeEnvironment();
         out.text("Побудуємо таблицю для максимінної композиції за ").openEnvironment("equation*").text("\\mu_{A\\ast B} (x,z) = \\sup\\limits_{y\\in Y} \\min\\set{\\mu_A(x,y),\\mu_B(y,z)}")
                 .closeEnvironment().center();
-        out.matrix(A.maxminC(B), "$A\\ast B$", zColumns, xRows).closeEnvironment()
+        out.write(matrix(A.maxminC(B), "$A\\ast B$", zColumns, xRows)).closeEnvironment()
                 .text("Побудуємо таблицю для мінімаксної композиції за формулою").openEnvironment("equation*")
                 .text("\\mu_{A\\circ B} (x,z) = \\min\\limits_{y\\in Y} \\max\\set{\\mu_A(x,y),\\mu_B(y,z)}").closeEnvironment().center();
-        out.matrix(A.minmaxC(B), "$A\\circ B$", zColumns, xRows).closeEnvironment()
+        out.write(matrix(A.minmaxC(B), "$A\\circ B$", zColumns, xRows)).closeEnvironment()
                 .text("Побудуємо таблицю для максимультиплікативної композиції за формулою").openEnvironment("equation*")
                 .text("\\mu_{A\\cdot B} (x,z) = \\sup\\limits_{y\\in Y} \\set{\\mu_A(x,y)\\cdot \\mu_B(y,z)}").closeEnvironment().center();
-        out.matrix(A.maxmultC(B), "$A \\cdot B$", zColumns, xRows).closeEnvironment();
+        out.write(matrix(A.maxmultC(B), "$A \\cdot B$", zColumns, xRows)).closeEnvironment();
     }
 
     public void task9(FuzzyRelationMatrix R, TeXEventWriter out) {
@@ -215,9 +210,9 @@ public class Test1 {
                 .openEnvironment("eqnarray*").text("&R_1^2 = R\\cdot R").newline().text("&R_2^2 = R \\circ R").newline()
                 .text("&R_3^2 = R \\ast R").closeEnvironment().text("та перевірити виконання формули:").openEnvironment("equation*")
                 .text("R_3^2 \\subseteq R_2^2 \\subseteq R_1^2").closeEnvironment().center();
-        out.matrix(R, "$R$").closeEnvironment().text("Побудуємо відношення").center();
+        out.write(matrix(R, "$R$")).closeEnvironment().text("Побудуємо відношення").center();
         FuzzyRelationMatrix R1 = R.maxminC(), R2 = R.minmaxC(), R3 = R.maxmultC();
-        out.matrix(R1, "$R_1^2$").matrix(R2, "$R_2^2$").matrix(R3, "$R_3^2$").closeEnvironment();
+        out.write(matrix(R1, "$R_1^2$")).write(matrix(R2, "$R_2^2$")).write(matrix(R3, "$R_3^2$")).closeEnvironment();
         if (SetUtils.isSubset(R2, R3) && SetUtils.isSubset(R1, R2)) {
             out.text("Помітно, що формула виконується");
         } else {
@@ -230,16 +225,16 @@ public class Test1 {
         for (int i = 0; i < relations.length; i++) {
             FuzzyRelationMatrix R = relations[i];
             out.text("Задано таке відношення:").center();
-            out.matrix(R, "$R_{" + out.getNumberFormat().format(i) + "}$").closeEnvironment();
+            out.write(matrix(R, "$R_{" + out.getNumberFormat().format(i) + "}$")).closeEnvironment();
             out.text("Знайдемо відношення строгої переваги для цього відношення за формулою:").openEnvironment("equation*")
                     .text("\\mu_{R_S}(x,y) = \\max\\set{\\mu_R(x,y)-\\mu_R(y,x),0}").closeEnvironment().center();
             FuzzyRelationMatrix rs = SetUtils.buildStrong(R);
-            out.matrix(rs, "$R_s$").closeEnvironment();
+            out.write(matrix(rs, "$R_s$")).closeEnvironment();
             out.text("Знайдемо множину недомінованих альтернатив за формулою:").openEnvironment("equation*")
                     .text("\\mu_{R^{nd}}(x) = 1 - \\max\\limits_{y\\in X}\\set{\\mu_{R_s}(x,y)}").closeEnvironment().center();
             FuzzyNumberSet rnd = SetUtils.buildNotDominate(rs);
-            out.createTabular(rnd.getSize() + 1, true).row("$R^{nd}$", out.generateHeader("x", rnd.getSize()))
-                    .row("$\\mu_{R^{nd}}(x)$", rnd).closeTabular();
+            out.write(TeXTableUtil.rowFlow().row("$R^{nd}$", TeXTableUtil.generateHeader("x", rnd.getSize()))
+                    .row("$\\mu_{R^{nd}}(x)$", rnd).compile());
             out.closeEnvironment();
             int size = rnd.getSize();
             double max = 0;
@@ -267,6 +262,9 @@ public class Test1 {
         Test1 test = new Test1();
         NumberFormat numberFormat = NumberFormat.getNumberInstance();
         numberFormat.setMaximumFractionDigits(3);
+        Log.removeConsoleLog();
+        Log.setHidePrefix(Log.debugIndex, true);
+        Log.log(Log.debugIndex, "start");
         TeXEventWriter out = new TeXEventWriter(System.out, numberFormat);
         //Перше завдання
         test.task1(FuzzyNumberSet.create(1, 0.9, 0.3, 0.9, 0.1, 0.1, 0.4, 0.1, 0.4, 0.8, 0.4, 0), FuzzyNumberSet.create(0.2, 0.6, 0.2, 0.6, 0.7, 0, 0.3, 0.4, 0.6, 0.9, 0.7, 0.6), out);
@@ -351,7 +349,5 @@ public class Test1 {
 
         });
         test.task10(out, s10A, s10B, s10C, s10D);
-    }*/
-    //TODO:реалізувати на новому TeXApi
-
+    }
 }

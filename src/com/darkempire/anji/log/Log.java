@@ -299,7 +299,6 @@ public final class Log {
     }
     //endregion
 
-    @Deprecated
     @AnjiInternal
     @PreDestroy
     public static void anji_clear() {
@@ -332,6 +331,7 @@ public final class Log {
         log = new ChannelControlLog();
         initStartChannel();
     }
+
     private static void initStartChannel() {
         addString("Anji Core");//0
         addString("Anji Debug");//1

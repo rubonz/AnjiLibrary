@@ -30,7 +30,6 @@ public final class Cache {
         return imageCache.getImage(type);
     }
 
-    @Deprecated
     @AnjiInternal
     public static void anji_clear() {
         fxmlCache.clear();

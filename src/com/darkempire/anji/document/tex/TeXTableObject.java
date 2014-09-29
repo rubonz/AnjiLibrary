@@ -281,10 +281,8 @@ public class TeXTableObject implements ITeXObject {
     //region Заповнення прямокутника
     //region Заповнення прямокутника матрицею об’єктів
     public TeXTableObject rectangle(int rowStart, int columnStart, int rowEnd, int columnEnd, IMatrixProvider provider) {
-        int rowCount = tableMatrix.getRowCount();
         rowEnd++;
         columnEnd++;
-        int columnCount = tableMatrix.getColumnCount();
         for (int rowIndex = rowStart; rowIndex < rowEnd; rowIndex++) {
             for (int columnIndex = columnStart; columnIndex < columnEnd; columnIndex++) {
                 tableMatrix.setEl(rowIndex, columnIndex, provider.getEl(rowIndex - rowStart, columnIndex - columnStart).toString());
@@ -318,10 +316,8 @@ public class TeXTableObject implements ITeXObject {
 
     //region Заповнення прямокутника матрицею чисел
     public TeXTableObject rectangle(int rowStart, int columnStart, int rowEnd, int columnEnd, IDoubleMatrixProvider provider) {
-        int rowCount = tableMatrix.getRowCount();
         rowEnd++;
         columnEnd++;
-        int columnCount = tableMatrix.getColumnCount();
         for (int rowIndex = rowStart; rowIndex < rowEnd; rowIndex++) {
             for (int columnIndex = columnStart; columnIndex < columnEnd; columnIndex++) {
                 tableMatrix.setEl(rowIndex, columnIndex, numberFormat.format(provider.get(rowIndex - rowStart, columnIndex - columnStart)));

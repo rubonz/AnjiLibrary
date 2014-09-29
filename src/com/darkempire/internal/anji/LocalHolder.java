@@ -15,6 +15,5 @@ public final class LocalHolder {
     }
 
     @AnjiInternal
-    @Deprecated
     public static final ResourceBundle anji_resourceBundle = ResourceBundle.getBundle("com/darkempire/res/anji");
 }

@@ -91,6 +91,8 @@ public class TeXFlowObjectManager {
                     labelManager.createLabel(label, label);
                     tableCount++;
                     break;
+                default:
+                    break;
             }
         }
         return this;
