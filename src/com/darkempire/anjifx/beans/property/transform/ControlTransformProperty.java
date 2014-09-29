@@ -22,7 +22,7 @@ public class ControlTransformProperty<K, V> extends AbstractAnjiProperty<V> {
 
     @Override
     protected void set(V value) {
-        //property.setValue(transform.value(value));
+        //property.setValue(getRule.value(value));
         this.value = value;
     }
 

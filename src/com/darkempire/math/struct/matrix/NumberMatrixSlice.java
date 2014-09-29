@@ -8,11 +8,11 @@ import java.util.Arrays;
  * Create in 9:35
  * Created by siredvin on 20.12.13.
  */
-public abstract class LinearMatrixSlice<T extends com.darkempire.math.struct.Number<T>> extends LinearMatrix<T> {
-    protected LinearMatrix<T> linearMatrix;
+public abstract class NumberMatrixSlice<T extends com.darkempire.math.struct.Number<T>> extends NumberMatrix<T> {
+    protected NumberMatrix<T> linearMatrix;
 
     //region Конструктори
-    private LinearMatrixSlice(LinearMatrix<T> linearMatrix) {
+    private NumberMatrixSlice(NumberMatrix<T> linearMatrix) {
         this.linearMatrix = linearMatrix;
     }
     //endregion
@@ -50,10 +50,10 @@ public abstract class LinearMatrixSlice<T extends com.darkempire.math.struct.Num
 
     //region Системні методи
     @Override
-    public LinearMatrix<T> clone() {
+    public NumberMatrix<T> clone() {
         int rowCount = getRowCount();
         int columnCount = getColumnCount();
-        LinearFixedMatrix<T> matrix = LinearFixedMatrix.createInstance(rowCount, columnCount, (T[]) new Number[rowCount * columnCount]);
+        NumberFixedMatrix<T> matrix = NumberFixedMatrix.createInstance(rowCount, columnCount, (T[]) new Number[rowCount * columnCount]);
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
                 matrix.set(rowIndex, columnIndex, get(rowIndex, columnIndex).deepcopy());
@@ -65,7 +65,7 @@ public abstract class LinearMatrixSlice<T extends com.darkempire.math.struct.Num
 
     //region Арифметичні операції з присвоєнням
     @Override
-    public LinearMatrix<T> inegate() {
+    public NumberMatrix<T> inegate() {
         int rowCount = getRowCount();
         int columnCount = getColumnCount();
         for (int i = 0; i < rowCount; i++) {
@@ -77,7 +77,7 @@ public abstract class LinearMatrixSlice<T extends com.darkempire.math.struct.Num
     }
 
     @Override
-    public LinearMatrix<T> iadd(LinearMatrix<T> matrix) {
+    public NumberMatrix<T> iadd(NumberMatrix<T> matrix) {
         int rowCount = getRowCount();
         int columnCount = getColumnCount();
         for (int i = 0; i < rowCount; i++) {
@@ -89,7 +89,7 @@ public abstract class LinearMatrixSlice<T extends com.darkempire.math.struct.Num
     }
 
     @Override
-    public LinearMatrix<T> isubtract(LinearMatrix<T> matrix) {
+    public NumberMatrix<T> isubtract(NumberMatrix<T> matrix) {
         int rowCount = getRowCount();
         int columnCount = getColumnCount();
         for (int i = 0; i < rowCount; i++) {
@@ -103,7 +103,7 @@ public abstract class LinearMatrixSlice<T extends com.darkempire.math.struct.Num
 
     //region Арифметичні операції
     @Override
-    public LinearMatrix<T> add(LinearMatrix<T> matrix) {
+    public NumberMatrix<T> add(NumberMatrix<T> matrix) {
         int newColumnCount = Math.max(getColumnCount(), matrix.getColumnCount());
         int newRowCount = Math.max(getRowCount(), matrix.getRowCount());
         T[] nArr = (T[]) new Number[newColumnCount * newRowCount];
@@ -112,11 +112,11 @@ public abstract class LinearMatrixSlice<T extends com.darkempire.math.struct.Num
                 nArr[columnIndex + rowIndex * newColumnCount] = get(rowIndex, columnIndex).add(matrix.get(rowIndex, columnIndex));
             }
         }
-        return LinearResizeMatrix.createInstance(newRowCount, newColumnCount, nArr);
+        return NumberResizeMatrix.createInstance(newRowCount, newColumnCount, nArr);
     }
 
     @Override
-    public LinearMatrix<T> subtract(LinearMatrix<T> matrix) {
+    public NumberMatrix<T> subtract(NumberMatrix<T> matrix) {
         int newColumnCount = Math.max(getColumnCount(), matrix.getColumnCount());
         int newRowCount = Math.max(getRowCount(), matrix.getRowCount());
         T[] nArr = (T[]) new Number[newColumnCount * newRowCount];
@@ -125,26 +125,26 @@ public abstract class LinearMatrixSlice<T extends com.darkempire.math.struct.Num
                 nArr[columnIndex + rowIndex * newColumnCount] = get(rowIndex, columnIndex).subtract(matrix.get(rowIndex, columnIndex));
             }
         }
-        return LinearResizeMatrix.createInstance(newRowCount, newColumnCount, nArr);
+        return NumberResizeMatrix.createInstance(newRowCount, newColumnCount, nArr);
     }
 
     @Override
-    public LinearMatrix<T> negate() {
+    public NumberMatrix<T> negate() {
         int size = getColumnCount() * getRowCount();
         T[] nArr = (T[]) new Number[size];
         for (int i = 0; i < size; i++) {
             nArr[i] = get(i).negate();
         }
-        return LinearResizeMatrix.createInstance(getRowCount(), getColumnCount(), nArr);
+        return NumberResizeMatrix.createInstance(getRowCount(), getColumnCount(), nArr);
     }
 
     @Override
-    public LinearMatrix<T> multy(LinearMatrix<T> doubleMatrix) {
+    public NumberMatrix<T> multy(NumberMatrix<T> doubleMatrix) {
         int columnCount = getColumnCount();
         int rowCount = getRowCount();
         if (columnCount != doubleMatrix.getRowCount())
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MULTY_MISMATCH);
-        LinearFixedMatrix<T> result = LinearFixedMatrix.createInstance(rowCount, doubleMatrix.getColumnCount());
+        NumberFixedMatrix<T> result = NumberFixedMatrix.createInstance(rowCount, doubleMatrix.getColumnCount());
         int ncolumnCount = doubleMatrix.getColumnCount();
         for (int i = 0; i < rowCount; i++) {
             for (int j = 0; j < ncolumnCount; j++) {
@@ -159,10 +159,10 @@ public abstract class LinearMatrixSlice<T extends com.darkempire.math.struct.Num
     }
 
     @Override
-    public LinearMatrix<T> prod(T lambda) {
+    public NumberMatrix<T> prod(T lambda) {
         int columnCount = getColumnCount();
         int rowCount = getRowCount();
-        LinearMatrix<T> result = LinearFixedMatrix.createInstance(rowCount, columnCount, (T[]) new Number[columnCount * rowCount]);
+        NumberMatrix<T> result = NumberFixedMatrix.createInstance(rowCount, columnCount, (T[]) new Number[columnCount * rowCount]);
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
                 result.set(rowIndex, columnIndex, get(rowIndex, columnIndex).multiply(lambda));
@@ -172,10 +172,10 @@ public abstract class LinearMatrixSlice<T extends com.darkempire.math.struct.Num
     }
 
     @Override
-    public LinearMatrix<T> transpose() {
+    public NumberMatrix<T> transpose() {
         int rowCount = getRowCount();
         int columnCount = getColumnCount();
-        LinearFixedMatrix<T> matrix = LinearFixedMatrix.createInstance(columnCount, rowCount, (T[]) new Number[rowCount * columnCount]);
+        NumberFixedMatrix<T> matrix = NumberFixedMatrix.createInstance(columnCount, rowCount, (T[]) new Number[rowCount * columnCount]);
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
                 matrix.set(columnIndex, rowIndex, get(rowIndex, columnIndex).deepcopy());
@@ -185,13 +185,13 @@ public abstract class LinearMatrixSlice<T extends com.darkempire.math.struct.Num
     }
 
     @Override
-    public LinearMatrix<T> prod(LinearMatrix<T> doubleMatrix) {
+    public NumberMatrix<T> prod(NumberMatrix<T> doubleMatrix) {
         int columnCount = getColumnCount();
         int rowCount = getRowCount();
         if (columnCount != doubleMatrix.getColumnCount() || rowCount != doubleMatrix.getRowCount()) {
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
         }
-        LinearMatrix<T> result = LinearFixedMatrix.createInstance(rowCount, columnCount, (T[]) new Number[columnCount * rowCount]);
+        NumberMatrix<T> result = NumberFixedMatrix.createInstance(rowCount, columnCount, (T[]) new Number[columnCount * rowCount]);
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
                 result.set(rowIndex, columnIndex, get(rowIndex, columnIndex).multiply(doubleMatrix.get(rowIndex, columnIndex)));
@@ -201,12 +201,12 @@ public abstract class LinearMatrixSlice<T extends com.darkempire.math.struct.Num
     }
     //endregion
 
-    private static class IndexLinearMatrixSlice<T extends Number<T>> extends LinearMatrixSlice<T> {
+    private static class IndexNumberMatrixSlice<T extends Number<T>> extends NumberMatrixSlice<T> {
         private int[] columnIndexs;
         private int[] rowIndexs;
 
         //region Конструктори
-        private IndexLinearMatrixSlice(LinearMatrix<T> doubleMatrix, int[] rowIndexs, int[] columnIndexs) {
+        private IndexNumberMatrixSlice(NumberMatrix<T> doubleMatrix, int[] rowIndexs, int[] columnIndexs) {
             super(doubleMatrix);
             this.columnIndexs = columnIndexs;
             this.rowIndexs = rowIndexs;
@@ -239,7 +239,7 @@ public abstract class LinearMatrixSlice<T extends com.darkempire.math.struct.Num
 
         //region Зрізи
         @Override
-        public LinearMatrixSlice slice(int startRow, int startColumn, int endRow, int endColumn) {
+        public NumberMatrixSlice slice(int startRow, int startColumn, int endRow, int endColumn) {
             int[] newColumnIndexs = new int[endColumn - startColumn + 1];
             int[] newRowIndexs = new int[endRow - startRow + 1];
             endColumn++;
@@ -250,7 +250,7 @@ public abstract class LinearMatrixSlice<T extends com.darkempire.math.struct.Num
         }
 
         @Override
-        public LinearMatrixSlice slice(int[] rowIndexs, int[] columnIndexs) {
+        public NumberMatrixSlice slice(int[] rowIndexs, int[] columnIndexs) {
             int[] newColumnIndexs = new int[columnIndexs.length];
             int[] newRowIndexs = new int[rowIndexs.length];
             for (int i = 0; i < columnIndexs.length; i++) {
@@ -274,14 +274,14 @@ public abstract class LinearMatrixSlice<T extends com.darkempire.math.struct.Num
 
     }
 
-    private static class RectangleLinearMatrixSlice<T extends Number<T>> extends LinearMatrixSlice<T> {
+    private static class RectangleNumberMatrixSlice<T extends Number<T>> extends NumberMatrixSlice<T> {
         private int rowCount;
         private int columnCount;
         private int startRow;
         private int startColumn;
 
         //region Конструктори
-        private RectangleLinearMatrixSlice(LinearMatrix<T> doubleMatrix, int startRow, int startColumn, int endRow, int endColumn) {
+        private RectangleNumberMatrixSlice(NumberMatrix<T> doubleMatrix, int startRow, int startColumn, int endRow, int endColumn) {
             super(doubleMatrix);
             this.startColumn = startColumn;
             this.startRow = startRow;
@@ -322,7 +322,7 @@ public abstract class LinearMatrixSlice<T extends com.darkempire.math.struct.Num
 
         //region Зрізи
         @Override
-        public LinearMatrixSlice slice(int startRow, int startColumn, int endRow, int endColumn) {
+        public NumberMatrixSlice slice(int startRow, int startColumn, int endRow, int endColumn) {
             if (startRow >= rowCount || endRow >= rowCount || endColumn >= columnCount || startColumn >= columnCount) {
                 throw new ArrayIndexOutOfBoundsException();
             }
@@ -330,7 +330,7 @@ public abstract class LinearMatrixSlice<T extends com.darkempire.math.struct.Num
         }
 
         @Override
-        public LinearMatrixSlice slice(int[] rowIndexs, int[] columnIndexs) {
+        public NumberMatrixSlice slice(int[] rowIndexs, int[] columnIndexs) {
             for (int i = 0; i < columnIndexs.length; i++) {
                 if (i >= columnCount)
                     throw new ArrayIndexOutOfBoundsException();
@@ -359,12 +359,12 @@ public abstract class LinearMatrixSlice<T extends com.darkempire.math.struct.Num
     }
 
     //region Створення зрізів
-    public static <T extends Number<T>> LinearMatrixSlice createSlice(LinearMatrix<T> matrix, int startRow, int startColumn, int endRow, int endColumn) {
-        return new RectangleLinearMatrixSlice<>(matrix, startRow, startColumn, endRow, endColumn);
+    public static <T extends Number<T>> NumberMatrixSlice createSlice(NumberMatrix<T> matrix, int startRow, int startColumn, int endRow, int endColumn) {
+        return new RectangleNumberMatrixSlice<>(matrix, startRow, startColumn, endRow, endColumn);
     }
 
-    public static <T extends Number<T>> LinearMatrixSlice createSlice(LinearMatrix<T> matrix, int[] rowIndexs, int[] columnIndexs) {
-        return new IndexLinearMatrixSlice<>(matrix, rowIndexs, columnIndexs);
+    public static <T extends Number<T>> NumberMatrixSlice createSlice(NumberMatrix<T> matrix, int[] rowIndexs, int[] columnIndexs) {
+        return new IndexNumberMatrixSlice<>(matrix, rowIndexs, columnIndexs);
     }
     //endregion
 }

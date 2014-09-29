@@ -1,7 +1,7 @@
 package com.darkempire.math.struct.vector;
 
 import com.darkempire.math.struct.Number;
-import com.darkempire.math.struct.matrix.LinearMatrix;
+import com.darkempire.math.struct.matrix.NumberMatrix;
 
 /**
  * Create in 11:51
@@ -93,11 +93,11 @@ public abstract class LinearMatrixVector<T extends com.darkempire.math.struct.Nu
     //endregion
 
     private static class LinearMatrixRow<T extends Number<T>> extends LinearMatrixVector<T> {
-        private LinearMatrix<T> matrix;
+        private NumberMatrix<T> matrix;
         private int rowIndex;
 
         //region Конструктор
-        private LinearMatrixRow(int rowIndex, LinearMatrix<T> matrix) {
+        private LinearMatrixRow(int rowIndex, NumberMatrix<T> matrix) {
             this.matrix = matrix;
             this.rowIndex = rowIndex;
         }
@@ -155,11 +155,11 @@ public abstract class LinearMatrixVector<T extends com.darkempire.math.struct.Nu
     }
 
     private static class LinearMatrixColumn<T extends Number<T>> extends LinearMatrixVector<T> {
-        private LinearMatrix<T> matrix;
+        private NumberMatrix<T> matrix;
         private int columnIndex;
 
         //region Конструктор
-        private LinearMatrixColumn(int columnIndex, LinearMatrix<T> matrix) {
+        private LinearMatrixColumn(int columnIndex, NumberMatrix<T> matrix) {
             this.matrix = matrix;
             this.columnIndex = columnIndex;
         }
@@ -217,11 +217,11 @@ public abstract class LinearMatrixVector<T extends com.darkempire.math.struct.Nu
     }
 
     //region Отримання частин
-    public static <T extends Number<T>> LinearVector<T> row(int rowIndex, LinearMatrix<T> matrix) {
+    public static <T extends Number<T>> LinearVector<T> row(int rowIndex, NumberMatrix<T> matrix) {
         return new LinearMatrixRow<T>(rowIndex, matrix);
     }
 
-    public static <T extends Number<T>> LinearVector<T> column(int columnIndex, LinearMatrix<T> matrix) {
+    public static <T extends Number<T>> LinearVector<T> column(int columnIndex, NumberMatrix<T> matrix) {
         return new LinearMatrixColumn<T>(columnIndex, matrix);
     }
     //endregion

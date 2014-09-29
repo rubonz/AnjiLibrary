@@ -2,7 +2,7 @@ package com.darkempire.math.operator.matrix;
 
 import com.darkempire.anji.annotation.AnjiUtil;
 import com.darkempire.math.struct.Number;
-import com.darkempire.math.struct.matrix.LinearMatrix;
+import com.darkempire.math.struct.matrix.NumberMatrix;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.min;
@@ -16,7 +16,7 @@ public final class LinearMatrixOperator {
     private LinearMatrixOperator() {
     }
 
-    public static <T extends Number<T>> LinearMatrix<T> addRow(LinearMatrix<T> matrix, int sourceRow, int additionalRow, T lambda) {
+    public static <T extends Number<T>> NumberMatrix<T> addRow(NumberMatrix<T> matrix, int sourceRow, int additionalRow, T lambda) {
         int columnCount = matrix.getColumnCount();
         for (int j = 0; j < columnCount; j++) {
             T k = matrix.get(additionalRow, j).multiply(lambda);
@@ -25,7 +25,7 @@ public final class LinearMatrixOperator {
         return matrix;
     }
 
-    public static <T extends Number<T>> LinearMatrix<T> addColumn(LinearMatrix<T> matrix, int sourceColumn, int additionalColumn, T lambda) {
+    public static <T extends Number<T>> NumberMatrix<T> addColumn(NumberMatrix<T> matrix, int sourceColumn, int additionalColumn, T lambda) {
         int rowCount = matrix.getRowCount();
         for (int i = 0; i < rowCount; i++) {
             T k = matrix.get(i, additionalColumn).multiply(lambda);
@@ -34,7 +34,7 @@ public final class LinearMatrixOperator {
         return matrix;
     }
 
-    public static <T extends Number<T>> LinearMatrix<T> makeBaseRow(LinearMatrix<T> matrix, int baseRowIndex, int baseColumnIndex) {
+    public static <T extends Number<T>> NumberMatrix<T> makeBaseRow(NumberMatrix<T> matrix, int baseRowIndex, int baseColumnIndex) {
         T baseElement = matrix.get(baseRowIndex, baseColumnIndex).deepcopy();
         matrix.operateColumn(baseColumnIndex, d -> d.idivide(baseElement));
         int columnCount = matrix.getColumnCount();
@@ -48,7 +48,7 @@ public final class LinearMatrixOperator {
         return matrix;
     }
 
-    public static <T extends com.darkempire.math.struct.Number<T>> LinearMatrix<T> makeBaseColumn(LinearMatrix<T> matrix, int baseRowIndex, int baseColumnIndex) {
+    public static <T extends com.darkempire.math.struct.Number<T>> NumberMatrix<T> makeBaseColumn(NumberMatrix<T> matrix, int baseRowIndex, int baseColumnIndex) {
         T baseElement = matrix.get(baseRowIndex, baseColumnIndex).deepcopy();
         matrix.operateRow(baseRowIndex, d -> d.idivide(baseElement));
         //Log.log(Log.debugIndex,"Після ділення:\n",matrix);

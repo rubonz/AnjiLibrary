@@ -1,25 +1,17 @@
 package com.darkempire.math.struct.fractal.lsystem;
 
 /**
- * Created with IntelliJ IDEA.
- * User: siredvin
- * Date: 26.10.13
- * Time: 21:23
- * To change this template use File | Settings | File Templates.
+ * Created by siredvin on 29.09.14.
  */
 public class SimpleRule implements IRule {
-    private String transform;
+    private String rule;
 
-    public SimpleRule(String transform) {
-        this.transform = transform;
+    public SimpleRule(String rule) {
+        this.rule = rule;
     }
 
     @Override
     public String getRule() {
-        return transform;
-    }
-
-    public void setTransform(String transform) {
-        this.transform = transform;
+        return rule;
     }
 }

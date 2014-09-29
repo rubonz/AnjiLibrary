@@ -16,11 +16,11 @@ import static java.lang.Math.abs;
  * @see com.darkempire.math.struct.LinearAssignable
  * @see com.darkempire.math.struct.LinearCalcable
  * @see com.darkempire.math.struct.LinearModifable
- * @see LinearMatrix
+ * @see NumberMatrix
  * @see IMatrix
  * @since Anji 0.1
  */
-public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> extends LinearMatrix<T> {
+public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> extends NumberMatrix<T> {
     private T[] arr;
     private int columnCount;
     private int rowCount;
@@ -34,7 +34,7 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
      * @param rowCount    кількість рядків
      * @param arr         масив, які зберігає двувимірну матрицю
      */
-    private LinearFixedMatrix(int rowCount, int columnCount, T[] arr) {
+    private NumberFixedMatrix(int rowCount, int columnCount, T[] arr) {
         this.columnCount = columnCount;
         this.rowCount = rowCount;
         this.arr = arr;
@@ -49,7 +49,7 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
      * @param columnIndex індекс колонки
      * @param rowIndex    індекс рядку
      * @return значення поля
-     * @see LinearMatrix
+     * @see NumberMatrix
      */
     @Override
     public T get(int rowIndex, int columnIndex) {
@@ -72,7 +72,7 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
 
     /**
      * @return кількість рядків
-     * @see LinearMatrix
+     * @see NumberMatrix
      */
     @Override
     public int getRowCount() {
@@ -88,7 +88,7 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
      * @param columnIndex індекс колонки
      * @param rowIndex    індекс рядку
      * @param value       значення
-     * @see LinearMatrix
+     * @see NumberMatrix
      */
     @Override
     public void set(int rowIndex, int columnIndex, T value) {
@@ -109,7 +109,7 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
      * @return Глибоку копію об’єкту
      */
     @Override
-    public LinearFixedMatrix<T> clone() {
+    public NumberFixedMatrix<T> clone() {
         T[] array = arr.clone();
         for (int i = 0; i < array.length; i++) {
             array[i] = array[i].deepcopy();
@@ -135,7 +135,7 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
 
     //region Заповнювачі рядків
     @Override
-    public LinearFixedMatrix<T> fillRow(int rowIndex, T value) {
+    public NumberFixedMatrix<T> fillRow(int rowIndex, T value) {
         rowIndex *= columnCount;
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             arr[rowIndex] = value.deepcopy();
@@ -145,7 +145,7 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
     }
 
     @Override
-    public LinearFixedMatrix<T> fillRow(int rowIndex, FMatrixIndexToLinear<T> function) {
+    public NumberFixedMatrix<T> fillRow(int rowIndex, FMatrixIndexToLinear<T> function) {
         int pos = rowIndex * columnCount;
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             arr[pos] = function.calc(rowIndex, columnIndex);
@@ -155,7 +155,7 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
     }
 
     @Override
-    public LinearFixedMatrix<T> fillRow(int rowIndex, FLinearMatrixAndIndexToLinear<T> function) {
+    public NumberFixedMatrix<T> fillRow(int rowIndex, FLinearMatrixAndIndexToLinear<T> function) {
         int pos = rowIndex * columnCount;
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             arr[pos] = function.calc(this, rowIndex, columnIndex);
@@ -167,7 +167,7 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
 
     //region Заповнювачі колонок
     @Override
-    public LinearFixedMatrix<T> fillColumn(int columnIndex, T value) {
+    public NumberFixedMatrix<T> fillColumn(int columnIndex, T value) {
         int pos = columnIndex;
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             arr[pos] = value.deepcopy();
@@ -177,7 +177,7 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
     }
 
     @Override
-    public LinearFixedMatrix<T> fillColumn(int columnIndex, FMatrixIndexToLinear<T> function) {
+    public NumberFixedMatrix<T> fillColumn(int columnIndex, FMatrixIndexToLinear<T> function) {
         int pos = columnIndex;
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             arr[pos] = function.calc(rowIndex, columnIndex);
@@ -187,7 +187,7 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
     }
 
     @Override
-    public LinearFixedMatrix<T> fillColumn(int columnIndex, FLinearMatrixAndIndexToLinear<T> function) {
+    public NumberFixedMatrix<T> fillColumn(int columnIndex, FLinearMatrixAndIndexToLinear<T> function) {
         int pos = columnIndex;
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             arr[pos] = function.calc(this, rowIndex, columnIndex);
@@ -200,7 +200,7 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
 
     //region Арифметичні операції з присвоєннями
     @Override
-    public LinearFixedMatrix<T> inegate() {
+    public NumberFixedMatrix<T> inegate() {
         for (T anArr : arr) {
             anArr.inegate();
         }
@@ -208,7 +208,7 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
     }
 
     @Override
-    public LinearFixedMatrix<T> iadd(LinearMatrix<T> doubleMatrix) {
+    public NumberFixedMatrix<T> iadd(NumberMatrix<T> doubleMatrix) {
         if (columnCount != doubleMatrix.getColumnCount() || rowCount != doubleMatrix.getRowCount()) {
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
         }
@@ -219,7 +219,7 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
     }
 
     @Override
-    public LinearFixedMatrix<T> isubtract(LinearMatrix<T> doubleMatrix) {
+    public NumberFixedMatrix<T> isubtract(NumberMatrix<T> doubleMatrix) {
         if (columnCount != doubleMatrix.getColumnCount() || rowCount != doubleMatrix.getRowCount()) {
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
         }
@@ -229,14 +229,14 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
         return this;
     }
 
-    public LinearFixedMatrix<T> iprod(T lambda) {
+    public NumberFixedMatrix<T> iprod(T lambda) {
         for (T anArr : arr) {
             anArr.imultiply(lambda);
         }
         return this;
     }
 
-    public LinearFixedMatrix<T> iprod(LinearFixedMatrix<T> doubleMatrix) {
+    public NumberFixedMatrix<T> iprod(NumberFixedMatrix<T> doubleMatrix) {
         if (columnCount != doubleMatrix.columnCount || rowCount != doubleMatrix.rowCount) {
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
         }
@@ -247,7 +247,7 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
     }
 
     @Override
-    public LinearFixedMatrix<T> itranspose() {
+    public NumberFixedMatrix<T> itranspose() {
         if (columnCount != rowCount)
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_IS_NOT_SQUARE);
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
@@ -263,7 +263,7 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
 
     //region Арифметичні операції
     @Override
-    public LinearFixedMatrix<T> add(LinearMatrix<T> doubleMatrix) {
+    public NumberFixedMatrix<T> add(NumberMatrix<T> doubleMatrix) {
         if (columnCount != doubleMatrix.getColumnCount() || rowCount != doubleMatrix.getRowCount()) {
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
         }
@@ -271,11 +271,11 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
         for (int i = 0; i < arr.length; i++) {
             arrN[i] = arr[i].add(doubleMatrix.get(i));
         }
-        return new LinearFixedMatrix<T>(rowCount, columnCount, arrN);
+        return new NumberFixedMatrix<T>(rowCount, columnCount, arrN);
     }
 
     @Override
-    public LinearFixedMatrix<T> subtract(LinearMatrix<T> doubleMatrix) {
+    public NumberFixedMatrix<T> subtract(NumberMatrix<T> doubleMatrix) {
         if (columnCount != doubleMatrix.getColumnCount() || rowCount != doubleMatrix.getRowCount()) {
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
         }
@@ -283,32 +283,32 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
         for (int i = 0; i < arr.length; i++) {
             arrN[i] = arr[i].subtract(doubleMatrix.get(i));
         }
-        return new LinearFixedMatrix<>(rowCount, columnCount, arrN);
+        return new NumberFixedMatrix<>(rowCount, columnCount, arrN);
     }
 
     @Override
-    public LinearFixedMatrix<T> negate() {
+    public NumberFixedMatrix<T> negate() {
         T[] arrN = Arrays.copyOf(arr, arr.length);
         for (int i = 0; i < arr.length; i++) {
             arrN[i] = arr[i].negate();
         }
-        return new LinearFixedMatrix<>(rowCount, columnCount, arrN);
+        return new NumberFixedMatrix<>(rowCount, columnCount, arrN);
     }
 
 
     @Override
-    public LinearFixedMatrix<T> prod(T lambda) {
+    public NumberFixedMatrix<T> prod(T lambda) {
         T[] arrN = Arrays.copyOf(arr, arr.length);
         for (int i = 0; i < arr.length; i++) {
             arrN[i] = lambda.multiply(arr[i]);
         }
-        return new LinearFixedMatrix<T>(rowCount, columnCount, arrN);
+        return new NumberFixedMatrix<T>(rowCount, columnCount, arrN);
     }
 
 
     @Override
-    public LinearFixedMatrix<T> transpose() {
-        LinearFixedMatrix<T> matrix = createInstance(columnCount, rowCount, arr);
+    public NumberFixedMatrix<T> transpose() {
+        NumberFixedMatrix<T> matrix = createInstance(columnCount, rowCount, arr);
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
                 matrix.set(columnIndex, rowIndex, get(rowIndex, columnIndex).deepcopy());
@@ -318,7 +318,7 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
     }
 
     @Override
-    public LinearFixedMatrix<T> prod(LinearMatrix<T> doubleMatrix) {
+    public NumberFixedMatrix<T> prod(NumberMatrix<T> doubleMatrix) {
         if (columnCount != doubleMatrix.getColumnCount() || rowCount != doubleMatrix.getRowCount()) {
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
         }
@@ -326,15 +326,15 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
         for (int i = 0; i < arr.length; i++) {
             arrN[i] = arr[i].multiply(doubleMatrix.get(i));
         }
-        return new LinearFixedMatrix<T>(rowCount, columnCount, arrN);
+        return new NumberFixedMatrix<T>(rowCount, columnCount, arrN);
     }
 
 
     @Override
-    public LinearMatrix<T> multy(LinearMatrix<T> doubleMatrix) {
+    public NumberMatrix<T> multy(NumberMatrix<T> doubleMatrix) {
         if (columnCount != doubleMatrix.getRowCount())
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MULTY_MISMATCH);
-        LinearFixedMatrix<T> result = LinearFixedMatrix.createInstance(rowCount, doubleMatrix.getColumnCount());
+        NumberFixedMatrix<T> result = NumberFixedMatrix.createInstance(rowCount, doubleMatrix.getColumnCount());
         int columnCount = doubleMatrix.getColumnCount();
         for (int i = 0; i < rowCount; i++) {
             for (int j = 0; j < columnCount; j++) {
@@ -350,14 +350,14 @@ public class LinearFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
     //endregion
 
     //region Створення матриць
-    public static <T extends Number<T>> LinearFixedMatrix<T> createInstance(int rowCount, int columnCount, T[] array) {
+    public static <T extends Number<T>> NumberFixedMatrix<T> createInstance(int rowCount, int columnCount, T[] array) {
         if (columnCount * rowCount != array.length)
             throw new ArrayIndexOutOfBoundsException();
-        return new LinearFixedMatrix<T>(rowCount, columnCount, array);
+        return new NumberFixedMatrix<T>(rowCount, columnCount, array);
     }
 
-    public static <T extends Number<T>> LinearFixedMatrix<T> createInstance(int rowCount, int columnCount) {
-        return new LinearFixedMatrix<T>(rowCount, columnCount, (T[]) new Number[rowCount * columnCount]);
+    public static <T extends Number<T>> NumberFixedMatrix<T> createInstance(int rowCount, int columnCount) {
+        return new NumberFixedMatrix<T>(rowCount, columnCount, (T[]) new Number[rowCount * columnCount]);
     }
     //endregion
 }

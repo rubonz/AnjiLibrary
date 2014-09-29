@@ -13,7 +13,7 @@ import java.util.stream.Stream;
  * Create in 9:13
  * Created by siredvin on 20.12.13.
  */
-public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T>> implements IMatrix<LinearMatrix<T>, T>, ILinearMatrixProvider<T>, LinearCalcable<LinearMatrix<T>> {
+public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T>> implements IMatrix<NumberMatrix<T>, T>, INumberMatrixProvider<T>, LinearCalcable<NumberMatrix<T>> {
     //region Геттери
     @Override
     public abstract T get(int rowIndex, int columnIndex);
@@ -63,33 +63,33 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
     //endregion
 
     //region Зрізи
-    public LinearMatrixSlice slice(int startRow, int startColumn, int endRow, int endColumn) {
-        return LinearMatrixSlice.createSlice(this, startRow, startColumn, endRow, endColumn);
+    public NumberMatrixSlice slice(int startRow, int startColumn, int endRow, int endColumn) {
+        return NumberMatrixSlice.createSlice(this, startRow, startColumn, endRow, endColumn);
     }
 
-    public LinearMatrixSlice slice(int[] rowIndexs, int[] columnIndexs) {
-        return LinearMatrixSlice.createSlice(this, rowIndexs, columnIndexs);
+    public NumberMatrixSlice slice(int[] rowIndexs, int[] columnIndexs) {
+        return NumberMatrixSlice.createSlice(this, rowIndexs, columnIndexs);
     }
 
-    public LinearMatrixSlice sliceColumns(int[] columnsIndex) {
+    public NumberMatrixSlice sliceColumns(int[] columnsIndex) {
         int rowCount = getRowCount();
         int[] rowIndexs = new int[rowCount];
         for (int i = 0; i < rowCount; i++) {
             rowIndexs[i] = i;
         }
-        return LinearMatrixSlice.createSlice(this, rowIndexs, columnsIndex);
+        return NumberMatrixSlice.createSlice(this, rowIndexs, columnsIndex);
     }
 
-    public LinearMatrixSlice sliceRows(int[] rowIndex) {
+    public NumberMatrixSlice sliceRows(int[] rowIndex) {
         int columnCount = getColumnCount();
         int[] columnIndexs = new int[columnCount];
         for (int i = 0; i < columnCount; i++) {
             columnIndexs[i] = i;
         }
-        return LinearMatrixSlice.createSlice(this, rowIndex, columnIndexs);
+        return NumberMatrixSlice.createSlice(this, rowIndex, columnIndexs);
     }
 
-    public LinearMatrixSlice slicePeriodic(int rowPeriod, int columnPeriod) {
+    public NumberMatrixSlice slicePeriodic(int rowPeriod, int columnPeriod) {
         int rowCount = getRowCount();
         int columnCount = getColumnCount();
         int columnAdditional = columnCount % columnPeriod != 0 ? 1 : 0;
@@ -102,13 +102,13 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
         for (int i = 0; i < columnIndexs.length; i++) {
             columnIndexs[i] = i * columnPeriod;
         }
-        return LinearMatrixSlice.createSlice(this, rowIndexs, columnIndexs);
+        return NumberMatrixSlice.createSlice(this, rowIndexs, columnIndexs);
     }
     //endregion
 
     //region Арифметичні операції з присвоєнням
     @Override
-    public LinearMatrix<T> itranspose() {
+    public NumberMatrix<T> itranspose() {
         if (getRowCount() != getColumnCount()) {
             throw new MatrixSizeException(MatrixSizeException.MATRIX_IS_NOT_SQUARE);
         }
@@ -152,8 +152,8 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
     public boolean equals(Object o) {
         if (o == this)
             return true;
-        if (o instanceof LinearMatrix) {
-            LinearMatrix temp = (LinearMatrix) o;
+        if (o instanceof NumberMatrix) {
+            NumberMatrix temp = (NumberMatrix) o;
             int columnCount = getColumnCount();
             int rowCount = getRowCount();
             if (columnCount == temp.getColumnCount() && rowCount == temp.getRowCount()) {
@@ -171,7 +171,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
     }
 
     @Override
-    public abstract LinearMatrix<T> clone();
+    public abstract NumberMatrix<T> clone();
 
     /**
      * Виводить до табличного виду без табуляції
@@ -206,7 +206,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
      * @return цей об’єкт
      */
     @Override
-    public LinearMatrix<T> switchRows(int rowIndex1, int rowIndex2) {
+    public NumberMatrix<T> switchRows(int rowIndex1, int rowIndex2) {
         int columnCount = getColumnCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             T temp = get(rowIndex1, columnIndex);
@@ -224,7 +224,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
      * @return цей об’єкт
      */
     @Override
-    public LinearMatrix<T> switchColumns(int columnIndex1, int columnIndex2) {
+    public NumberMatrix<T> switchColumns(int columnIndex1, int columnIndex2) {
         int rowCount = getRowCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             T temp = get(rowIndex, columnIndex1);
@@ -245,7 +245,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
      * @return цей об’єкт
      * @see com.darkempire.math.struct.function.interfaces.FMatrixIndexToLinear
      */
-    public LinearMatrix<T> fill(FMatrixIndexToLinear<T> function) {
+    public NumberMatrix<T> fill(FMatrixIndexToLinear<T> function) {
         int columnCount = getColumnCount();
         int rowCount = getRowCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
@@ -263,7 +263,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
      * @return цей об’єкт
      * @see com.darkempire.math.struct.function.interfaces.FLinearMatrixAndIndexToLinear
      */
-    public LinearMatrix<T> fill(FLinearMatrixAndIndexToLinear<T> function) {
+    public NumberMatrix<T> fill(FLinearMatrixAndIndexToLinear<T> function) {
         int columnCount = getColumnCount();
         int rowCount = getRowCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
@@ -280,7 +280,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
      * @param value число, яким заповнити марицю
      * @return цей об’єкт
      */
-    public LinearMatrix<T> fill(T value) {
+    public NumberMatrix<T> fill(T value) {
         int columnCount = getColumnCount();
         int rowCount = getRowCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
@@ -293,7 +293,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
     //endregion
 
     //region Заповнювачі прямокутників
-    public LinearMatrix<T> fillRectangle(int startRow, int startColumn, int endRow, int endColumn, T value) {
+    public NumberMatrix<T> fillRectangle(int startRow, int startColumn, int endRow, int endColumn, T value) {
         endColumn++;
         endRow++;
         for (int columnIndex = startColumn; columnIndex < endColumn; columnIndex++) {
@@ -304,7 +304,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public LinearMatrix<T> fillRectangle(int startRow, int startColumn, int endRow, int endColumn, FMatrixIndexToLinear<T> function) {
+    public NumberMatrix<T> fillRectangle(int startRow, int startColumn, int endRow, int endColumn, FMatrixIndexToLinear<T> function) {
         endColumn++;
         endRow++;
         for (int columnIndex = startColumn; columnIndex < endColumn; columnIndex++) {
@@ -315,7 +315,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public LinearMatrix<T> fillRectangle(int startRow, int startColumn, int endRow, int endColumn, FLinearMatrixAndIndexToLinear<T> function) {
+    public NumberMatrix<T> fillRectangle(int startRow, int startColumn, int endRow, int endColumn, FLinearMatrixAndIndexToLinear<T> function) {
         endColumn++;
         endRow++;
         for (int columnIndex = startColumn; columnIndex < endColumn; columnIndex++) {
@@ -329,7 +329,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
 
     //region Заповнювачі рядків
     @SafeVarargs
-    public final LinearMatrix<T> fillRow(int rowIndex, T... values) {
+    public final NumberMatrix<T> fillRow(int rowIndex, T... values) {
         int columnCount = getColumnCount();
         if (values.length != columnCount)
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
@@ -339,7 +339,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public LinearMatrix<T> fillRow(int rowIndex, T value) {
+    public NumberMatrix<T> fillRow(int rowIndex, T value) {
         int columnCount = getColumnCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             set(rowIndex, columnIndex, value.deepcopy());
@@ -347,7 +347,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public LinearMatrix<T> fillRow(int rowIndex, FMatrixIndexToLinear<T> function) {
+    public NumberMatrix<T> fillRow(int rowIndex, FMatrixIndexToLinear<T> function) {
         int columnCount = getColumnCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             set(rowIndex, columnIndex, function.calc(rowIndex, columnIndex));
@@ -355,7 +355,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public LinearMatrix<T> fillRow(int rowIndex, FLinearMatrixAndIndexToLinear<T> function) {
+    public NumberMatrix<T> fillRow(int rowIndex, FLinearMatrixAndIndexToLinear<T> function) {
         int columnCount = getColumnCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             set(rowIndex, columnIndex, function.calc(this, rowIndex, columnIndex));
@@ -363,34 +363,34 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public LinearMatrix<T> fillFirstRow(FMatrixIndexToLinear<T> function) {
+    public NumberMatrix<T> fillFirstRow(FMatrixIndexToLinear<T> function) {
         return fillRow(0, function);
     }
 
-    public LinearMatrix<T> fillFirstRow(FLinearMatrixAndIndexToLinear<T> function) {
+    public NumberMatrix<T> fillFirstRow(FLinearMatrixAndIndexToLinear<T> function) {
         return fillRow(0, function);
     }
 
-    public LinearMatrix<T> fillFirstRow(T value) {
+    public NumberMatrix<T> fillFirstRow(T value) {
         return fillRow(0, value);
     }
 
-    public LinearMatrix<T> fillLastRow(FLinearMatrixAndIndexToLinear<T> function) {
+    public NumberMatrix<T> fillLastRow(FLinearMatrixAndIndexToLinear<T> function) {
         return fillRow(getRowCount() - 1, function);
     }
 
-    public LinearMatrix<T> fillLastRow(FMatrixIndexToLinear<T> function) {
+    public NumberMatrix<T> fillLastRow(FMatrixIndexToLinear<T> function) {
         return fillRow(getRowCount() - 1, function);
     }
 
-    public LinearMatrix<T> fillLastRow(T value) {
+    public NumberMatrix<T> fillLastRow(T value) {
         return fillRow(getRowCount() - 1, value);
     }
     //endregion
 
     //region Заповнювачі стовпчиків
     @SafeVarargs
-    public final LinearMatrix<T> fillColumn(int columnIndex, T... values) {
+    public final NumberMatrix<T> fillColumn(int columnIndex, T... values) {
         int rowCount = getRowCount();
         if (values.length != rowCount)
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
@@ -400,7 +400,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public LinearMatrix<T> fillColumn(int columnIndex, T value) {
+    public NumberMatrix<T> fillColumn(int columnIndex, T value) {
         int rowCount = getRowCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             set(rowIndex, columnIndex, value.deepcopy());
@@ -408,7 +408,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public LinearMatrix<T> fillColumn(int columnIndex, FMatrixIndexToLinear<T> function) {
+    public NumberMatrix<T> fillColumn(int columnIndex, FMatrixIndexToLinear<T> function) {
         int rowCount = getRowCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             set(rowIndex, columnIndex, function.calc(rowIndex, columnIndex));
@@ -416,7 +416,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public LinearMatrix<T> fillColumn(int columnIndex, FLinearMatrixAndIndexToLinear<T> function) {
+    public NumberMatrix<T> fillColumn(int columnIndex, FLinearMatrixAndIndexToLinear<T> function) {
         int rowCount = getRowCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             set(rowIndex, columnIndex, function.calc(this, rowIndex, columnIndex));
@@ -424,27 +424,27 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public LinearMatrix<T> fillFirstColumn(FLinearMatrixAndIndexToLinear<T> function) {
+    public NumberMatrix<T> fillFirstColumn(FLinearMatrixAndIndexToLinear<T> function) {
         return fillColumn(0, function);
     }
 
-    public LinearMatrix<T> fillFirstColumn(FMatrixIndexToLinear<T> function) {
+    public NumberMatrix<T> fillFirstColumn(FMatrixIndexToLinear<T> function) {
         return fillColumn(0, function);
     }
 
-    public LinearMatrix<T> fillFirstColumn(T value) {
+    public NumberMatrix<T> fillFirstColumn(T value) {
         return fillColumn(0, value);
     }
 
-    public LinearMatrix<T> fillLastColumn(FLinearMatrixAndIndexToLinear<T> function) {
+    public NumberMatrix<T> fillLastColumn(FLinearMatrixAndIndexToLinear<T> function) {
         return fillColumn(getColumnCount() - 1, function);
     }
 
-    public LinearMatrix<T> fillLastColumn(FMatrixIndexToLinear<T> function) {
+    public NumberMatrix<T> fillLastColumn(FMatrixIndexToLinear<T> function) {
         return fillColumn(getColumnCount() - 1, function);
     }
 
-    public LinearMatrix<T> fillLastColumn(T value) {
+    public NumberMatrix<T> fillLastColumn(T value) {
         return fillColumn(getColumnCount() - 1, value);
     }
     //endregion
@@ -452,7 +452,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
 
     //region Операції над матрицями
     //region Операції над всією матрицею
-    public LinearMatrix<T> operate(FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
+    public NumberMatrix<T> operate(FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
         int rowCount = getRowCount();
         int columnCount = getColumnCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
@@ -463,7 +463,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public LinearMatrix<T> operate(FLinearToLinear<T> function) {
+    public NumberMatrix<T> operate(FLinearToLinear<T> function) {
         int rowCount = getRowCount();
         int columnCount = getColumnCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
@@ -476,7 +476,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
     //endregion
 
     //region Операція над прямокутною ділянкою
-    public LinearMatrix<T> operateRectange(int startRow, int startColumn, int endRow, int endColumn, FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
+    public NumberMatrix<T> operateRectange(int startRow, int startColumn, int endRow, int endColumn, FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
         endRow++;
         endColumn++;
         for (int rowIndex = startRow; rowIndex < endRow; rowIndex++) {
@@ -487,7 +487,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public LinearMatrix<T> operateRectangle(int startRow, int startColumn, int endRow, int endColumn, FLinearToLinear<T> function) {
+    public NumberMatrix<T> operateRectangle(int startRow, int startColumn, int endRow, int endColumn, FLinearToLinear<T> function) {
         endRow++;
         endColumn++;
         for (int rowIndex = startRow; rowIndex < endRow; rowIndex++) {
@@ -501,7 +501,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
 
 
     //region Операції над стобпчиками
-    public LinearMatrix<T> operateColumn(int columnIndex, FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
+    public NumberMatrix<T> operateColumn(int columnIndex, FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
         int rowCount = getRowCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             set(rowIndex, columnIndex, function.operate(get(rowIndex, columnIndex), rowIndex, columnIndex));
@@ -509,7 +509,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public LinearMatrix<T> operateColumn(int columnIndex, FLinearToLinear<T> function) {
+    public NumberMatrix<T> operateColumn(int columnIndex, FLinearToLinear<T> function) {
         int rowCount = getRowCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             set(rowIndex, columnIndex, function.calc(get(rowIndex, columnIndex)));
@@ -517,26 +517,26 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public LinearMatrix<T> operateFirstColumn(FLinearToLinear<T> function) {
+    public NumberMatrix<T> operateFirstColumn(FLinearToLinear<T> function) {
         return operateColumn(0, function);
     }
 
-    public LinearMatrix<T> operateFirstColumn(FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
+    public NumberMatrix<T> operateFirstColumn(FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
         return operateColumn(0, function);
     }
 
-    public LinearMatrix<T> operateLastColumn(FLinearToLinear<T> function) {
+    public NumberMatrix<T> operateLastColumn(FLinearToLinear<T> function) {
         return operateColumn(getColumnCount() - 1, function);
     }
 
-    public LinearMatrix<T> operateLastColumn(FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
+    public NumberMatrix<T> operateLastColumn(FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
         return operateColumn(getColumnCount() - 1, function);
     }
     //endregion
 
 
     //region Операції над рядками
-    public LinearMatrix<T> operateRow(int rowIndex, FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
+    public NumberMatrix<T> operateRow(int rowIndex, FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
         int columnCount = getColumnCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             set(rowIndex, columnIndex, function.operate(get(rowIndex, columnIndex), rowIndex, columnIndex));
@@ -544,7 +544,7 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public LinearMatrix<T> operateRow(int rowIndex, FLinearToLinear<T> function) {
+    public NumberMatrix<T> operateRow(int rowIndex, FLinearToLinear<T> function) {
         int columnCount = getColumnCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             set(rowIndex, columnIndex, function.calc(get(rowIndex, columnIndex)));
@@ -552,19 +552,19 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public LinearMatrix<T> operateFirstRow(FLinearToLinear<T> function) {
+    public NumberMatrix<T> operateFirstRow(FLinearToLinear<T> function) {
         return operateRow(0, function);
     }
 
-    public LinearMatrix<T> operateFirstRow(FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
+    public NumberMatrix<T> operateFirstRow(FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
         return operateRow(0, function);
     }
 
-    public LinearMatrix<T> operateLastRow(FLinearToLinear<T> function) {
+    public NumberMatrix<T> operateLastRow(FLinearToLinear<T> function) {
         return operateRow(getRowCount() - 1, function);
     }
 
-    public LinearMatrix<T> operateLastRow(FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
+    public NumberMatrix<T> operateLastRow(FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
         return operateRow(getRowCount() - 1, function);
     }
     //endregion
@@ -599,13 +599,13 @@ public abstract class LinearMatrix<T extends com.darkempire.math.struct.Number<T
     //endregion
 
     //region Арифметичні операції
-    public abstract LinearMatrix<T> multy(LinearMatrix<T> matrix);
+    public abstract NumberMatrix<T> multy(NumberMatrix<T> matrix);
 
-    public abstract LinearMatrix<T> prod(T lambda);
+    public abstract NumberMatrix<T> prod(T lambda);
 
-    public abstract LinearMatrix<T> transpose();
+    public abstract NumberMatrix<T> transpose();
 
-    public abstract LinearMatrix<T> prod(LinearMatrix<T> doubleMatrix);
+    public abstract NumberMatrix<T> prod(NumberMatrix<T> doubleMatrix);
     //endregion
 
 }

@@ -12,7 +12,7 @@ import static java.lang.Math.abs;
  * Create in 11:55
  * Created by siredvin on 21.12.13.
  */
-public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> extends LinearMatrix<T> {
+public class NumberResizeMatrix<T extends com.darkempire.math.struct.Number<T>> extends NumberMatrix<T> {
     private T[] arr;
     private int columnCount;
     private int rowCount;
@@ -26,7 +26,7 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
      * @param rowCount    кількість рядків
      * @param arr         масив, які зберігає двувимірну матрицю
      */
-    private LinearResizeMatrix(int rowCount, int columnCount, T[] arr) {
+    private NumberResizeMatrix(int rowCount, int columnCount, T[] arr) {
         this.columnCount = columnCount;
         this.rowCount = rowCount;
         this.arr = arr;
@@ -42,7 +42,7 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
      * @param columnIndex індекс колонки
      * @param rowIndex    індекс рядку
      * @return значення поля
-     * @see LinearMatrix<T>
+     * @see NumberMatrix <T>
      */
     @Override
     public T get(int rowIndex, int columnIndex) {
@@ -67,7 +67,7 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
 
     /**
      * @return кількість рядків
-     * @see LinearMatrix<T>
+     * @see NumberMatrix <T>
      */
     @Override
     public int getRowCount() {
@@ -83,7 +83,7 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
      * @param columnIndex індекс колонки
      * @param rowIndex    індекс рядку
      * @param value       значення
-     * @see LinearMatrix<T>
+     * @see NumberMatrix <T>
      */
     @Override
     public void set(int rowIndex, int columnIndex, T value) {
@@ -107,7 +107,7 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
      * @return Глибоку копію об’єкту
      */
     @Override
-    public LinearResizeMatrix<T> clone() {
+    public NumberResizeMatrix<T> clone() {
         T[] array = arr.clone();
         for (int i = 0; i < array.length; i++) {
             array[i] = array[i].deepcopy();
@@ -131,7 +131,7 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
 
     //region Заповнювачі рядків
     @Override
-    public LinearResizeMatrix<T> fillRow(int rowIndex, T value) {
+    public NumberResizeMatrix<T> fillRow(int rowIndex, T value) {
         rowIndex *= columnCount;
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             arr[rowIndex] = value.deepcopy();
@@ -141,7 +141,7 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
     }
 
     @Override
-    public LinearResizeMatrix<T> fillRow(int rowIndex, FMatrixIndexToLinear<T> function) {
+    public NumberResizeMatrix<T> fillRow(int rowIndex, FMatrixIndexToLinear<T> function) {
         int pos = rowIndex * columnCount;
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             arr[pos] = function.calc(rowIndex, columnIndex);
@@ -151,7 +151,7 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
     }
 
     @Override
-    public LinearResizeMatrix<T> fillRow(int rowIndex, FLinearMatrixAndIndexToLinear<T> function) {
+    public NumberResizeMatrix<T> fillRow(int rowIndex, FLinearMatrixAndIndexToLinear<T> function) {
         int pos = rowIndex * columnCount;
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             arr[pos] = function.calc(this, rowIndex, columnIndex);
@@ -163,7 +163,7 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
 
     //region Заповнювачі стовпчиків
     @Override
-    public LinearResizeMatrix<T> fillColumn(int columnIndex, T value) {
+    public NumberResizeMatrix<T> fillColumn(int columnIndex, T value) {
         int pos = columnIndex;
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             arr[pos] = value.deepcopy();
@@ -173,7 +173,7 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
     }
 
     @Override
-    public LinearResizeMatrix<T> fillColumn(int columnIndex, FMatrixIndexToLinear<T> function) {
+    public NumberResizeMatrix<T> fillColumn(int columnIndex, FMatrixIndexToLinear<T> function) {
         int pos = columnIndex;
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             arr[pos] = function.calc(rowIndex, columnIndex);
@@ -183,7 +183,7 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
     }
 
     @Override
-    public LinearResizeMatrix<T> fillColumn(int columnIndex, FLinearMatrixAndIndexToLinear<T> function) {
+    public NumberResizeMatrix<T> fillColumn(int columnIndex, FLinearMatrixAndIndexToLinear<T> function) {
         int pos = columnIndex;
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             arr[pos] = function.calc(this, rowIndex, columnIndex);
@@ -195,7 +195,7 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
 
     //region Арифметичні операції з присвоєнням
     @Override
-    public LinearResizeMatrix<T> inegate() {
+    public NumberResizeMatrix<T> inegate() {
         for (T anArr : arr) {
             anArr.inegate();
         }
@@ -203,7 +203,7 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
     }
 
     @Override
-    public LinearResizeMatrix<T> iadd(LinearMatrix<T> doubleMatrix) {
+    public NumberResizeMatrix<T> iadd(NumberMatrix<T> doubleMatrix) {
         if (columnCount != doubleMatrix.getColumnCount() || rowCount != doubleMatrix.getRowCount()) {
             int newColumnCount = Math.max(columnCount, doubleMatrix.getColumnCount());
             int newRowCount = Math.max(rowCount, doubleMatrix.getRowCount());
@@ -224,7 +224,7 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
     }
 
     @Override
-    public LinearResizeMatrix<T> isubtract(LinearMatrix<T> doubleMatrix) {
+    public NumberResizeMatrix<T> isubtract(NumberMatrix<T> doubleMatrix) {
         if (columnCount != doubleMatrix.getColumnCount() || rowCount != doubleMatrix.getRowCount()) {
             int newColumnCount = Math.max(columnCount, doubleMatrix.getColumnCount());
             int newRowCount = Math.max(rowCount, doubleMatrix.getRowCount());
@@ -243,14 +243,14 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
         return this;
     }
 
-    public LinearResizeMatrix<T> iprod(T lambda) {
+    public NumberResizeMatrix<T> iprod(T lambda) {
         for (T anArr : arr) {
             anArr.imultiply(lambda);
         }
         return this;
     }
 
-    public LinearResizeMatrix<T> iprod(LinearResizeMatrix<T> doubleMatrix) {
+    public NumberResizeMatrix<T> iprod(NumberResizeMatrix<T> doubleMatrix) {
         if (columnCount != doubleMatrix.columnCount || rowCount != doubleMatrix.rowCount) {
             int newColumnCount = Math.max(columnCount, doubleMatrix.columnCount);
             int newRowCount = Math.max(rowCount, doubleMatrix.rowCount);
@@ -270,7 +270,7 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
     }
 
     @Override
-    public LinearResizeMatrix<T> itranspose() {
+    public NumberResizeMatrix<T> itranspose() {
         if (columnCount != rowCount) {
             T[] nArr = (T[]) new Number[columnCount * rowCount];
             for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
@@ -297,7 +297,7 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
 
     //region Арифметичні операції
     @Override
-    public LinearResizeMatrix<T> add(LinearMatrix<T> doubleMatrix) {
+    public NumberResizeMatrix<T> add(NumberMatrix<T> doubleMatrix) {
         int newColumnCount = Math.max(columnCount, doubleMatrix.getColumnCount());
         int newRowCount = Math.max(rowCount, doubleMatrix.getRowCount());
         T[] nArr = (T[]) new Number[newColumnCount * newRowCount];
@@ -306,11 +306,11 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
                 nArr[columnIndex + rowIndex * newColumnCount] = get(rowIndex, columnIndex).add(doubleMatrix.get(rowIndex, columnIndex));
             }
         }
-        return new LinearResizeMatrix<T>(newRowCount, newColumnCount, nArr);
+        return new NumberResizeMatrix<T>(newRowCount, newColumnCount, nArr);
     }
 
     @Override
-    public LinearResizeMatrix<T> subtract(LinearMatrix<T> doubleMatrix) {
+    public NumberResizeMatrix<T> subtract(NumberMatrix<T> doubleMatrix) {
         int newColumnCount = Math.max(columnCount, doubleMatrix.getColumnCount());
         int newRowCount = Math.max(rowCount, doubleMatrix.getRowCount());
         T[] nArr = (T[]) new Number[newColumnCount * newRowCount];
@@ -319,32 +319,32 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
                 nArr[columnIndex + rowIndex * newColumnCount] = get(rowIndex, columnIndex).subtract(doubleMatrix.get(rowIndex, columnIndex));
             }
         }
-        return new LinearResizeMatrix<T>(newRowCount, newColumnCount, nArr);
+        return new NumberResizeMatrix<T>(newRowCount, newColumnCount, nArr);
     }
 
     @Override
-    public LinearResizeMatrix<T> negate() {
+    public NumberResizeMatrix<T> negate() {
         T[] nArr = (T[]) new Number[arr.length];
         for (int i = 0; i < arr.length; i++) {
             nArr[i] = arr[i].negate();
         }
-        return new LinearResizeMatrix<T>(rowCount, columnCount, nArr);
+        return new NumberResizeMatrix<T>(rowCount, columnCount, nArr);
     }
 
 
     @Override
-    public LinearResizeMatrix<T> prod(T lambda) {
+    public NumberResizeMatrix<T> prod(T lambda) {
         T[] nArr = (T[]) new Number[arr.length];
         for (int i = 0; i < arr.length; i++) {
             nArr[i] = lambda.multiply(arr[i]);
         }
-        return new LinearResizeMatrix<T>(rowCount, columnCount, nArr);
+        return new NumberResizeMatrix<T>(rowCount, columnCount, nArr);
     }
 
 
     @Override
-    public LinearResizeMatrix<T> transpose() {
-        LinearResizeMatrix<T> matrix = createInstance(columnCount, rowCount, arr);
+    public NumberResizeMatrix<T> transpose() {
+        NumberResizeMatrix<T> matrix = createInstance(columnCount, rowCount, arr);
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
                 matrix.set(columnIndex, rowIndex, get(rowIndex, columnIndex).deepcopy());
@@ -353,7 +353,7 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
         return matrix;
     }
 
-    public LinearResizeMatrix<T> prod(LinearMatrix<T> doubleMatrix) {
+    public NumberResizeMatrix<T> prod(NumberMatrix<T> doubleMatrix) {
         int newColumnCount = Math.max(columnCount, doubleMatrix.getColumnCount());
         int newRowCount = Math.max(rowCount, doubleMatrix.getRowCount());
         T[] nArr = (T[]) new Number[newColumnCount * newRowCount];
@@ -362,14 +362,14 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
                 nArr[columnIndex + rowIndex * newColumnCount] = get(rowIndex, columnIndex).multiply(doubleMatrix.get(rowIndex, columnIndex));
             }
         }
-        return new LinearResizeMatrix<T>(newRowCount, newColumnCount, nArr);
+        return new NumberResizeMatrix<T>(newRowCount, newColumnCount, nArr);
     }
 
     @Override
-    public LinearMatrix<T> multy(LinearMatrix<T> doubleMatrix) {
+    public NumberMatrix<T> multy(NumberMatrix<T> doubleMatrix) {
         if (columnCount != doubleMatrix.getRowCount())
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MULTY_MISMATCH);
-        LinearResizeMatrix<T> result = LinearResizeMatrix.createInstance(rowCount, doubleMatrix.getColumnCount());
+        NumberResizeMatrix<T> result = NumberResizeMatrix.createInstance(rowCount, doubleMatrix.getColumnCount());
         int columnCount = doubleMatrix.getColumnCount();
         for (int i = 0; i < rowCount; i++) {
             for (int j = 0; j < columnCount; j++) {
@@ -385,13 +385,13 @@ public class LinearResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
     //endregion
 
     //region Створення матриці
-    public static <T extends Number<T>> LinearResizeMatrix<T> createInstance(int rowCount, int columnCount, T[] array) {
+    public static <T extends Number<T>> NumberResizeMatrix<T> createInstance(int rowCount, int columnCount, T[] array) {
         if (columnCount * rowCount != array.length)
             throw new ArrayIndexOutOfBoundsException();
-        return new LinearResizeMatrix<T>(rowCount, columnCount, array);
+        return new NumberResizeMatrix<T>(rowCount, columnCount, array);
     }
 
-    public static <T extends Number<T>> LinearResizeMatrix<T> createInstance(int rowCount, int columnCount) {
+    public static <T extends Number<T>> NumberResizeMatrix<T> createInstance(int rowCount, int columnCount) {
         T[] array = (T[]) new Number[columnCount * rowCount];
         return createInstance(rowCount, columnCount, array);
     }

@@ -21,13 +21,13 @@ public final class LinearMatrixGenerateOperator {
      * @param type тип матриці
      * @return діагональна матриця заданого типу
      */
-    public static <T extends com.darkempire.math.struct.Number<T>> LinearMatrix<T> generateDiagonalMatrix(int size, LinearMatrix<T> type) {
-        LinearMatrix<T> result = null;
+    public static <T extends com.darkempire.math.struct.Number<T>> NumberMatrix<T> generateDiagonalMatrix(int size, NumberMatrix<T> type) {
+        NumberMatrix<T> result = null;
         T el = type.get(0, 0);
-        if (type instanceof LinearFixedMatrix) {
+        if (type instanceof NumberFixedMatrix) {
             result = generateFixedDiagonalMatrix(size, el);
         }
-        if (type instanceof LinearResizeMatrix) {
+        if (type instanceof NumberResizeMatrix) {
             result = generateResizeDiagonalMatrix(size, el);
         }
         return result;
@@ -39,8 +39,8 @@ public final class LinearMatrixGenerateOperator {
      * @param size розмірність матриці
      * @return діагональна фіксована матриця
      */
-    public static <T extends Number<T>> LinearFixedMatrix<T> generateFixedDiagonalMatrix(int size, T el) {
-        LinearFixedMatrix<T> result = LinearFixedMatrix.createInstance(size, size);
+    public static <T extends Number<T>> NumberFixedMatrix<T> generateFixedDiagonalMatrix(int size, T el) {
+        NumberFixedMatrix<T> result = NumberFixedMatrix.createInstance(size, size);
         for (int rowIndex = 0; rowIndex < size; rowIndex++) {
             for (int columnIndex = 0; columnIndex < size; columnIndex++) {
                 if (rowIndex == columnIndex) {
@@ -59,8 +59,8 @@ public final class LinearMatrixGenerateOperator {
      * @param size розмірність матриці
      * @return діагональна матриця
      */
-    public static <T extends Number<T>> LinearResizeMatrix<T> generateResizeDiagonalMatrix(int size, T el) {
-        LinearResizeMatrix<T> result = LinearResizeMatrix.createInstance(size, size);
+    public static <T extends Number<T>> NumberResizeMatrix<T> generateResizeDiagonalMatrix(int size, T el) {
+        NumberResizeMatrix<T> result = NumberResizeMatrix.createInstance(size, size);
         for (int rowIndex = 0; rowIndex < size; rowIndex++) {
             for (int columnIndex = 0; columnIndex < size; columnIndex++) {
                 if (rowIndex == columnIndex) {

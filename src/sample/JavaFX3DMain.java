@@ -119,7 +119,7 @@ public class JavaFX3DMain extends Application {
         cube1_8X.rz.setAngle(40.0);
         cube1_9X.rz.setAngle(-60.0);
 
-        double endTime = 40000.0;
+        double endTime = 4000.0;
         Line l = new Line();
         l.setStartX(cube1.getTranslateX());
         l.setStartY(cube1.getTranslateY());
@@ -190,7 +190,7 @@ public class JavaFX3DMain extends Application {
                         new KeyValue(cube1_7.rx.angleProperty(), 7200.0),
                         new KeyValue(cube1_8.rx.angleProperty(), -7200.0),
                         new KeyValue(cube1_9.rx.angleProperty(), 7200.0)));
-        animation.setDelay(new Duration(5000));
+        animation.setDelay(new Duration(500));
         animation.setCycleCount(Timeline.INDEFINITE);
 
         PerspectiveCamera camera = new PerspectiveCamera(true);

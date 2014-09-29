@@ -2,7 +2,7 @@ package com.darkempire.math.operator.matrix;
 
 import com.darkempire.anji.annotation.AnjiUtil;
 import com.darkempire.math.exception.MatrixSizeException;
-import com.darkempire.math.struct.matrix.LinearMatrix;
+import com.darkempire.math.struct.matrix.NumberMatrix;
 
 import static com.darkempire.math.operator.matrix.LinearMatrixMathOperator.addRow;
 
@@ -16,11 +16,11 @@ public final class LinearMatrixTransformOperator {
     }
 
     //region Трикутні форми
-    public static <T extends com.darkempire.math.struct.Number<T>> LinearMatrix<T> makeUpperTriangle(LinearMatrix<T> matrix) {
+    public static <T extends com.darkempire.math.struct.Number<T>> NumberMatrix<T> makeUpperTriangle(NumberMatrix<T> matrix) {
         return makeUpperTriangle(matrix, false);
     }
 
-    public static <T extends com.darkempire.math.struct.Number<T>> LinearMatrix<T> makeUpperTriangle(LinearMatrix<T> matrix, boolean rowSwitchAllow) {
+    public static <T extends com.darkempire.math.struct.Number<T>> NumberMatrix<T> makeUpperTriangle(NumberMatrix<T> matrix, boolean rowSwitchAllow) {
         int rowCount = matrix.getRowCount();
         int columnCount = matrix.getColumnCount();
         if (rowCount != columnCount) {
@@ -72,11 +72,11 @@ public final class LinearMatrixTransformOperator {
         return matrix;
     }
 
-    public static <T extends com.darkempire.math.struct.Number<T>> LinearMatrix<T> makeLowerTriangle(LinearMatrix<T> matrix) {
+    public static <T extends com.darkempire.math.struct.Number<T>> NumberMatrix<T> makeLowerTriangle(NumberMatrix<T> matrix) {
         return makeLowerTriangle(matrix, false);
     }
 
-    public static <T extends com.darkempire.math.struct.Number<T>> LinearMatrix<T> makeLowerTriangle(LinearMatrix<T> matrix, boolean rowSwitchAllow) {
+    public static <T extends com.darkempire.math.struct.Number<T>> NumberMatrix<T> makeLowerTriangle(NumberMatrix<T> matrix, boolean rowSwitchAllow) {
         int rowCount = matrix.getRowCount();
         int columnCount = matrix.getColumnCount();
         if (rowCount != columnCount) {
@@ -130,11 +130,11 @@ public final class LinearMatrixTransformOperator {
     //endregion
 
     //region Діагональні форми
-    public static <T extends com.darkempire.math.struct.Number<T>> LinearMatrix<T> makeDiagonalForm(LinearMatrix<T> matrix) {
+    public static <T extends com.darkempire.math.struct.Number<T>> NumberMatrix<T> makeDiagonalForm(NumberMatrix<T> matrix) {
         return makeDiagonalForm(matrix, false);
     }
 
-    public static <T extends com.darkempire.math.struct.Number<T>> LinearMatrix<T> makeDiagonalForm(LinearMatrix<T> matrix, boolean rowSwitchAllow) {
+    public static <T extends com.darkempire.math.struct.Number<T>> NumberMatrix<T> makeDiagonalForm(NumberMatrix<T> matrix, boolean rowSwitchAllow) {
         int rowCount = matrix.getRowCount();
         int columnCount = matrix.getColumnCount();
         if (rowCount != columnCount) {
@@ -193,12 +193,12 @@ public final class LinearMatrixTransformOperator {
 
     //region Заміна місцями стовпчик або рядок
     @Deprecated
-    public static <T extends com.darkempire.math.struct.Number<T>> LinearMatrix<T> switchRow(LinearMatrix<T> matrix, int rowIndex1, int rowIndex2) {
+    public static <T extends com.darkempire.math.struct.Number<T>> NumberMatrix<T> switchRow(NumberMatrix<T> matrix, int rowIndex1, int rowIndex2) {
         return matrix.switchRows(rowIndex1, rowIndex2);
     }
 
     @Deprecated
-    public static <T extends com.darkempire.math.struct.Number<T>> LinearMatrix<T> switchColumn(LinearMatrix<T> matrix, int columnIndex1, int columnIndex2) {
+    public static <T extends com.darkempire.math.struct.Number<T>> NumberMatrix<T> switchColumn(NumberMatrix<T> matrix, int columnIndex1, int columnIndex2) {
         return matrix.switchColumns(columnIndex1, columnIndex2);
     }
     //endregion

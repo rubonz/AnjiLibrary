@@ -2,7 +2,7 @@ package com.darkempire.math.operator.matrix;
 
 import com.darkempire.anji.annotation.AnjiUtil;
 import com.darkempire.math.exception.MatrixSizeException;
-import com.darkempire.math.struct.matrix.LinearMatrix;
+import com.darkempire.math.struct.matrix.NumberMatrix;
 
 /**
  * Created by siredvin on 08.09.14.
@@ -14,7 +14,7 @@ public final class LinearMatrixMathOperator {
     }
 
     //region Додавання рядків та стовпчиків між собою
-    public static <T extends com.darkempire.math.struct.Number<T>> LinearMatrix<T> addRow(LinearMatrix<T> matrix, int sourceRow, int additionalRow, T lambda) {
+    public static <T extends com.darkempire.math.struct.Number<T>> NumberMatrix<T> addRow(NumberMatrix<T> matrix, int sourceRow, int additionalRow, T lambda) {
         int columnCount = matrix.getColumnCount();
         for (int j = 0; j < columnCount; j++) {
             matrix.get(sourceRow, j).iadd(matrix.get(additionalRow, j).multiply(lambda));
@@ -22,7 +22,7 @@ public final class LinearMatrixMathOperator {
         return matrix;
     }
 
-    public static <T extends com.darkempire.math.struct.Number<T>> LinearMatrix<T> addColumn(LinearMatrix<T> matrix, int sourceColumn, int additionalColumn, T lambda) {
+    public static <T extends com.darkempire.math.struct.Number<T>> NumberMatrix<T> addColumn(NumberMatrix<T> matrix, int sourceColumn, int additionalColumn, T lambda) {
         int rowCount = matrix.getRowCount();
         for (int i = 0; i < rowCount; i++) {
             matrix.get(i, sourceColumn).iadd(matrix.get(i, additionalColumn).multiply(lambda));
@@ -128,14 +128,14 @@ public final class LinearMatrixMathOperator {
     //endregion
 
     //region Обчислення обернених матриць
-    public static <T extends com.darkempire.math.struct.Number<T>> LinearMatrix<T> calcInverseMatrix(LinearMatrix<T> matrix) {
+    public static <T extends com.darkempire.math.struct.Number<T>> NumberMatrix<T> calcInverseMatrix(NumberMatrix<T> matrix) {
         int rowCount = matrix.getRowCount();
         int columnCount = matrix.getColumnCount();
         if (rowCount != columnCount) {
             throw new MatrixSizeException(MatrixSizeException.MATRIX_IS_NOT_SQUARE);
         }
-        LinearMatrix<T> temp = matrix.clone();
-        LinearMatrix<T> result = LinearMatrixGenerateOperator.generateDiagonalMatrix(rowCount, temp);
+        NumberMatrix<T> temp = matrix.clone();
+        NumberMatrix<T> result = LinearMatrixGenerateOperator.generateDiagonalMatrix(rowCount, temp);
         //Починаємо цикл
         T zero = temp.get(0, 0).getZero();
         for (int index = 0; index < columnCount; index++) {

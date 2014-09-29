@@ -9,7 +9,7 @@ package com.darkempire.math.struct.fractal;
  */
 public interface IFractal {
     public enum FractalDisplayType {
-        LSYSTEM;
+        LINDERMAYER_SYSTEM
     }
 
     public String getName();

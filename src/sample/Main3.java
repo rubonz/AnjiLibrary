@@ -2,8 +2,8 @@ package sample;
 
 import com.darkempire.anji.log.Log;
 import com.darkempire.math.operator.matrix.LinearMatrixMathOperator;
-import com.darkempire.math.struct.matrix.LinearFixedMatrix;
-import com.darkempire.math.struct.matrix.LinearMatrix;
+import com.darkempire.math.struct.matrix.NumberFixedMatrix;
+import com.darkempire.math.struct.matrix.NumberMatrix;
 import com.darkempire.math.struct.number.Fraction;
 
 import java.io.FileNotFoundException;
@@ -22,14 +22,14 @@ public class Main3 {
         Log.log(Log.debugIndex, m);
         Log.log(Log.debugIndex,"Діагональна матриця:\n", makeDiagonalForm(m.clone()));
         Log.log(Log.debugIndex,"Обернена матриця:\n", DoubleMatrixMathOperator.calcInverseMatrix(m));*/
-        LinearMatrix<Fraction> m1 = LinearFixedMatrix.createInstance(3, 3, new Fraction[]{
+        NumberMatrix<Fraction> m1 = NumberFixedMatrix.createInstance(3, 3, new Fraction[]{
                 new Fraction(1), new Fraction(2), new Fraction(3),
                 new Fraction(6), new Fraction(4), new Fraction(0),
                 new Fraction(7), new Fraction(0), new Fraction(-1)
         });
         //Log.log(Log.debugIndex, "Діагональна матриця:\n",makeDiagonalForm(m1.clone()));
         Log.log(Log.debugIndex, "Обернена матриця:\n", LinearMatrixMathOperator.calcInverseMatrix(m1));
-        LinearMatrix<Fraction> m2 = LinearFixedMatrix.createInstance(3, 3, new Fraction[]{
+        NumberMatrix<Fraction> m2 = NumberFixedMatrix.createInstance(3, 3, new Fraction[]{
                 new Fraction(1, 19), new Fraction(-1, 38), new Fraction(3, 19),
                 new Fraction(-3, 38), new Fraction(11, 38), new Fraction(-9, 38),
                 new Fraction(7, 19), new Fraction(-7, 38), new Fraction(2, 19)});
