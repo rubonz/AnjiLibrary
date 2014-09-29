@@ -25,7 +25,7 @@ public class IntegerField extends TextField {
         super();
         setStyle(null);
         setFocusTraversable(true);
-        getStyleClass().add("long-field");
+        getStyleClass().add("integer-field");
         valueProperty = new AnjiIntegerProperty(this, "value", v);
         numberFormatProperty = new AnjiObjectProperty<>(this, "numberFormat", NumberFormat.getIntegerInstance());
         setText(getNumberFormat().format(getValue()));

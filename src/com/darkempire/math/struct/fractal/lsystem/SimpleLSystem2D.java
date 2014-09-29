@@ -1,16 +1,16 @@
 package com.darkempire.math.struct.fractal.lsystem;
 
+import com.darkempire.math.struct.fractal.IFractal;
 import com.darkempire.math.struct.geometry.geomerty2d.Point2D;
 import com.darkempire.math.struct.geometry.geomerty2d.Vector2D;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Stack;
 
 /**
  * Created by siredvin on 29.09.14.
  */
-public class SimpleLSystem2D {
+public class SimpleLSystem2D implements IFractal {
     private static final int ENGLISH_SYMBOL_COUNT = 58;
     private static final int FIRST_ENGLISH_SYMBOL_INDEX = 65;
     private static final String SPECIAL_CHARACTER_STRING = "[]+-()&^{}";
@@ -24,10 +24,11 @@ public class SimpleLSystem2D {
     private CharType[] types;
 
     private boolean saveMode;
-    private String priviosResult;
+    private String previousResult;
     private int level;
+    private String name;
 
-    public SimpleLSystem2D(Tortoise2D marker, double angle, String axiom, ILSystem2DDrawer drawer) {
+    public SimpleLSystem2D(Tortoise2D marker, double angle, String axiom, ILSystem2DDrawer drawer, String name) {
         this.marker = marker;
         this.angle = angle;
         this.axiom = axiom;
@@ -46,8 +47,8 @@ public class SimpleLSystem2D {
         return level;
     }
 
-    public String getPriviosResult() {
-        return priviosResult;
+    public String getPreviousResult() {
+        return previousResult;
     }
 
     public IRule getRule(char k) {
@@ -64,9 +65,9 @@ public class SimpleLSystem2D {
     public void setSaveMode(boolean saveMode) {
         this.saveMode = saveMode;
         if (saveMode) {
-            priviosResult = axiom;
+            previousResult = axiom;
         } else {
-            priviosResult = null;
+            previousResult = null;
         }
     }
 
@@ -85,7 +86,7 @@ public class SimpleLSystem2D {
     public String createString(int level) {
         String result = generateLevelString(level, axiom);
         if (saveMode) {
-            priviosResult = result;
+            previousResult = result;
         }
         return result;
     }
@@ -172,5 +173,15 @@ public class SimpleLSystem2D {
                     break;
             }
         }
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public FractalDisplayType getDisplayType() {
+        return FractalDisplayType.SIMPLE_LINDERMAYER_SYSTEM_2D;
     }
 }

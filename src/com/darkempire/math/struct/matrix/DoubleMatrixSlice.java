@@ -105,6 +105,18 @@ public abstract class DoubleMatrixSlice extends DoubleMatrix {
         }
         return this;
     }
+
+    @Override
+    public DoubleMatrix iprod(double lambda) {
+        int rowCount = getRowCount();
+        int columnCount = getColumnCount();
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+                set(rowIndex, columnIndex, get(rowIndex, columnIndex) * lambda);
+            }
+        }
+        return this;
+    }
     //endregion
 
     //region Арифметичні операції

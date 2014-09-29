@@ -605,6 +605,8 @@ public abstract class DoubleMatrix implements IMatrix<DoubleMatrix, Double>, IDo
     //region Арифметичні операції
     public abstract DoubleMatrix prod(double lambda);
 
+    public abstract DoubleMatrix iprod(double lambda);
+
     public abstract DoubleMatrix transpose();
 
     public abstract DoubleMatrix prod(DoubleMatrix doubleMatrix);
