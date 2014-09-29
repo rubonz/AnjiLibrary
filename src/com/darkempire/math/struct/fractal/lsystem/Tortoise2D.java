@@ -42,8 +42,8 @@ public class Tortoise2D {
         moveVector.rotate(angle);
     }
 
-    public void step() {
-        position.iadd(moveVector.getX(), moveVector.getY());
+    public Point2D step() {
+        return position.iadd(moveVector.getX(), moveVector.getY());
     }
     //endregion
 }
