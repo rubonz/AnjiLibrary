@@ -214,4 +214,9 @@ public class Complex implements Calcable<Complex> {
         return complex;
     }
     //endregion
+
+    @Override
+    public Complex deepcopy() {
+        return clone();
+    }
 }

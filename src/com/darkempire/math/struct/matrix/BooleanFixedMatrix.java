@@ -350,5 +350,11 @@ public class BooleanFixedMatrix extends BooleanMatrix {
         boolean[] array = new boolean[columnCount * rowCount];
         return createInstance(rowCount, columnCount, array);
     }
+
     //endregion
+
+    @Override
+    public BooleanMatrix deepcopy() {
+        return clone();
+    }
 }

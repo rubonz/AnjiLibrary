@@ -62,6 +62,11 @@ public abstract class DoubleMatrixSlice extends DoubleMatrix {
         }
         return matrix;
     }
+
+    @Override
+    public DoubleMatrix deepcopy() {
+        return clone();
+    }
     //endregion
 
     //region Арифметичні операції з присвоєнням

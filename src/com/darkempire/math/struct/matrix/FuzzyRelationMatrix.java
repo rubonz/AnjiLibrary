@@ -748,4 +748,9 @@ public class FuzzyRelationMatrix extends DoubleMatrix implements SetOperable<Fuz
         return negate();
     }
     //endregion
+
+    @Override
+    public FuzzyRelationMatrix deepcopy() {
+        return clone();
+    }
 }

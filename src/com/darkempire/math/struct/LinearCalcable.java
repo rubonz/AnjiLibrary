@@ -8,4 +8,5 @@ package com.darkempire.math.struct;
  * To change this template use File | Settings | File Templates.
  */
 public interface LinearCalcable<T extends LinearCalcable<T>> extends LinearAssignable<T>, LinearModifable<T> {
+    public T deepcopy();
 }

@@ -217,4 +217,9 @@ public class Vector2D implements LinearCalcable<Vector2D> {
         return new Vector2D(Double.valueOf(split[0].substring(1)), Double.valueOf(split[1].substring(0, split[1].length() - 2)));
     }
     //endregion
+
+    @Override
+    public Vector2D deepcopy() {
+        return clone();
+    }
 }

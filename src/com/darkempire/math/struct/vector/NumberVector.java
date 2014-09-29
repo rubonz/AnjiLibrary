@@ -2,8 +2,8 @@ package com.darkempire.math.struct.vector;
 
 import com.darkempire.anji.util.Util;
 import com.darkempire.math.struct.*;
-import com.darkempire.math.struct.function.interfaces.FIndexToLinear;
-import com.darkempire.math.struct.function.interfaces.FLinearVectorAndIndexToLinear;
+import com.darkempire.math.struct.function.interfaces.FIndexToNumber;
+import com.darkempire.math.struct.function.interfaces.FNumberVectorAndIndexToNumber;
 
 /**
  * Create in 10:42
@@ -39,7 +39,7 @@ public abstract class NumberVector<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public NumberVector<T> fill(FIndexToLinear<T> function) {
+    public NumberVector<T> fill(FIndexToNumber<T> function) {
         int size = getSize();
         for (int i = 0; i < size; i++) {
             set(i, function.calc(i));
@@ -47,7 +47,7 @@ public abstract class NumberVector<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public NumberVector<T> fill(FLinearVectorAndIndexToLinear<T> function) {
+    public NumberVector<T> fill(FNumberVectorAndIndexToNumber<T> function) {
         int size = getSize();
         for (int i = 0; i < size; i++) {
             set(i, function.calc(this, i));
@@ -65,7 +65,7 @@ public abstract class NumberVector<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public NumberVector<T> fillSubvector(int start, int end, FIndexToLinear<T> function) {
+    public NumberVector<T> fillSubvector(int start, int end, FIndexToNumber<T> function) {
         end++;
         for (int i = start; i < end; i++) {
             set(i, function.calc(i));
@@ -73,7 +73,7 @@ public abstract class NumberVector<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public NumberVector<T> fillSubvector(int start, int end, FLinearVectorAndIndexToLinear<T> function) {
+    public NumberVector<T> fillSubvector(int start, int end, FNumberVectorAndIndexToNumber<T> function) {
         end++;
         for (int i = start; i < end; i++) {
             set(i, function.calc(this, i));

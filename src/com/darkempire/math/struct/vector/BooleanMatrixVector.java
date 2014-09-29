@@ -22,6 +22,11 @@ public abstract class BooleanMatrixVector extends BooleanVector {
     //endregion
 
     @Override
+    public BooleanVector deepcopy() {
+        return clone();
+    }
+
+    @Override
     public boolean scalar(BooleanVector vector) {
         int size = Math.min(getSize(), vector.getSize());
         boolean temp = false;

@@ -176,4 +176,10 @@ public class ResizePoint implements LinearCalcable<ResizePoint> {
         return builder.toString();
     }
     //endregion
+
+
+    @Override
+    public ResizePoint deepcopy() {
+        return clone();
+    }
 }

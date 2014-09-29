@@ -142,5 +142,10 @@ public class DoubleFixedVector extends DoubleVector {
     }
     //endregion
 
+    @Override
+    public DoubleVector deepcopy() {
+        return clone();
+    }
+
 
 }

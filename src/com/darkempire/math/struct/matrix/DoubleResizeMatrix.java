@@ -409,4 +409,9 @@ public class DoubleResizeMatrix extends DoubleMatrix {
         return createInstance(rowCount, columnCount, array);
     }
     //endregion
+
+    @Override
+    public DoubleMatrix deepcopy() {
+        return clone();
+    }
 }

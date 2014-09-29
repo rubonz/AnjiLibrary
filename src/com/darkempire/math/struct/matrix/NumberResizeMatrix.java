@@ -1,8 +1,8 @@
 package com.darkempire.math.struct.matrix;
 
 import com.darkempire.math.struct.Number;
-import com.darkempire.math.struct.function.interfaces.FLinearMatrixAndIndexToLinear;
-import com.darkempire.math.struct.function.interfaces.FMatrixIndexToLinear;
+import com.darkempire.math.struct.function.interfaces.FMatrixIndexToNumber;
+import com.darkempire.math.struct.function.interfaces.FNumberMatrixAndIndexToNumber;
 
 import java.util.Arrays;
 
@@ -141,7 +141,7 @@ public class NumberResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
     }
 
     @Override
-    public NumberResizeMatrix<T> fillRow(int rowIndex, FMatrixIndexToLinear<T> function) {
+    public NumberResizeMatrix<T> fillRow(int rowIndex, FMatrixIndexToNumber<T> function) {
         int pos = rowIndex * columnCount;
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             arr[pos] = function.calc(rowIndex, columnIndex);
@@ -151,7 +151,7 @@ public class NumberResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
     }
 
     @Override
-    public NumberResizeMatrix<T> fillRow(int rowIndex, FLinearMatrixAndIndexToLinear<T> function) {
+    public NumberResizeMatrix<T> fillRow(int rowIndex, FNumberMatrixAndIndexToNumber<T> function) {
         int pos = rowIndex * columnCount;
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             arr[pos] = function.calc(this, rowIndex, columnIndex);
@@ -173,7 +173,7 @@ public class NumberResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
     }
 
     @Override
-    public NumberResizeMatrix<T> fillColumn(int columnIndex, FMatrixIndexToLinear<T> function) {
+    public NumberResizeMatrix<T> fillColumn(int columnIndex, FMatrixIndexToNumber<T> function) {
         int pos = columnIndex;
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             arr[pos] = function.calc(rowIndex, columnIndex);
@@ -183,7 +183,7 @@ public class NumberResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
     }
 
     @Override
-    public NumberResizeMatrix<T> fillColumn(int columnIndex, FLinearMatrixAndIndexToLinear<T> function) {
+    public NumberResizeMatrix<T> fillColumn(int columnIndex, FNumberMatrixAndIndexToNumber<T> function) {
         int pos = columnIndex;
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             arr[pos] = function.calc(this, rowIndex, columnIndex);
@@ -396,4 +396,10 @@ public class NumberResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
         return createInstance(rowCount, columnCount, array);
     }
     //endregion
+
+
+    @Override
+    public NumberMatrix<T> deepcopy() {
+        return clone();
+    }
 }

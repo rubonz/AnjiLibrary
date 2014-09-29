@@ -16,7 +16,7 @@ public class Matrix<T> implements IMatrix<Matrix<T>, T>, IMatrixProvider<T> {
     private int rowCount;
 
     //region Конструктори
-    private Matrix(int rowCount, int columnCount, T[] array) {
+    protected Matrix(int rowCount, int columnCount, T[] array) {
         this.columnCount = columnCount;
         this.rowCount = rowCount;
         this.array = array;
@@ -198,8 +198,7 @@ public class Matrix<T> implements IMatrix<Matrix<T>, T>, IMatrixProvider<T> {
     //endregion
 
     //region Заповнювачі рядків
-    @SafeVarargs
-    public final Matrix<T> fillRow(int rowIndex, T... values) {
+    public Matrix<T> fillRow(int rowIndex, T... values) {
         int columnCount = getColumnCount();
         if (values.length != columnCount)
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
@@ -243,8 +242,7 @@ public class Matrix<T> implements IMatrix<Matrix<T>, T>, IMatrixProvider<T> {
     //endregion
 
     //region Заповнювачі стовпчиків
-    @SafeVarargs
-    public final Matrix fillColumn(int columnIndex, T... values) {
+    public Matrix fillColumn(int columnIndex, T... values) {
         int rowCount = getRowCount();
         if (values.length != rowCount)
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);

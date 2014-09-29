@@ -60,7 +60,7 @@ public class NumberFixedVector<T extends com.darkempire.math.struct.Number<T>> e
     }
 
     @Override
-    public NumberVector clone() {
+    public NumberVector<T> clone() {
         T[] value = values.clone();
         for (int i = 0; i < value.length; i++) {
             value[i] = value[i].deepcopy();
@@ -130,4 +130,9 @@ public class NumberFixedVector<T extends com.darkempire.math.struct.Number<T>> e
         return new NumberFixedVector<T>(p);
     }
     //endregion
+
+    @Override
+    public NumberVector<T> deepcopy() {
+        return clone();
+    }
 }

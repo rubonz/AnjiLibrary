@@ -7,6 +7,6 @@ import com.darkempire.math.struct.vector.INumberVectorProvider;
  * Created by siredvin on 24.04.14.
  */
 @FunctionalInterface
-public interface FLinearVectorAndIndexToLinear<T extends com.darkempire.math.struct.Number<T>> {
+public interface FNumberVectorAndIndexToNumber<T extends com.darkempire.math.struct.Number<T>> {
     public T calc(INumberVectorProvider<T> provider, int index);
 }

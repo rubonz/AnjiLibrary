@@ -91,12 +91,7 @@ public class MinMaxFuzzyBool extends FuzzyBool<MinMaxFuzzyBool> {
 
     @Override
     public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (o instanceof MinMaxFuzzyBool) {
-            return value == ((MinMaxFuzzyBool) o).value;
-        }
-        return false;
+        return o == this || o instanceof MinMaxFuzzyBool && value == ((MinMaxFuzzyBool) o).value;
     }
 
     @Override
@@ -107,5 +102,10 @@ public class MinMaxFuzzyBool extends FuzzyBool<MinMaxFuzzyBool> {
 
     protected static MinMaxFuzzyBool valueOf(String v) {
         return new MinMaxFuzzyBool(Double.valueOf(v.replace("minmax:", "")));
+    }
+
+    @Override
+    public MinMaxFuzzyBool deepcopy() {
+        return clone();
     }
 }

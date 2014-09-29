@@ -150,4 +150,9 @@ public class DoubleResizeVector extends DoubleVector {
     public DoubleVector clone() {
         return new DoubleResizeVector(values.clone());
     }
+
+    @Override
+    public DoubleVector deepcopy() {
+        return clone();
+    }
 }

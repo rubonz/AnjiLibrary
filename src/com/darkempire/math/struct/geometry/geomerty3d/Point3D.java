@@ -185,4 +185,9 @@ public class Point3D implements LinearCalcable<Point3D> {
         return new Point3D(Double.valueOf(split[0].substring(1)), Double.valueOf(split[1]), Double.valueOf(split[2].substring(0, split[2].length() - 2)));
     }
     //endregion
+
+    @Override
+    public Point3D deepcopy() {
+        return clone();
+    }
 }

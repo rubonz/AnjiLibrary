@@ -22,6 +22,11 @@ public abstract class DoubleMatrixVector extends DoubleVector {
     //endregion
 
     @Override
+    public DoubleVector deepcopy() {
+        return clone();
+    }
+
+    @Override
     public double scalar(DoubleVector vector) {
         int size = Math.min(getSize(), vector.getSize());
         double temp = 0;

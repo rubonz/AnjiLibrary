@@ -54,6 +54,12 @@ public class DoubleSliceVector extends DoubleVector {
         return endIndex - startIndex + 1;
     }
 
+
+    @Override
+    public DoubleVector deepcopy() {
+        return clone();
+    }
+
     @Override
     public double scalar(DoubleVector vector) {
         int size = Math.min(getSize(), vector.getSize());

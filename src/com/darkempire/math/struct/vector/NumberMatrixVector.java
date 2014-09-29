@@ -23,6 +23,11 @@ public abstract class NumberMatrixVector<T extends com.darkempire.math.struct.Nu
     //endregion
 
     @Override
+    public NumberVector<T> deepcopy() {
+        return clone();
+    }
+
+    @Override
     public T scalar(NumberVector<T> vector) {
         int size = Math.min(getSize(), vector.getSize());
         T temp = get(0).multiply(vector.get(0));

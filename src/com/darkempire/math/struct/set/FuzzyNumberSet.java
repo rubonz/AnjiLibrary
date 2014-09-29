@@ -243,7 +243,7 @@ public class FuzzyNumberSet implements FuzzySetOperable<FuzzyNumberSet>, IDouble
 
     //region Системні функції
     @Override
-    public Object clone() {
+    public FuzzyNumberSet clone() {
         return new FuzzyNumberSet(p.clone());
     }
 
@@ -375,4 +375,9 @@ public class FuzzyNumberSet implements FuzzySetOperable<FuzzyNumberSet>, IDouble
         return newSet;
     }
     //endregion
+
+    @Override
+    public FuzzyNumberSet deepcopy() {
+        return clone();
+    }
 }

@@ -108,4 +108,9 @@ public class AddMultyFuzzyBool extends FuzzyBool<AddMultyFuzzyBool> {
         return new AddMultyFuzzyBool(Double.valueOf(v.replace("addmulty:", "")));
     }
     //endregion
+
+    @Override
+    public AddMultyFuzzyBool deepcopy() {
+        return clone();
+    }
 }

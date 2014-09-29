@@ -169,5 +169,11 @@ public class FixedPoint implements LinearCalcable<FixedPoint> {
         builder.append(')');
         return builder.toString();
     }
+
     //endregion
+
+    @Override
+    public FixedPoint deepcopy() {
+        return clone();
+    }
 }

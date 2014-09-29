@@ -142,5 +142,10 @@ public class BooleanFixedVector extends BooleanVector {
     }
     //endregion
 
+    @Override
+    public BooleanVector deepcopy() {
+        return clone();
+    }
+
 
 }

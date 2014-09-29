@@ -61,6 +61,11 @@ public abstract class NumberMatrixSlice<T extends com.darkempire.math.struct.Num
         }
         return matrix;
     }
+
+    @Override
+    public NumberMatrix<T> deepcopy() {
+        return clone();
+    }
     //endregion
 
     //region Арифметичні операції з присвоєнням

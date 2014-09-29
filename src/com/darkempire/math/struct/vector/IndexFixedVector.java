@@ -116,4 +116,9 @@ public class IndexFixedVector extends IndexVector {
     public IndexVector clone() {
         return new IndexFixedVector(values.clone());
     }
+
+    @Override
+    public IndexVector deepcopy() {
+        return clone();
+    }
 }

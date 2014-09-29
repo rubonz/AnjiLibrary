@@ -264,4 +264,9 @@ public class Vector3D implements LinearCalcable<Vector3D> {
         return new Vector3D(Double.valueOf(split[0].substring(1)), Double.valueOf(split[1]), Double.valueOf(split[2].substring(0, split[2].length() - 2)));
     }
     //endregion
+
+    @Override
+    public Vector3D deepcopy() {
+        return clone();
+    }
 }

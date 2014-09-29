@@ -125,4 +125,9 @@ public class IndexResizeVector extends IndexVector {
     public IndexVector clone() {
         return new IndexResizeVector(values.clone());
     }
+
+    @Override
+    public IndexVector deepcopy() {
+        return clone();
+    }
 }

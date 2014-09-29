@@ -138,7 +138,7 @@ public class NumberResizeVector<T extends com.darkempire.math.struct.Number<T>> 
     //endregion
 
     @Override
-    public NumberVector clone() {
+    public NumberVector<T> clone() {
         T[] value = values.clone();
         for (int i = 0; i < value.length; i++) {
             value[i] = value[i].deepcopy();
@@ -146,4 +146,8 @@ public class NumberResizeVector<T extends com.darkempire.math.struct.Number<T>> 
         return new NumberResizeVector<>(values.clone());
     }
 
+    @Override
+    public NumberVector<T> deepcopy() {
+        return clone();
+    }
 }

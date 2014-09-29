@@ -169,4 +169,9 @@ public class Point2D implements LinearCalcable<Point2D> {
         return new Point2D(Double.parseDouble(split[0].substring(1)), Double.parseDouble(split[1].substring(0, split[1].length() - 2)));
     }
     //endregion
+
+    @Override
+    public Point2D deepcopy() {
+        return clone();
+    }
 }

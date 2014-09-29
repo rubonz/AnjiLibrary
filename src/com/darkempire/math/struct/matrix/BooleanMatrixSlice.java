@@ -58,6 +58,11 @@ public abstract class BooleanMatrixSlice extends BooleanMatrix {
         }
         return matrix;
     }
+
+    @Override
+    public BooleanMatrix deepcopy() {
+        return clone();
+    }
     //endregion
 
     //region Арифметичні операції з присвоєнням
