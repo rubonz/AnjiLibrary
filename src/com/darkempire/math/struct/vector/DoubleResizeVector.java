@@ -152,6 +152,11 @@ public class DoubleResizeVector extends DoubleVector {
     }
 
     @Override
+    public double[] toRawArray() {
+        return values.clone();
+    }
+
+    @Override
     public DoubleVector deepcopy() {
         return clone();
     }

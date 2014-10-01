@@ -2,7 +2,7 @@ package com.darkempire.anjifx.util;
 
 import com.darkempire.internal.anji.LocalHolder;
 import com.darkempire.anji.annotation.AnjiUtil;
-import com.darkempire.anjifx.scene.AnjiLineChart;
+import com.darkempire.anjifx.scene.chart.AnjiLineChart;
 import com.darkempire.math.struct.geometry.geomerty2d.Point2D;
 import com.darkempire.math.struct.result.Graphics2DResult;
 import javafx.collections.FXCollections;

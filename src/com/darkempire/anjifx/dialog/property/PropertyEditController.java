@@ -39,6 +39,7 @@ public class PropertyEditController extends GridPane implements Initializable {
     private VBox propertiesPane;
     private Stage stage;
     private Set<AnjiWrapper> decoratorSet;
+    private boolean isEdited;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -229,6 +230,7 @@ public class PropertyEditController extends GridPane implements Initializable {
         for (AnjiWrapper decorator : decoratorSet) {
             decorator.free();
         }
+        isEdited = true;
         decoratorSet.clear();
         stage.close();
     }
@@ -238,7 +240,12 @@ public class PropertyEditController extends GridPane implements Initializable {
         for (AnjiWrapper decorator : decoratorSet) {
             decorator.backup();
         }
+        isEdited = false;
         decoratorSet.clear();
         stage.close();
+    }
+
+    public boolean isEdited() {
+        return isEdited;
     }
 }

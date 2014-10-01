@@ -13,6 +13,7 @@ import java.util.TreeSet;
  * To change this template use File | Settings | File Templates.
  */
 public class AnjiChooseStringProperty extends AbstractAnjiProperty<String> {
+    //TODO:певно, варто огорнути Collection в ObservableCollection, а поки clear велосипед
     private String currentValue;
     private Collection<String> set;
 
@@ -47,6 +48,11 @@ public class AnjiChooseStringProperty extends AbstractAnjiProperty<String> {
         } else {
             currentValue = null;
         }
+    }
+
+    //TODO:видалити цей велосипед та зробити щось нормальне
+    public void wipe() {
+        currentValue = set.iterator().next();
     }
 
     public boolean contains(String s) {

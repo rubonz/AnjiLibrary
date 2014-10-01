@@ -1,4 +1,4 @@
-package com.darkempire.anjifx.scene;
+package com.darkempire.anjifx.scene.chart;
 
 import com.darkempire.anjifx.beans.property.AnjiColorProperty;
 import com.darkempire.anjifx.dialog.DialogUtil;
@@ -26,6 +26,7 @@ import java.util.Set;
  * Time: 8:25
  * To change this template use File | Settings | File Templates.
  */
+@Deprecated
 public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
     private List<AnjiColorProperty> colorValues;
     private InvalidationListener updateColor = observable -> updateStyle();
@@ -62,7 +63,7 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
     }
 
     public void removeColor(int lineIndex) {
-        colorValues.remove(lineIndex);
+        colorValues.remove(lineIndex);//TODO:тут скрита помилка
         updateStyle();
     }
 

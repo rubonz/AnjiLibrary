@@ -139,6 +139,8 @@ public abstract class DoubleVector implements LinearCalcable<DoubleVector>, IDou
 
     @Override
     public abstract DoubleVector clone();
+
+    public abstract double[] toRawArray();
     //endregion
 
     public DoubleVector irotate(int i, int j, double angle) {

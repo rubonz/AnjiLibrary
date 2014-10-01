@@ -1,6 +1,6 @@
 package com.darkempire.anji.log;
 
-import com.darkempire.internal.anji.AnjiConsts;
+import com.darkempire.internal.AnjiConsts;
 import com.darkempire.internal.anji.LocalHolder;
 
 import java.io.File;
@@ -30,11 +30,7 @@ public class AdvancedLog extends SimpleLog {
         String fileName = "anji-log-" + (LocalDateTime.now()).toString() + ".txt";
         String errFileName = "anji-err-" + (LocalDateTime.now()).toString() + ".txt";
         File dir = AnjiConsts.logDir;
-        if (!Files.exists(dir.toPath())) {
-            if (!dir.mkdir()) {
-                return;
-            }
-        }
+        AnjiConsts.checkDir(dir);
         File file = new File(dir, fileName);
         File errFile = new File(dir, errFileName);
         try {
@@ -56,11 +52,7 @@ public class AdvancedLog extends SimpleLog {
         String fileName = "anji-log.txt";
         String errFileName = "anji-err.txt";
         File dir = AnjiConsts.logDir;
-        if (!Files.exists(dir.toPath())) {
-            if (!dir.mkdir()) {
-                return;
-            }
-        }
+        AnjiConsts.checkDir(dir);
         File file = new File(dir, fileName);
         File errFile = new File(dir, errFileName);
         try {

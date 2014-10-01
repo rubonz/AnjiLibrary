@@ -42,7 +42,7 @@ public final class WolframConvertUtils {
     }
 
     public static DoubleFixedVector convertResultToDoubleFixedVector(String result) {
-        result = result.replace("{", "").replace("}", "");
+        result = result.replace("{", "").replace("}", "").replace("*^", "E");
         String[] numbers = result.split(",");
         DoubleFixedVector vector = new DoubleFixedVector(numbers.length);
         for (int i = 0; i < numbers.length; i++) {
@@ -52,7 +52,7 @@ public final class WolframConvertUtils {
     }
 
     public static DoubleResizeVector convertResultToDoubleResizeVector(String result) {
-        result = result.replace("{", "").replace("}", "");
+        result = result.replace("{", "").replace("}", "").replace("*^", "E");
         String[] numbers = result.split(",");
         DoubleResizeVector vector = new DoubleResizeVector(numbers.length);
         for (int i = 0; i < numbers.length; i++) {

@@ -43,7 +43,7 @@ public class PropertyEditDialog {
         this.title = title;
     }
 
-    public void show() {
+    public boolean show() {
         Stage stage = new Stage();
         VBox pane = null;
         try {
@@ -60,9 +60,11 @@ public class PropertyEditDialog {
         controller.setStage(stage);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
+        return controller.isEdited();
     }
 
     public Iterable<AbstractAnjiProperty> getContent() {
         return content;
     }
+
 }

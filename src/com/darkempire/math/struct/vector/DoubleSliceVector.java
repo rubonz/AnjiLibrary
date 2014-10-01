@@ -61,6 +61,16 @@ public class DoubleSliceVector extends DoubleVector {
     }
 
     @Override
+    public double[] toRawArray() {
+        int size = getSize();
+        double[] arr = new double[size];
+        for (int i = 0; i < size; i++) {
+            arr[i] = get(i);
+        }
+        return arr;
+    }
+
+    @Override
     public double scalar(DoubleVector vector) {
         int size = Math.min(getSize(), vector.getSize());
         double result = 0;

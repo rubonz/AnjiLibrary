@@ -70,6 +70,11 @@ public class DoubleFixedVector extends DoubleVector {
         return new DoubleFixedVector(values.clone());
     }
 
+    @Override
+    public double[] toRawArray() {
+        return values.clone();
+    }
+
     //region Арифметичні операції з присвоєнням
     @Override
     public DoubleVector inegate() {
