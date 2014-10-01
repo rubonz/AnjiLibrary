@@ -35,7 +35,6 @@ import static com.darkempire.internal.AnjiConsts.imgDir;
  * Created by siredvin on 01.10.14.
  */
 public class AnjiLineChartTabPane<R extends INameable> extends TabPane {
-    //TODO:можливо, варто додати можливість закривати вкладки
     //Списки, що стосуються графіків
     private List<LineChart> chartList;
     private List<Function<R, XYChart.Series>> processorList;
