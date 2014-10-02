@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
 <script src="utility.js"></script>
+<script src="mips_constants.js"></script>
 <script src="mips.js"></script>
 <script src="controller.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+<script src="lib/angular.js"></script>
 <head lang="en">
     <meta charset="UTF-8">
     <title></title>
@@ -33,7 +34,12 @@
             <input class="btn-primary" type="submit" value="Додати">
         </form>
         <br/>
-        <textarea placeholder="Result" ng-model="resultArea"></textarea>
+        <textarea placeholder="Результат" ng-model="resultArea" cols="38" rows="10"></textarea>
+        <!--<ul class="unstyled">-->
+            <!--<li ng-repeat="register in registers track by $index">-->
+                <!--<span>{{registersName[$index]}} -- {{register}}</span>-->
+            <!--</li>-->
+        <!--</ul>-->
     </div>
 </div>
 </body>

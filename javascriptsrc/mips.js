@@ -1,4 +1,5 @@
-//region Конструювання необхідних частин
+
+//region Memory
 function initRamHolder() {
     var ramHolder = {};
     ramHolder.ramMap = [];
@@ -52,94 +53,257 @@ function initCommandRamHolder() {
     return commandRamHolder;
 }
 
+//endregion
+
+//region Розбір команд
+/*
+Важливі спостереження:
+- Якщо команда починається з 1, то вона працює з пам’ятю. Інакше, все це добро потрібно надсилати в ALU
+- Всі арифметичні операції між трьома регістрами починаються з 000000
+ */
+cStart = {
+    //Арифметичні операції з трьома регістрами
+    'add':"000000",
+    'addu':"000000",
+    'and':"000000",
+    'div':"000000",
+    'divu':"000000",
+    'jr':"000000",
+    'mfhi':"000000",
+    'mflo':"000000",
+    'mult':"000000",
+    'multu':"000000",
+    'or':"000000",
+    'sllv':"000000",
+    'slt':"000000",
+    'sltu':"000000",
+    'srlv':"000000",
+    'sub':"000000",
+    'subu':"000000",
+    'xor':"000000",
+    //Кінець
+    //Розширені арифметичні
+    'sra':"00000000000",
+    'sll':"00000000000",
+    'srl':"00000000000",
+    //Кінець
+    'addi':"001000",
+    'addiu':'001001',
+    'andi':"001100",
+    'beq':"000100",
+    //Порівняння з нулем та стрибок
+    'bgez':"000001",
+    'bgezal':"000001",
+    'bltz':"000001",
+    'bltzal':"000001",
+    //Кінець
+    'bgtz':"000111",
+    'blez':"000110",
+    'bne':"000101",
+    'j':"000010",
+    'jal':"000011",
+    'lb':"100000",
+    'lui':"001111",
+    'lw':"100011",
+    'ori':"001101",
+    'sb':"101000",
+    'slti':"001010",
+    'sltiu':"001011",
+    'sw':"101011",
+    'xori':"001110"
+};
+
+cEnd = {
+    'add':"00000100000",
+    'addu':"00000100001",
+    'and':"00000100100",
+    'div':"0000000000011010",
+    'divu':"0000000000011011",
+    'jr':"000000000000000001000",
+    'mfhi':"00000010000",
+    'mflo':"00000010010",
+    'mult':"0000000000011000",
+    'multu':"0000000000011001",
+    'sll':"000000",
+    'sllv':"00000000100",
+    'slt':"00000101010",
+    'sltu':"00000101011",
+    'sra':"000011",
+    'srl':"000010",
+    'srlv':"00000000110",
+    'sub':"00000100010",
+    'subu':"00000100011",
+    'xor':"00000100110"
+};
+
+cMiddle = {
+    'bgez':"00001",
+    'bgezal':"10001",
+    'bgtz':"00000",
+    'blez':"00000",
+    'bltz':"00000",
+    'bltzal':"10000"
+};
+
+function convertTSImm(splitedCode){
+    return DexToFillBin(getRegisterCode(splitedCode[2]),5) + DexToFillBin(getRegisterCode(splitedCode[1]),5)
+        + DexToFillBin(parseInt(splitedCode[3]),5);
+}
+
+function convertDST(splitedCode){
+    return DexToFillBin(getRegisterCode(splitedCode[2]),5) +DexToFillBin(getRegisterCode(splitedCode[3]),5) + DexToFillBin(getRegisterCode(splitedCode[1]),5);
+}
+
+function convertSOff(splitedCode){
+    return DexToFillBin(getRegisterCode(splitedCode[1]),5) + cMiddle[splitedCode[0]] + DexToFillBin(splitedCode[2],16);
+}
+
+function convertST(splitedCode){
+    return DexToFillBin(getRegisterCode(splitedCode[1]),5)+DexToFillBin(getRegisterCode(splitedCode[2]),5);
+}
+
+function convertSTOff(splitedCode){
+    return DexToFillBin(getRegisterCode(splitedCode[1]),5) + DexToFillBin(getRegisterCode(splitedCode[2]),5) + DexToFillBin(getRegisterCode(splitedCode[3]),16);
+}
+
+function convertTarget(splitedCode){
+    return DexToFillBin(splitedCode[1],26);
+}
+
+function convertTOffS(splitedCode){
+    var offS = splitedCode[2];
+    var offSArr = offS.split("(");
+    offSArr[1] = offSArr.substring(0,offSArr[1].length-1);
+    return DexToFillBin(getRegisterCode(offSArr[1]),5) + DexToFillBin(getRegisterCode(splitedCode[1]),5) + DexToFillBin(offSArr[0],16);
+}
+
+function convertSorD(splitedCode) {
+    return DexToFillBin(getRegisterCode(splitedCode[1]),5);
+}
+function convertTImm(splitedCode){
+    return DexToFillBin(getRegisterCode(splitedCode[1]),5) + DexToFillBin(splitedCode[2],16);
+}
+
+function convertDTH(splitedCode){
+    return DexToFillBin(getRegisterCode(splitedCode[2]),5) + DexToFillBin(getRegisterCode(splitedCode[1]),5) + DexToFillBin(splitedCode[3],5);
+}
+
+var commandRegExp = new RegExp("(,| )");
+
+/*commandTSImmGroup = ['addi','addiu','andi','ori','slti','sltiu','xori'];
+ commandDSTGroup = ['add','addu','and','or','sllv','slt','sltu','srlv','sub','subu','xor'];
+ commandSOffGroup = ['bgez','bgezal','bgtz','blez','bltz','bltzal'];
+ commandSTGroup = ['div','divu','mult','multu'];
+ commandSTOffGroup = ['beq','bne'];
+ commandTargetGroup=['j','jal'];
+ commandTOffSGroup = ['lw','sw','lb','sb'];
+ commandSorDGroup = ['mfhi','mflo','jr'];
+ commandTImmGroup = ['lui'];
+ commandDTHGroup = ['sll','sra','srl'];*/
+
 function initCommandParser() {
     var commandParser = {};
-    var parseArray = generateParseArray();
     commandParser.createCommand = function(code){
-        var splitedCode = code.split(' ');
-        for (var i=1;i<splitedCode.length-1;i++){
-            splitedCode[i] = splitedCode[i].substring(0,splitedCode[i].length-1);
-        }
-        console.log(splitedCode[0]);
-        console.log(splitedCode[1]);
-        console.log(splitedCode[2]);
-        console.log(splitedCode[3]);
+        var splitedCode = code.split(commandRegExp);
+        splitedCode = splitedCode.filter(function(element){
+            var b = true;
+            if (element.length<2){
+                if (numberSet.indexOf(parseInt(element)) == -1){
+                    b = false;
+                }
+            }
+            return b;
+        });
         return splitedCode;
     };
     commandParser.parse = function (splitedCode) {
-        return parseArray[splitedCode[0]](splitedCode);
+        var code = splitedCode[0];
+        switch (code){
+            //TImm Group
+            case 'addi':
+            case 'addiu':
+            case 'andi':
+            case 'ori':
+            case 'slti':
+            case 'sltiu':
+            case 'xori':
+                return cStart[code]+convertTSImm(splitedCode);
+                break;
+            //DST Group
+            case 'add':
+            case 'addu':
+            case 'and':
+            case 'or':
+            case 'sllv':
+            case 'slt':
+            case 'sltu':
+            case 'srlv':
+            case 'sub':
+            case 'subu':
+            case 'xor':
+                return cStart[code]+convertDST(splitedCode) + cEnd[code];
+                break;
+            //SOff Group
+            case 'bgez':
+            case 'bgezal':
+            case 'bgtz':
+            case 'blez':
+            case 'bltz':
+            case 'bltzal':
+                return cStart[code] + convertSOff(splitedCode);
+                break;
+            //ST Group
+            case 'div':
+            case 'divu':
+            case 'mult':
+            case 'multu':
+                return cStart[code] + convertST(splitedCode) + cEnd[code];
+                break;
+            //STOff Group
+            case 'beq':
+            case 'bne':
+                return cStart[code] + convertSTOff(splitedCode);
+                break;
+            //Target Group
+            case 'j':
+            case 'jal':
+                return cStart[code] + convertTarget(splitedCode);
+                break;
+            //TOffS Group
+            case 'lw':
+            case 'sw':
+            case 'lb':
+            case 'sb':
+                return cStart[code] + convertTOffS(splitedCode);
+                break;
+            //SorD Group
+            case 'mfhi':
+            case 'mflo':
+            case 'jr':
+                return cStart[code] + convertSorD(splitedCode) + cEnd[code];
+                break;
+            //TImm Group
+            case 'lui':
+                return cStart[code] + convertTImm(splitedCode);
+                break;
+            //DTH Group
+            case 'sll':
+            case 'sra':
+            case 'srl':
+                return cStart[code] + convertDTH(splitedCode) + cEnd[code];
+                break;
+
+        }
     };
     return commandParser;
 }
-//endregion
 
-function generateParseArray() {
-    var parseArray = [];
-    parseArray['add'] = function (splitedCode) {
-        return "000000" + convertDST(splitedCode) + "0000010000";
-    };
-    parseArray['addi'] = function(splitedCode){
-        return "001000" + convertTSImm(splitedCode);
-    };
-    parseArray['addiu'] = function(splitedCode){
-        return "001001" + convertTSImm(splitedCode);
-    };
-    parseArray['addu'] = function(splitedCode){
-        return "000000" + convertDST(splitedCode) + "00000100001"
-    };
-    return parseArray;
-}
 
-//TODO:докинути тут необхідні нулі до кінця
-function convertDST(splitedCode){
-    return DexToBin(getRegisterCode(splitedCode[2])) +DexToBin(getRegisterCode(splitedCode[3])) + DexToBin(getRegisterCode(splitedCode[1]));
-}
-
-//TODO:докинути тут необхідні нулі до кінця
-function convertTSImm(splitedCode){
-    return DexToBin(getRegisterCode(splitedCode[2])) + DexToBin(getRegisterCode(splitedCode[1]))
-        + DexToBin(parseInt(splitedCode[3]))
-        ;
-}
-
-registerCode = {
-    'zero': 0,
-    'at': 1,
-    'v0': 2,
-    'v1': 3,
-    'a0': 4,
-    'a1': 5,
-    'a2': 6,
-    'a3': 7,
-    't0': 8,
-    't1': 9,
-    't2': 10,
-    't3': 11,
-    't4': 12,
-    't5': 13,
-    't6': 14,
-    't7': 15,
-    's0': 16,
-    's1': 17,
-    's2': 18,
-    's3': 19,
-    's4': 20,
-    's5': 21,
-    's6': 22,
-    's7': 23,
-    't8': 24,
-    't9': 25,
-    'k0': 26,
-    'k1': 27,
-    'gp': 28,
-    'sp': 29,
-    's8': 30,
-    'ra': 31
-};
 
 numberSet = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 /**
  * @param {String} code
+ * @return {Number}
  */
 function getRegisterCode(code) {
     var exsCode = code.substring(1);
@@ -148,4 +312,149 @@ function getRegisterCode(code) {
     }
     return parseInt(exsCode);
 }
+//endregion
+
+//region CPU
+function initDemoCPU(){
+    var demoCPU = {};
+    demoCPU.ram = initRamHolder();
+    demoCPU.cRAM = initCommandRamHolder();
+    var commandParser = initCommandParser();
+    demoCPU.register = initRegisterHolder();
+    demoCPU.commandParser = commandParser;
+    var commandWork = [];
+
+    var getSTCode = function (splitedCode) {
+        return [demoCPU.register.get(getRegisterCode(splitedCode[2])),demoCPU.register.get(getRegisterCode(splitedCode[3]))];
+    };
+
+    var getSImmCode = function(splitedCode){
+        return [demoCPU.register.get(getRegisterCode(splitedCode[2])),parseInt(splitedCode[3])]
+    };
+
+    commandWork['add'] = function (splitedCode) {
+        var d = getRegisterCode(splitedCode[1]);
+        var st = getSTCode(splitedCode);
+        demoCPU.register.set(d,st[0]+st[1]);
+    };
+
+    commandWork['addi'] = function(splitedCode){
+        var d = getRegisterCode(splitedCode[1]);
+        var simm = getSImmCode(splitedCode);
+        demoCPU.register.set(d,simm[0]+simm[1]);
+    };
+
+    commandWork['and'] = function (splitedCode) {
+        var d = getRegisterCode(splitedCode[1]);
+        var st = getSTCode(splitedCode);
+        demoCPU.register.set(d,st[0] & st[1]);
+    };
+
+    commandWork['andi'] = function (splitedCode) {
+        var d = getRegisterCode(splitedCode[1]);
+        var simm = getSImmCode(splitedCode);
+        demoCPU.register.set(d,simm[0] & simm[1]);
+    };
+
+
+    commandWork['lui'] = function (splitedCode) {
+        var t = getRegisterCode(splitedCode[1]);
+        demoCPU.register.set(t,parseInt(splitedCode[2]<<16));
+    };
+
+    commandWork['noop'] = function (splitedCode) {};
+
+    commandWork['or'] = function (splitedCode) {
+        var d = getRegisterCode(splitedCode[1]);
+        var st = getSTCode(splitedCode);
+        demoCPU.register.set(d,st[0] | st[1]);
+    };
+
+    commandWork['ori'] = function (splitedCode) {
+        var d = getRegisterCode(splitedCode[1]);
+        var simm = getSImmCode(splitedCode);
+        demoCPU.register.set(d,simm[0] | simm[1]);
+    };
+
+    commandWork['sll'] = function (splitedCode) {
+        var d = getRegisterCode(splitedCode[1]);
+
+    };
+
+    commandWork['sllv'] = function (splitedCode) {
+
+    };
+
+    commandWork['slt'] = function (splitedCode) {
+
+    };
+
+    commandWork['slti'] = function (splitedCode) {
+
+    };
+
+    commandWork['sra'] = function (splitedCode) {
+
+    };
+
+    commandWork['srl'] = function (splitedCode) {
+
+    };
+
+    commandWork['srlv'] = function (splitedCode) {
+
+    };
+
+    commandWork['sub'] = function (splitedCode) {
+
+    };
+
+    commandWork['xor'] = function (splitedCode) {
+
+    };
+
+    commandWork['xori'] = function (splitedCode) {
+
+    };
+
+
+    demoCPU.operate = function(splitedCode){
+        console.log(splitedCode);
+        commandWork[splitedCode[0]](splitedCode);
+    };
+
+    demoCPU.command = function (command) {
+        this.operate(commandParser.createCommand(command));
+    };
+    return demoCPU;
+}
+//endregion
+
+//region ALU
+/*
+ALU Notes:
+- З цікавого: усі операції діляться за бітами:
+    Якщо команда починається з 000000, оцінка за останніми шістьма бітами хвоста, методом if-else:
+        1. Перший біт не нульовий - це звичайна арифметична операція з трьома регістрами
+        2. Другий біт не нульовий - це операція, що використовує аккомулятор
+        3. Третій біт не нульовий - це команда стрибка
+        4. Четвертий біт не нульовий - це зсув для трьох регістрів
+        5. П’ятий біт не нульовий - це зсув вправо для дивних параметрів
+        6. Всі нулі - це зсув вліво для дивних параметрів
+
+ */
+function initALU(registerHolder, ramHolder, commandRamHolder){
+    var alu = {};
+    alu.calculate = function(b){
+        if (b.startsWith("000000")){
+
+        } else {
+
+        }
+    };
+    return alu;
+}
+//endregion
+
+
 

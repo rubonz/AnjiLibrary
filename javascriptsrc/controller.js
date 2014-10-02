@@ -1,6 +1,9 @@
 function TestCtrl($scope){
-    var parser = initCommandParser();
+    var demoCPU = initDemoCPU();
+    $scope.registers = demoCPU.register.registerMap;
+    $scope.registersName = registersName;
+    $scope.resultArea = "";
     $scope.runConvert = function(){
-       $scope.resultArea = parser.parse(parser.createCommand($scope.codeArea));
+        $scope.resultArea += BinToViewBin(demoCPU.commandParser.parse(demoCPU.commandParser.createCommand($scope.codeArea)))+ "\n";
     }
 }
