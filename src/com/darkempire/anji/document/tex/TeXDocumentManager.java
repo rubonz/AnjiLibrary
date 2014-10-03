@@ -37,4 +37,8 @@ public class TeXDocumentManager {
     public TeXFlowObjectManager getFlowObjectManager() {
         return flowObjectManager;
     }
+
+    public void close() {
+        out.close();
+    }
 }

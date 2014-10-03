@@ -10,16 +10,12 @@ import java.util.List;
  * Created by siredvin on 01.09.14.
  */
 public class TeXProjectManager {
-    public final static String mathPackageStart = "\\documentclass[a4paper,12pt,oneside,ukrainian]{book}\n" +
+    public final static String mathPackageStart = "\\documentclass[a4paper,12pt,oneside,ukrainian]{article}\n" +
             "\\usepackage[T2A]{fontenc}\n" +
             "\\usepackage[utf8]{inputenc}\n" +
             "\\usepackage{amssymb,amsmath,amsthm}\n" +
-            "\\usepackage{vmargin}\n" +
-            "\\usepackage{setspace}\n" +
             "\\usepackage[ukrainian]{babel}\n" +
-            "\\usepackage{tikz}\n" +
             "\\usepackage[unicode,colorlinks]{hyperref}\n" +
-            "\\usetikzlibrary{patterns,positioning,calc}\n" +
             "\\setlength{\\parindent}{1.25cm}\n";
 
     private File projectDirectory;
@@ -81,23 +77,40 @@ public class TeXProjectManager {
         return mainFile;
     }
 
-    public File createNewPart() {
-        String name = String.valueOf(additionalFiles.size()) + ".tex";
+    public int createNewPart() {
+        int size = additionalFiles.size();
+        String name = String.valueOf(size) + ".tex";
         File part = new File(projectDirectory, name);
         mainFileManager.getEventWriter().input(name);
         additionalFiles.add(part);
-        return part;
+        try {
+            additionalFileManagers.add(new TeXDocumentManager(new PrintStream(new FileOutputStream(part, false))));
+        } catch (FileNotFoundException e) {
+            Log.error(Log.texIndex, e);
+        }
+        return size;
     }
 
-    public File createNewPart(String name) {
+    public int createNewPart(String name) {
+        int size = additionalFiles.size();
         File part = new File(projectDirectory, name);
         mainFileManager.getEventWriter().input(name);
         additionalFiles.add(part);
-        return part;
+        try {
+            additionalFileManagers.add(new TeXDocumentManager(new PrintStream(new FileOutputStream(part, false))));
+        } catch (FileNotFoundException e) {
+            Log.error(Log.texIndex, e);
+        }
+        return size;
     }
 
     public TeXDocumentManager getMainFileManager() {
         return mainFileManager;
+    }
+
+    public void close() {
+        additionalFileManagers.forEach(TeXDocumentManager::close);
+        mainFileManager.close();
     }
 
 }

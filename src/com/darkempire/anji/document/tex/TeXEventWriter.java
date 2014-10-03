@@ -83,6 +83,7 @@ public class TeXEventWriter {
         generateTabular();
         out.print("\\");
         out.print(comm);
+        isNeedNewline = true;
         return this;
     }
 
@@ -95,6 +96,7 @@ public class TeXEventWriter {
             out.print(s);
             out.print('}');
         }
+        isNeedNewline = true;
         return this;
     }
 
@@ -110,6 +112,7 @@ public class TeXEventWriter {
             out.print(s);
             out.print('}');
         }
+        isNeedNewline = true;
         return this;
     }
     //endregion
@@ -141,6 +144,66 @@ public class TeXEventWriter {
 
     public TeXEventWriter input(String name) {
         return icommP("input", name);
+    }
+    //endregion
+
+    //region Команди форматування тексту
+    public TeXEventWriter section(String name) {
+        return commP("section", name);
+    }
+
+    public TeXEventWriter subsection(String name) {
+        return commP("subsection", name);
+    }
+
+    public TeXEventWriter subsubsection(String name) {
+        return commP("subsubsection", name);
+    }
+
+    public TeXEventWriter paragraph(String name) {
+        return commP("paragraph", name);
+    }
+
+    public TeXEventWriter subparagraph(String name) {
+        return commP("subparagraph", name);
+    }
+
+    public TeXEventWriter part(String name) {
+        return commP("part", name);
+    }
+
+    public TeXEventWriter chapter(String name) {
+        return commP("chapter", name);
+    }
+    //endregion
+
+    //region Команди форматування тексту без нумерування
+    public TeXEventWriter sections(String name) {
+        return commP("section*", name);
+    }
+
+    public TeXEventWriter subsections(String name) {
+        return commP("subsection*", name);
+    }
+
+    public TeXEventWriter subsubsections(String name) {
+        return commP("subsubsection*", name);
+    }
+
+    public TeXEventWriter paragraphs(String name) {
+        return commP("paragraph*", name);
+    }
+
+    public TeXEventWriter subparagraphs(String name) {
+        return commP("subparagraph*", name);
+    }
+
+    public TeXEventWriter parts(String name) {
+        return commP("part*", name);
+    }
+
+    public TeXEventWriter chapters(String name) {
+        return commP("chapter*", name);
     }
     //endregion
 
@@ -548,10 +611,19 @@ public class TeXEventWriter {
     }
     //endregion
 
+
     //region Спеціальні функції
     public TeXEventWriter write(ITeXObject object) {
         object.write(this);
         return this;
     }
     //endregion
+
+
+    public void close() {
+        while (environmentStack.size() > 0) {
+            closeEnvironment();
+        }
+        out.close();
+    }
 }
