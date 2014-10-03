@@ -5,41 +5,145 @@
 <script src="mips.js"></script>
 <script src="controller.js"></script>
 <script src="lib/angular.js"></script>
+<link rel="stylesheet" type="text/css" href="index.css" />
 <head lang="en">
     <meta charset="UTF-8">
     <title></title>
 </head>
 <body>
 <!--<div ng-app>-->
-    <!--<h2>Todo</h2>-->
-    <!--<div ng-controller="TodoCtrl">-->
-        <!--<span>{{remaining()}} of {{todos.length}} remaining</span>-->
-        <!--[ <a href="" ng-click="archive()">archive</a> ]-->
-        <!--<ul class="unstyled">-->
-            <!--<li ng-repeat="todo in todos">-->
-                <!--<input type="checkbox" ng-model="todo.done">-->
-                <!--<span class="done-{{todo.done}}">{{todo.text}}</span>-->
-            <!--</li>-->
-        <!--</ul>-->
-        <!--<form ng-submit="addTodo()">-->
-            <!--<input type="text" ng-model="todoText"  size="30" placeholder="add new todo here">-->
-            <!--<input class="btn-primary" type="submit" value="add">-->
-        <!--</form>-->
-    <!--</div>-->
+<!--<h2>Todo</h2>-->
+<!--<div ng-controller="TodoCtrl">-->
+<!--<span>{{remaining()}} of {{todos.length}} remaining</span>-->
+<!--[ <a href="" ng-click="archive()">archive</a> ]-->
+<!--<ul class="unstyled">-->
+<!--<li ng-repeat="todo in todos">-->
+<!--<input type="checkbox" ng-model="todo.done">-->
+<!--<span class="done-{{todo.done}}">{{todo.text}}</span>-->
+<!--</li>-->
+<!--</ul>-->
+<!--<form ng-submit="addTodo()">-->
+<!--<input type="text" ng-model="todoText"  size="30" placeholder="add new todo here">-->
+<!--<input class="btn-primary" type="submit" value="add">-->
+<!--</form>-->
+<!--</div>-->
 <!--</div>-->
 <div ng-app>
     <div ng-controller="TestCtrl">
         <form ng-submit="runConvert()">
-            <textarea placeholder="Код" ng-model="$parent.codeArea"></textarea> <br/>
+            <textarea placeholder="Код" ng-model="$parent.codeArea" cols="30" rows="10"></textarea> <br/>
             <input class="btn-primary" type="submit" value="Додати">
         </form>
         <br/>
+        <div class="CSSTableGenerator">
+            <table>
+                <tr>
+                    <th>Регістри</th>
+                    <th>Значення</th>
+                    <th>Регістри</th>
+                    <th>Значення</th>
+                </tr>
+                <tr>
+                    <td>zero</td>
+                    <td>{{registers[0]}}</td>
+                    <td>$s0</td>
+                    <td>{{registers[16]}}</td>
+                </tr>
+                <tr>
+                    <td>$at</td>
+                    <td>{{registers[1]}}</td>
+                    <td>$s1</td>
+                    <td>{{registers[17]}}</td>
+                </tr>
+                <tr>
+                    <td>$v0</td>
+                    <td>{{registers[2]}}</td>
+                    <td>$s2</td>
+                    <td>{{registers[18]}}</td>
+                </tr>
+                <tr>
+                    <td>$v1</td>
+                    <td>{{registers[3]}}</td>
+                    <td>$s3</td>
+                    <td>{{registers[19]}}</td>
+                </tr>
+                <tr>
+                    <td>$a0</td>
+                    <td>{{registers[4]}}</td>
+                    <td>$s4</td>
+                    <td>{{registers[20]}}</td>
+                </tr>
+                <tr>
+                    <td>$a1</td>
+                    <td>{{registers[5]}}</td>
+                    <td>$s5</td>
+                    <td>{{registers[21]}}</td>
+                </tr>
+                <tr>
+                    <td>$a2</td>
+                    <td>{{registers[6]}}</td>
+                    <td>$s6</td>
+                    <td>{{registers[22]}}</td>
+                </tr>
+                <tr>
+                    <td>$a3</td>
+                    <td>{{registers[7]}}</td>
+                    <td>$s7</td>
+                    <td>{{registers[23]}}</td>
+                </tr>
+                <tr>
+                    <td>$t0</td>
+                    <td>{{registers[8]}}</td>
+                    <td>$t8</td>
+                    <td>{{registers[24]}}</td>
+                </tr>
+                <tr>
+                    <td>$t1</td>
+                    <td>{{registers[9]}}</td>
+                    <td>$t9</td>
+                    <td>{{registers[25]}}</td>
+                </tr>
+                <tr>
+                    <td>$t2</td>
+                    <td>{{registers[10]}}</td>
+                    <td>$k0</td>
+                    <td>{{registers[26]}}</td>
+                </tr>
+                <tr>
+                    <td>$t3</td>
+                    <td>{{registers[11]}}</td>
+                    <td>$k1</td>
+                    <td>{{registers[27]}}</td>
+                </tr>
+                <tr>
+                    <td>$t4</td>
+                    <td>{{registers[12]}}</td>
+                    <td>$gp</td>
+                    <td>{{registers[28]}}</td>
+                </tr>
+                <tr>
+                    <td>$t5</td>
+                    <td>{{registers[13]}}</td>
+                    <td>$sp</td>
+                    <td>{{registers[29]}}</td>
+                </tr>
+                <tr>
+                    <td>$t6</td>
+                    <td>{{registers[14]}}</td>
+                    <td>$s8</td>
+                    <td>{{registers[30]}}</td>
+                </tr>
+                <tr>
+                    <td>$t7</td>
+                    <td>{{registers[15]}}</td>
+                    <td>$ra</td>
+                    <td>{{registers[31]}}</td>
+                </tr>
+            </table>
+        </div>
+        <br/>
+        <br/>
         <textarea placeholder="Результат" ng-model="resultArea" cols="38" rows="10"></textarea>
-        <!--<ul class="unstyled">-->
-            <!--<li ng-repeat="register in registers track by $index">-->
-                <!--<span>{{registersName[$index]}} -- {{register}}</span>-->
-            <!--</li>-->
-        <!--</ul>-->
     </div>
 </div>
 </body>

@@ -89,3 +89,13 @@ function BinToViewBin(b){
     }
     return result;
 }
+
+/**
+ * Взагалі, це чорна магія
+ * @param {Number} x
+ * @param {Number} y
+ * @returns {number}
+ */
+function integerDivision(x,y){
+    return x/y>>0;
+}
