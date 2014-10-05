@@ -3,6 +3,8 @@ package com.darkempire.math.utils;
 import com.darkempire.anji.annotation.AnjiUtil;
 import com.darkempire.anji.log.Log;
 import com.darkempire.math.struct.matrix.IDoubleMatrixProvider;
+import com.darkempire.math.struct.set.DoubleInterval;
+import com.darkempire.math.struct.set.SimpleDoubleInterval;
 import com.darkempire.math.struct.vector.DoubleFixedVector;
 import com.darkempire.math.struct.vector.DoubleResizeVector;
 import com.darkempire.math.struct.vector.IDoubleVectorProvider;
@@ -60,5 +62,13 @@ public final class WolframConvertUtils {
         }
         return vector;
     }
+
+    //TODO:реалізувати підтримку поєднаних інтервалів
+    public static DoubleInterval fromWolframToDoubleInterval(String wolframInterval) {
+        String[] splited = wolframInterval.split("<=");
+        return new SimpleDoubleInterval(Double.parseDouble(splited[0].trim()), Double.parseDouble(splited[2].trim()));
+    }
+
+
 
 }

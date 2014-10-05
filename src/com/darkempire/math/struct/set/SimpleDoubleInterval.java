@@ -171,6 +171,9 @@ public class SimpleDoubleInterval extends DoubleInterval {
 
     @Override
     public DoubleInterval intersection(DoubleInterval doubleInterval) {
+        if (doubleInterval.isSimple()) {
+            return new SimpleDoubleInterval(Math.max(start, doubleInterval.getStart()), Math.min(end, doubleInterval.getEnd()));
+        }
         return doubleInterval.intersection(this);
     }
 

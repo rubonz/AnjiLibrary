@@ -3,7 +3,11 @@ package com.darkempire.math.utils;
 import com.darkempire.anji.annotation.AnjiUtil;
 import com.darkempire.math.struct.geometry.geometrynd.FixedLine;
 import com.darkempire.math.struct.geometry.geometrynd.FixedPoint;
+import com.darkempire.math.struct.set.SimpleDoubleInterval;
 import com.darkempire.math.struct.vector.DoubleVector;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -64,5 +68,20 @@ public final class GeometryUtils {
         vector.set(i, xi * Math.cos(angle) - xj * Math.sin(angle));
         vector.set(j, xi * Math.sin(angle) + xj * Math.cos(angle));
         return vector;
+    }
+
+    /**
+     * Генерує купу інтервалів у вигляді [x_0,x_1],[x_1,x_2],...
+     *
+     * @param values [x_0,x_1,x_2,...]
+     * @return інтервали
+     */
+    public static List<SimpleDoubleInterval> generateIntervals(double... values) {
+        List<SimpleDoubleInterval> result = new ArrayList<>();
+        int size = values.length - 1;
+        for (int i = 0; i < size; i++) {
+            result.add(new SimpleDoubleInterval(values[i], values[i + 1]));
+        }
+        return result;
     }
 }

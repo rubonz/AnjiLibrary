@@ -1,6 +1,7 @@
 package com.darkempire.math.utils;
 
 import com.darkempire.anji.annotation.AnjiUtil;
+import com.darkempire.anji.util.Util;
 
 @AnjiUtil
 public final class StringUtils {
@@ -43,5 +44,18 @@ public final class StringUtils {
             len--;
         }
         return c.toString();
+    }
+
+    public static String generateIndexedStrings(String value, int count) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            builder.append(value);
+            builder.append("_{");
+            builder.append(i);
+            builder.append("}");
+            builder.append(',');
+        }
+        Util.removeLastChar(builder);
+        return builder.toString();
     }
 }
