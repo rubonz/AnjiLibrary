@@ -3,7 +3,13 @@ package sample;
 import com.darkempire.anji.document.tex.TeXDocumentManager;
 import com.darkempire.anji.document.tex.TeXEventWriter;
 import com.darkempire.anji.document.tex.TeXTableObject;
+import com.darkempire.anji.log.Log;
+import com.darkempire.math.struct.matrix.BooleanFixedMatrix;
+import com.darkempire.math.struct.matrix.BooleanMatrix;
 import com.darkempire.math.struct.number.Fraction;
+import com.darkempire.math.struct.set.CombinateDoubleInterval;
+import com.darkempire.math.struct.set.DoubleInterval;
+import com.darkempire.math.struct.set.SimpleDoubleInterval;
 
 /**
  * Create in 10:19
@@ -16,15 +22,8 @@ public class Main2 {
 
 
 // Here you have to simplify the fraction
-        Fraction temp = new Fraction(-0.155f);
-        System.out.println(temp);
-        System.out.println(temp.doubleValue());
-        TeXDocumentManager manager = new TeXDocumentManager(System.out);
-        TeXEventWriter out = manager.getEventWriter();
-        TeXTableObject table = new TeXTableObject(3, 3).row(0, "t", "t", "t")
-                .row(1, "a", "a", "a").row(2, "b", "b", "b");
-        table.getHorizontalLinesMatrix().fillFirstRow(true).fillLastRow(false).fillRectangle(1, 1, 2, 2, true);
-        table.write(out);
+        DoubleInterval i = new CombinateDoubleInterval(new SimpleDoubleInterval(5, 6), new SimpleDoubleInterval(5.5, 6.5), new SimpleDoubleInterval(6.5, 7));
+        Log.log(Log.debugIndex, i);
     }
 
 }

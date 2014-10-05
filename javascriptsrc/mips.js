@@ -202,6 +202,7 @@ var commandRegExp = new RegExp("(,| )");
 
 function initCommandParser() {
     var commandParser = {};
+    //TODO:спробувати додати тут розбір label
     commandParser.createCommand = function (code) {
         var splitedCode = code.split(commandRegExp);
         splitedCode = splitedCode.filter(function (element) {

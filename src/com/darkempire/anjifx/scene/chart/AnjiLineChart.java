@@ -26,7 +26,6 @@ import java.util.Set;
  * Time: 8:25
  * To change this template use File | Settings | File Templates.
  */
-@Deprecated
 public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
     private List<AnjiColorProperty> colorValues;
     private InvalidationListener updateColor = observable -> updateStyle();
@@ -62,9 +61,8 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
         colorValues.get(index).setValue(color);
     }
 
-    public void removeColor(int lineIndex) {
-        colorValues.remove(lineIndex);//TODO:тут скрита помилка
-        updateStyle();
+    public void clearColor(int lineIndex) {
+        colorValues.get(lineIndex).setValue(Color.gray(Math.random() * 0.5 + 0.3));
     }
 
     private void updateStyle() {
