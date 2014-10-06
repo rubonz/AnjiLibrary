@@ -1,5 +1,6 @@
 package com.darkempire.anjifx.scene;
 
+import com.darkempire.anji.annotation.AnjiRewrite;
 import com.darkempire.anjifx.beans.property.AbstractAnjiReadOnlyProperty;
 import javafx.scene.control.Slider;
 
@@ -10,6 +11,7 @@ import javafx.scene.control.Slider;
  * Time: 17:22
  * To change this template use File | Settings | File Templates.
  */
+@AnjiRewrite
 public class DoubleSlider extends Slider {
     private AbstractAnjiReadOnlyProperty<Double> doubleProperty = new AbstractAnjiReadOnlyProperty<Double>() {
         @Override

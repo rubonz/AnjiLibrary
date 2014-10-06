@@ -1,5 +1,6 @@
 package com.darkempire.anjifx.scene;
 
+import com.darkempire.anji.annotation.AnjiRewrite;
 import com.darkempire.anjifx.beans.property.AnjiDoubleProperty;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Control;
@@ -11,6 +12,7 @@ import javafx.scene.control.Control;
  * Time: 9:19
  * To change this template use File | Settings | File Templates.
  */
+@AnjiRewrite
 public class DoubleSpinBox extends Control {
     private static final double DEFAULT_STEP = 0.01;
     private DoubleField inheritedField;

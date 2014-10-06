@@ -1,5 +1,6 @@
 package com.darkempire.anji.document.tables;
 
+import com.darkempire.anji.annotation.AnjiDocumentWork;
 import com.darkempire.anji.util.Pair;
 import com.darkempire.math.struct.geometry.geomerty2d.Point2D;
 import com.darkempire.math.struct.result.Graphics2DResult;
@@ -17,6 +18,7 @@ import java.util.Scanner;
  * Time: 17:52
  * To change this template use File | Settings | File Templates.
  */
+@AnjiDocumentWork
 public class SimpleTableReader {
     private File table;
     private String name;

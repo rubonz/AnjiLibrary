@@ -1,11 +1,14 @@
 package com.darkempire.anji.engine;
 
+import com.darkempire.anji.annotation.AnjiUnknow;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by siredvin on 26.12.13.
  */
+@AnjiUnknow
 public abstract class Engine {
     private List<Process> processList;
     private List<EngineElement> elementList;

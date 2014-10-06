@@ -1,5 +1,6 @@
 package com.darkempire.anjifx.annotation;
 
+import com.darkempire.anji.annotation.AnjiRewrite;
 import com.darkempire.internal.anji.AnjiInternal;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -30,6 +31,7 @@ import java.util.regex.Pattern;
 @AnjiInternal
 @SupportedAnnotationTypes({"com.darkempire.anjifx.annotation.AnjiFXValue"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
+@AnjiRewrite
 //Magic:це дійсно чорна магія, яке щястя, що це інтернал фіча
 public class AnjiValueProcessor extends AbstractProcessor {
     private static final String packagePattern = "package.+value;";

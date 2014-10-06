@@ -1,5 +1,7 @@
 package com.darkempire.anji.document;
 
+import com.darkempire.anji.annotation.AnjiUnknow;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,6 +9,7 @@ import java.util.Map;
  * Create in 12:59
  * Created by siredvin on 08.04.14.
  */
+@AnjiUnknow
 public class PostgreSQLTypeConverter implements TypeConverter {
     private static Map<String, String> typeMap;
 

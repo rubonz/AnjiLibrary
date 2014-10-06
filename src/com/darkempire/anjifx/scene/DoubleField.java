@@ -1,5 +1,6 @@
 package com.darkempire.anjifx.scene;
 
+import com.darkempire.anji.annotation.AnjiRewrite;
 import com.darkempire.anjifx.beans.property.AnjiDoubleProperty;
 import com.darkempire.anjifx.beans.property.AnjiObjectProperty;
 import javafx.beans.binding.Bindings;
@@ -16,6 +17,7 @@ import java.text.ParseException;
  * Time: 19:04
  * To change this template use File | Settings | File Templates.
  */
+@AnjiRewrite
 public class DoubleField extends TextField {
     private static final int DEFAULT_FRACTION_DIGITS = 14;
     private AnjiDoubleProperty valueProperty;

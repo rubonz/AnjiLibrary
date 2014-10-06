@@ -1,5 +1,6 @@
 package com.darkempire.anjifx.scene;
 
+import com.darkempire.anji.annotation.AnjiRewrite;
 import com.darkempire.anjifx.beans.property.AnjiIntegerProperty;
 import com.darkempire.anjifx.beans.property.AnjiObjectProperty;
 import javafx.beans.binding.Bindings;
@@ -16,6 +17,7 @@ import java.text.ParseException;
  * Time: 19:04
  * To change this template use File | Settings | File Templates.
  */
+@AnjiRewrite
 public class IntegerField extends TextField {
     private AnjiIntegerProperty valueProperty;
     private AnjiObjectProperty<NumberFormat> numberFormatProperty;

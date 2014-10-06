@@ -1,5 +1,6 @@
 package com.darkempire.anji.database;
 
+import com.darkempire.anji.annotation.AnjiUnknow;
 import com.darkempire.anji.log.Log;
 import com.darkempire.anjifx.beans.property.AbstractAnjiProperty;
 import com.darkempire.anjifx.beans.property.AnjiIntegerProperty;
@@ -10,6 +11,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@AnjiUnknow
 public class DatabaseAnalyzer {
 
     /**

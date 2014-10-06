@@ -1,6 +1,7 @@
 package com.darkempire.anji.document.diagrams;
 
 import com.darkempire.anji.annotation.AnjiConsts;
+import com.darkempire.anji.annotation.AnjiUnknow;
 import com.darkempire.anji.document.PostgreSQLTypeConverter;
 import com.darkempire.anji.document.TypeConverter;
 
@@ -21,6 +22,7 @@ import java.io.PrintWriter;
  * Create in 12:19
  * Created by siredvin on 08.04.14.
  */
+@AnjiUnknow
 public class XMLDatabaseRecoder {
     @AnjiConsts
     private static final class XMLQNameParams {

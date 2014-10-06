@@ -1,5 +1,6 @@
 package com.darkempire.anji.document.diagrams;
 
+import com.darkempire.anji.annotation.AnjiUnknow;
 import com.darkempire.anji.document.PostgreSQLTypeConverter;
 import com.darkempire.anji.document.TypeConverter;
 import com.darkempire.anji.util.AnjiStringUtil;
@@ -15,6 +16,7 @@ import java.util.List;
  * Create in 19:42
  * Created by siredvin on 08.04.14.
  */
+@AnjiUnknow
 public class TableNode implements DiagramNode, Iterable<ColumnNode> {
     private String name;
     private String id;

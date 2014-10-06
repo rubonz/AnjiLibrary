@@ -1,5 +1,6 @@
 package com.darkempire.anji.database;
 
+import com.darkempire.anji.annotation.AnjiUnknow;
 import com.darkempire.anji.log.Log;
 import com.darkempire.anji.annotation.AnjiUtil;
 import com.darkempire.anji.util.Util;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
  * Created by siredvin on 14.04.14.
  */
 @AnjiUtil
+@AnjiUnknow
 public final class DatabaseAnalyzerUtil {
 
     private DatabaseAnalyzerUtil() {

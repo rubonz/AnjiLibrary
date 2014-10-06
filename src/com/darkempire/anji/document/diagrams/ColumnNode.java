@@ -1,5 +1,6 @@
 package com.darkempire.anji.document.diagrams;
 
+import com.darkempire.anji.annotation.AnjiUnknow;
 import com.darkempire.anji.util.AnjiStringUtil;
 
 import java.io.PrintWriter;
@@ -8,6 +9,7 @@ import java.io.PrintWriter;
  * Create in 19:43
  * Created by siredvin on 08.04.14.
  */
+@AnjiUnknow
 public class ColumnNode implements DiagramNode {
     private String name;
     private String id;
