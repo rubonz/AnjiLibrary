@@ -10,6 +10,10 @@ import com.darkempire.math.struct.number.Fraction;
 import com.darkempire.math.struct.set.CombinateDoubleInterval;
 import com.darkempire.math.struct.set.DoubleInterval;
 import com.darkempire.math.struct.set.SimpleDoubleInterval;
+import com.darkempire.math.struct.vector.IndexFixedVector;
+import com.darkempire.math.struct.vector.IndexVector;
+
+import java.util.Random;
 
 /**
  * Create in 10:19
@@ -22,7 +26,9 @@ public class Main2 {
 
 
 // Here you have to simplify the fraction
-        DoubleInterval i = new CombinateDoubleInterval(new SimpleDoubleInterval(5, 6), new SimpleDoubleInterval(5.5, 6.5), new SimpleDoubleInterval(6.5, 7));
+        Random random = new Random();
+        IndexVector i = new IndexFixedVector(5);
+        i.fill(ij -> random.nextInt(20));
         Log.log(Log.debugIndex, i);
     }
 
