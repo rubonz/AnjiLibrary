@@ -1,5 +1,6 @@
 package sample;
 
+import com.darkempire.anji.document.tex.util.TeXUtil;
 import com.darkempire.anji.log.Log;
 import com.darkempire.anji.annotation.AnjiUtil;
 import com.darkempire.anji.document.tex.TeXProjectManager;
@@ -28,7 +29,7 @@ public final class SimplexSolverMain {
         Log.initSimpleLog();
         File dir = new File("./TeX");
         TeXProjectManager projectManager = new TeXProjectManager(dir, "main1.tex");
-        projectManager.insertMathStart();
+        TeXUtil.initSimpleHeader(projectManager.getMainFileManager().getEventWriter()).openEnvironment("document");
         TableSimplexSolver solver = new TableSimplexSolver(projectManager.getMainFileManager());
         LinearMultiPolynomial targetFunction = new LinearMultiPolynomial(7, 6);
         ArrayList<SimpleLinearBoundConditional> conditionalList = new ArrayList<>();
@@ -42,7 +43,7 @@ public final class SimplexSolverMain {
         Runtime r = Runtime.getRuntime();
         String cmd = "";
         try {
-            process = r.exec("pdflatex -synctex=1 -interaction=nonstopmode main1.tex", new String[]{}, dir);
+            process = r.exec(new String[]{"pdflatex", "main1.tex"}, null, dir);
             if (!process.isAlive()) {
                 Log.log(Log.debugIndex, "Fail");
             } else {

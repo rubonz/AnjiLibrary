@@ -10,14 +10,6 @@ import java.util.List;
  * Created by siredvin on 01.09.14.
  */
 public class TeXProjectManager {
-    public final static String mathPackageStart = "\\documentclass[a4paper,12pt,oneside,ukrainian]{article}\n" +
-            "\\usepackage[T2A]{fontenc}\n" +
-            "\\usepackage[utf8]{inputenc}\n" +
-            "\\usepackage{amssymb,amsmath,amsthm}\n" +
-            "\\usepackage[ukrainian]{babel}\n" +
-            "\\usepackage[unicode,colorlinks]{hyperref}\n" +
-            "\\setlength{\\parindent}{1.25cm}\n";
-
     private File projectDirectory;
     private List<File> additionalFiles;
     private List<TeXDocumentManager> additionalFileManagers;
@@ -51,12 +43,6 @@ public class TeXProjectManager {
         }
     }
 
-
-    public void insertMathStart() {
-        mainFileManager.getEventWriter().append(mathPackageStart).openEnvironment("document");
-    }
-
-
     public File getProjectDirectory() {
         return projectDirectory;
     }
@@ -75,6 +61,10 @@ public class TeXProjectManager {
 
     public File getMainFile() {
         return mainFile;
+    }
+
+    public File createResourceFile(String name) {
+        return new File(projectDirectory, name);
     }
 
     public int createNewPart() {
