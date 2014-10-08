@@ -107,13 +107,13 @@ public class AnjiTODOProcessor extends AbstractProcessor {
             case ANNOTATION_TYPE:
             case CLASS:
             case INTERFACE:
-                builder.append("Клас:");
+                builder.append("Клас: ");
                 TypeElement typeElement = (TypeElement) e;
                 builder.append(typeElement.getQualifiedName().toString());
                 break;
             case METHOD:
             case CONSTRUCTOR:
-                builder.append("Метод:");
+                builder.append("Метод: ");
                 builder.append(((TypeElement) e.getEnclosingElement()).getQualifiedName().toString());
                 builder.append(':');
                 builder.append(e.getSimpleName());

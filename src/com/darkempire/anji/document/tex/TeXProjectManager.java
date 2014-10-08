@@ -5,11 +5,13 @@ import com.darkempire.anji.log.Log;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Created by siredvin on 01.09.14.
  */
 public class TeXProjectManager {
+    public static final int texBuild = Log.addString("TeX-Build");
     private File projectDirectory;
     private List<File> additionalFiles;
     private List<TeXDocumentManager> additionalFileManagers;
@@ -96,6 +98,25 @@ public class TeXProjectManager {
 
     public TeXDocumentManager getMainFileManager() {
         return mainFileManager;
+    }
+
+    //TODO:повернення якоїсь помилки у випадку, якщо не збілдилося
+    public void build() throws IOException {
+        Process p = Runtime.getRuntime().exec(new String[]{"pdflatex", "main.tex"}, null, projectDirectory);
+        Scanner in = new Scanner(p.getInputStream());
+        while (in.hasNextLine()) {
+            Log.log(texBuild, in.nextLine());
+        }
+    }
+
+    public void buildAndShow() throws IOException {
+        Runtime r = Runtime.getRuntime();
+        Process p = r.exec(new String[]{"pdflatex", "main.tex"}, null, projectDirectory);
+        Scanner in = new Scanner(p.getInputStream());
+        while (in.hasNextLine()) {
+            Log.log(texBuild, in.nextLine());
+        }
+        r.exec(new String[]{"okular", "--noraise", "--unique", "main.pdf"}, null, projectDirectory);
     }
 
     public void close() {

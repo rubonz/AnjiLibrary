@@ -1,7 +1,7 @@
 package com.darkempire.math.struct.set;
 
 import com.darkempire.anji.document.tex.ITeXObject;
-import com.darkempire.math.utils.IWolframObject;
+import com.darkempire.anji.document.wolfram.IWolframObject;
 
 import java.util.List;
 

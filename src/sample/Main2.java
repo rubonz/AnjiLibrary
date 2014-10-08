@@ -22,14 +22,7 @@ import java.util.Random;
 public class Main2 {
 
     public static void main(String[] args) {
-// Code below doesn't work for 0 and NaN - just check before
-
-
-// Here you have to simplify the fraction
-        Random random = new Random();
-        IndexVector i = new IndexFixedVector(5);
-        i.fill(ij -> random.nextInt(20));
-        Log.log(Log.debugIndex, i);
+        Log.log(Log.debugIndex, Double.parseDouble("0.00004"));
     }
 
 }

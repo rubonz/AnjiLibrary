@@ -1,5 +1,7 @@
 package com.darkempire.math.utils;
 
+import com.darkempire.anji.annotation.AnjiExperimental;
+import com.darkempire.anji.annotation.AnjiRewrite;
 import com.darkempire.anji.annotation.AnjiUtil;
 import com.darkempire.math.struct.matrix.BooleanMatrix;
 
@@ -37,6 +39,8 @@ public final class LogicUtil {
      * @param a матриця відношення
      * @return транзитивне замикання
      */
+    @AnjiExperimental
+    @AnjiRewrite
     public static BooleanMatrix getCircuit(BooleanMatrix a) {
         BooleanMatrix a1 = a.add(a.multy(a));
         do {
@@ -53,6 +57,7 @@ public final class LogicUtil {
      * @param simMatrix  матриці відношення ідентифірентності
      * @return змінені матриці
      */
+    @AnjiRewrite
     public static BooleanMatrix[] deepAnalysisRelation(BooleanMatrix succMatrix, BooleanMatrix simMatrix) {
         BooleanMatrix succ = getCircuit(succMatrix.clone());
         BooleanMatrix sim = getCircuit(simMatrix.clone());

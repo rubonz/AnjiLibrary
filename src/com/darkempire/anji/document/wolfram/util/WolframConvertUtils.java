@@ -1,5 +1,6 @@
-package com.darkempire.math.utils;
+package com.darkempire.anji.document.wolfram.util;
 
+import com.darkempire.anji.annotation.AnjiRewrite;
 import com.darkempire.anji.annotation.AnjiUtil;
 import com.darkempire.anji.log.Log;
 import com.darkempire.math.struct.matrix.IDoubleMatrixProvider;
@@ -64,6 +65,7 @@ public final class WolframConvertUtils {
     }
 
     //TODO:реалізувати підтримку поєднаних інтервалів
+    @AnjiRewrite
     public static DoubleInterval fromWolframToDoubleInterval(String wolframInterval) {
         String[] splited = wolframInterval.split("<=");
         return new SimpleDoubleInterval(Double.parseDouble(splited[0].trim()), Double.parseDouble(splited[2].trim()));

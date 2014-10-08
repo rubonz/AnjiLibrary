@@ -1,7 +1,7 @@
 package sample;
 
 import com.darkempire.math.struct.matrix.DoubleFixedMatrix;
-import com.darkempire.math.utils.WolframConvertUtils;
+import com.darkempire.anji.document.wolfram.util.WolframConvertUtils;
 import com.wolfram.jlink.KernelLink;
 import com.wolfram.jlink.MathLinkException;
 import com.wolfram.jlink.MathLinkFactory;

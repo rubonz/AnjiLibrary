@@ -1,5 +1,6 @@
 package com.darkempire.anji.document.tex.util;
 
+import com.darkempire.anji.annotation.AnjiExperimental;
 import com.darkempire.anji.annotation.AnjiUtil;
 import com.darkempire.anji.document.tex.ITeXObject;
 import com.darkempire.anji.document.tex.TeXEventWriter;
@@ -25,13 +26,13 @@ public final class TeXUtil {
             "\n" +
             "\\usepackage{sectsty} % Allows customizing section commands\n" +
             "\\allsectionsfont{\\centering \\normalfont\\scshape} % Make all sections centered, the default font and small caps\n" +
-            "\n" +
+            "\\usepackage{geometry}\n" +
             "\\usepackage{graphicx}\n" +
             "\\usepackage{listings}\n" +
             "\\usepackage{makeidx}\n" +
             "\\usepackage{titling}\n" +
             "\\usepackage{abstract}\n" +
-            "\n" +
+            "\\usepackage{color}\n" +
             "\\usepackage{fancyhdr} % Custom headers and footers\n" +
             "\\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers\n" +
             "\\fancyhead{} % No page header - if you want one, create it in the same way as the footers below\n" +
@@ -42,34 +43,29 @@ public final class TeXUtil {
             "\\renewcommand{\\footrulewidth}{0pt} % Remove footer underlines\n" +
             "\\setlength{\\headheight}{13.6pt} % Customize the height of the header";
 
-    private static final String kpiTitle = "\\newcommand{\\horrule}[1]{\\rule{\\linewidth}{#1}} % Create horizontal rule command with 1 argument of height\n" +
+    private static final String kpiTitle = "\\newgeometry{top=1cm}\n" +
+            "\\newcommand{\\horrule}[1]{\\rule{\\linewidth}{#1}}\n" +
+            "\\begin{titlepage}\n" +
             "\n" +
-            "\\title{\t\n" +
-            "\\normalfont \\normalsize \n" +
-            "\\textsc{Національний технічний університет \"Київський політехнічний інститут\"} \\\\ [25pt] % Your university, school and/or department name(s)\n" +
-            "\\vspace{100px}\n" +
-            "\\horrule{0.5pt} \\\\[0.4cm] % Thin top horizontal rule\n" +
-            "\\huge Лабораторна робота №1 \\\\ % The assignment title\n" +
-            "\\Large з системного аналізу\n" +
-            "\\horrule{2pt} \\\\[0.5cm] % Thick bottom horizontal rule\n" +
-            "\\vspace{30px}\n" +
-            "}\n" +
-            "\\preauthor{\\begin{flushright}\\large} % makes author flush right\n" +
-            "\\postauthor{\\end{flushright}}\n" +
-            "\\author{\n" +
-            "Виконав: студент групи КА-15, ІПСА\\\\\n" +
-            "Гладищев Б.Ю.\\\\\n" +
-            "Перевірила: Панкратова Н. Д.\\\\\n" +
-            "\\vspace{200px}\n" +
-            "} % Your name\n" +
+            "\\begin{center}\n" +
+            "\\large Національний технічний університет \"Київський політехнічний інститут\"\\\\[4.5cm] \n" +
+            "\\horrule{0.5pt} \\\\[0.4cm]\n" +
+            "\\huge %s\\\\[0.6cm]\n" +
+            "\\large %s\n" +
+            "\\horrule{2pt} \\\\[3.7cm]\n" +
+            "\\end{center}\n" +
+            "\\begin{flushright}\n%s" +
+            "\\end{flushright}\n" +
             "\n" +
+            "\\vfill \n" +
+            "\\begin{center}\n" +
+            "{\\large %s} \n" +
+            "{\\large \\LaTeX} \n" +
+            "\\end{center}\n" +
             "\n" +
-            "\\date{Київ-2014} % Today's date or a custom date\n";
-    private static final String initTitle = "\\pagenumbering{gobble}\n" +
-            "\\maketitle % Print the title\n" +
-            "\\pagebreak\n" +
-            "\\pagenumbering{arabic}\n" +
-            "\\newpage";
+            "\\thispagestyle{empty}\n" +
+            "\\end{titlepage}\n" +
+            "\\restoregeometry";
     private TeXUtil() {
     }
 
@@ -149,7 +145,8 @@ public final class TeXUtil {
         return out.text(simpleInit);
     }
 
-    public static TeXEventWriter initKPITitle(TeXEventWriter out) {
-        return out.text(kpiTitle).openEnvironment("document").text(initTitle);
+    @AnjiExperimental
+    public static TeXEventWriter initKPITitle(TeXEventWriter out, String title, String subtitle, String author, String date) {
+        return out.openEnvironment("document").text(String.format(kpiTitle, title, subtitle, author, date));
     }
 }
