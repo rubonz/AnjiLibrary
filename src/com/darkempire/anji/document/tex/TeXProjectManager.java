@@ -101,6 +101,7 @@ public class TeXProjectManager {
     }
 
     //TODO:повернення якоїсь помилки у випадку, якщо не збілдилося
+    //TODO:ну хочь якось зкросплатформити
     public void build() throws IOException {
         Process p = Runtime.getRuntime().exec(new String[]{"pdflatex", "main.tex"}, null, projectDirectory);
         Scanner in = new Scanner(p.getInputStream());

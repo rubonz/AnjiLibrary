@@ -41,6 +41,7 @@ function initCommandRamHolder() {
     var commandRamHolder = {};
     commandRamHolder.PC = 0;
     commandRamHolder.commandCodeList = [];
+    commandRamHolder.labels = [];
     commandRamHolder.addCommandCodes = function (code) {
         this.commandCodeList.push(code);
     };
@@ -48,6 +49,12 @@ function initCommandRamHolder() {
         var result = this.commandCodeList[this.PC];
         this.PC++;
         return result;
+    };
+    commandRamHolder.setPC = function(newPC){
+        this.PC = newPC;
+    };
+    commandRamHolder.addLabel = function(label){
+        this.labels[label] = this.PC+1;
     };
     return commandRamHolder;
 }
@@ -202,7 +209,7 @@ var commandRegExp = new RegExp("(,| )");
 
 function initCommandParser() {
     var commandParser = {};
-    //TODO:спробувати додати тут розбір label
+    commandParser.commandHolder = initCommandRamHolder();
     commandParser.createCommand = function (code) {
         var splitedCode = code.split(commandRegExp);
         splitedCode = splitedCode.filter(function (element) {
@@ -317,114 +324,17 @@ function getRegisterCode(code) {
 function initDemoCPU() {
     var demoCPU = {};
     demoCPU.ram = initRamHolder();
-    demoCPU.cRAM = initCommandRamHolder();
-    var commandParser = initCommandParser();
+    demoCPU.commandParser = initCommandParser();
     demoCPU.register = initRegisterHolder();
-    demoCPU.commandParser = commandParser;
-    var commandWork = [];
-
-    var getSTCode = function (splitedCode) {
-        return [demoCPU.register.get(getRegisterCode(splitedCode[2])), demoCPU.register.get(getRegisterCode(splitedCode[3]))];
+    demoCPU.alu = initALU(demoCPU.register,demoCPU.ram,demoCPU.commandParser.commandHolder);
+    demoCPU.nextCommand = function(){
+        this.alu.calculate(this.commandParser.commandHolder.getCurrent());
     };
-
-    var getSImmCode = function (splitedCode) {
-        return [demoCPU.register.get(getRegisterCode(splitedCode[2])), parseInt(splitedCode[3])]
-    };
-
-    commandWork['add'] = function (splitedCode) {
-        var d = getRegisterCode(splitedCode[1]);
-        var st = getSTCode(splitedCode);
-        demoCPU.register.set(d, st[0] + st[1]);
-    };
-
-    commandWork['addi'] = function (splitedCode) {
-        var d = getRegisterCode(splitedCode[1]);
-        var simm = getSImmCode(splitedCode);
-        demoCPU.register.set(d, simm[0] + simm[1]);
-    };
-
-    commandWork['and'] = function (splitedCode) {
-        var d = getRegisterCode(splitedCode[1]);
-        var st = getSTCode(splitedCode);
-        demoCPU.register.set(d, st[0] & st[1]);
-    };
-
-    commandWork['andi'] = function (splitedCode) {
-        var d = getRegisterCode(splitedCode[1]);
-        var simm = getSImmCode(splitedCode);
-        demoCPU.register.set(d, simm[0] & simm[1]);
-    };
-
-
-    commandWork['lui'] = function (splitedCode) {
-        var t = getRegisterCode(splitedCode[1]);
-        demoCPU.register.set(t, parseInt(splitedCode[2] << 16));
-    };
-
-    commandWork['noop'] = function (splitedCode) {
-    };
-
-    commandWork['or'] = function (splitedCode) {
-        var d = getRegisterCode(splitedCode[1]);
-        var st = getSTCode(splitedCode);
-        demoCPU.register.set(d, st[0] | st[1]);
-    };
-
-    commandWork['ori'] = function (splitedCode) {
-        var d = getRegisterCode(splitedCode[1]);
-        var simm = getSImmCode(splitedCode);
-        demoCPU.register.set(d, simm[0] | simm[1]);
-    };
-
-    commandWork['sll'] = function (splitedCode) {
-        var d = getRegisterCode(splitedCode[1]);
-
-    };
-
-    commandWork['sllv'] = function (splitedCode) {
-
-    };
-
-    commandWork['slt'] = function (splitedCode) {
-
-    };
-
-    commandWork['slti'] = function (splitedCode) {
-
-    };
-
-    commandWork['sra'] = function (splitedCode) {
-
-    };
-
-    commandWork['srl'] = function (splitedCode) {
-
-    };
-
-    commandWork['srlv'] = function (splitedCode) {
-
-    };
-
-    commandWork['sub'] = function (splitedCode) {
-
-    };
-
-    commandWork['xor'] = function (splitedCode) {
-
-    };
-
-    commandWork['xori'] = function (splitedCode) {
-
-    };
-
-
-    demoCPU.operate = function (splitedCode) {
-        console.log(splitedCode);
-        commandWork[splitedCode[0]](splitedCode);
-    };
-
     demoCPU.command = function (command) {
-        this.operate(commandParser.createCommand(command));
+        var splitedCode = this.commandParser.createCommand(command);
+        var bCode = this.commandParser.parse(splitedCode);
+        this.commandParser.commandHolder.addCommandCodes(bCode);
+        return bCode;
     };
     return demoCPU;
 }
@@ -451,6 +361,7 @@ function initALU(registerHolder, ramHolder, commandRamHolder) {
     alu.hi = 0;
     alu.lo = 0;
     alu.calculate = function (b) {
+        console.log(b);
         if (b.startsWith("000000")) {
             var end = b.substring(b.length - 6, b.length);
             console.log(end);

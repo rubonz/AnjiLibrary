@@ -1,16 +1,26 @@
-function TestCtrl($scope){
+function TestCtrl($scope) {
     var demoCPU = initDemoCPU();
-    var registerHolder = initRegisterHolder();
-    $scope.registers = registerHolder.registerMap;
+    $scope.registers = demoCPU.register.registerMap;
     $scope.registersName = registersName;
     $scope.resultArea = "";
-    var alu = initALU(registerHolder);
-    $scope.runConvert = function(){
+    $scope.runConvert = function () {
         $scope.resultArea = "";
-        angular.forEach($scope.codeArea.split('\n'),function(value,key){
-            var binResult =demoCPU.commandParser.parse(demoCPU.commandParser.createCommand(value));
-            $scope.resultArea += BinToViewBin(binResult)+ "\n";
-            alu.calculate(binResult);
+        angular.forEach($scope.codeArea.split('\n'), function (value, key) {
+            value = value.trim();
+            var indexOf = value.indexOf(":");
+            if (indexOf != -1) {
+                var label = value.substring(0, indexOf);
+                demoCPU.commandParser.commandHolder.addLabel(label);
+                var command = value.substring(indexOf + 1);
+                if (command.length > 0) {
+                    value = command;
+                } else {
+                    return;
+                }
+            }
+            var binResult = demoCPU.command(value);
+            $scope.resultArea += BinToViewBin(binResult) + "\n";
+            demoCPU.nextCommand();
         });
     }
 }
