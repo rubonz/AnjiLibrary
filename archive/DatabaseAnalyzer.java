@@ -7,8 +7,6 @@ import com.darkempire.anjifx.beans.property.AnjiIntegerProperty;
 import com.darkempire.anjifx.beans.property.AnjiStringProperty;
 
 import java.lang.reflect.Field;
-import java.sql.*;
-import java.util.*;
 import java.util.stream.Collectors;
 
 @AnjiUnknow

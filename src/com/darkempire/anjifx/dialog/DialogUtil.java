@@ -1,18 +1,15 @@
 package com.darkempire.anjifx.dialog;
 
 import com.darkempire.anji.annotation.AnjiUtil;
-import com.darkempire.anji.database.DatabaseAnalyzer;
 import com.darkempire.anjifx.beans.property.AbstractAnjiProperty;
 import com.darkempire.anjifx.beans.property.AnjiChooseStringProperty;
 import com.darkempire.anjifx.beans.property.AnjiColorProperty;
 import com.darkempire.anjifx.beans.property.AnjiStringProperty;
-import com.darkempire.anjifx.dialog.database.DatabaseRecordEditDialog;
 import com.darkempire.anjifx.dialog.property.PropertyEditDialog;
 import com.darkempire.internal.anji.LocalHolder;
 import javafx.scene.paint.Color;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -86,22 +83,6 @@ public final class DialogUtil {
 
     public static Color colorDialog(String name) {
         return colorDialog(name, LocalHolder.anji_resourceBundle.getString("anjifx.dialog.property.content"), Color.BLACK);
-    }
-
-    public static DatabaseRecordEditDialog createDatabaseRecordDialog(Object o, DatabaseAnalyzer analyzer, List<DatabaseAnalyzer.DBAttribute_impl> fields) throws IllegalAccessException {
-        return createDatabaseRecordDialog(LocalHolder.anji_resourceBundle.getString("anjifx.dialog.property.content"), o, analyzer, fields);
-    }
-
-    public static DatabaseRecordEditDialog createDatabaseRecordDialog(DatabaseAnalyzer analyzer, DatabaseRecordEditDialog.PackedObject... packedObjects) throws IllegalAccessException {
-        return createDatabaseRecordDialog(LocalHolder.anji_resourceBundle.getString("anjifx.dialog.property.content"), analyzer, packedObjects);
-    }
-
-    public static DatabaseRecordEditDialog createDatabaseRecordDialog(String title, DatabaseAnalyzer analyzer, DatabaseRecordEditDialog.PackedObject... packedObjects) throws IllegalAccessException {
-        return new DatabaseRecordEditDialog(title, analyzer, packedObjects);
-    }
-
-    public static DatabaseRecordEditDialog createDatabaseRecordDialog(String title, Object o, DatabaseAnalyzer analyzer, List<DatabaseAnalyzer.DBAttribute_impl> fields) throws IllegalAccessException {
-        return new DatabaseRecordEditDialog(title, analyzer, fields, o);
     }
 
 }

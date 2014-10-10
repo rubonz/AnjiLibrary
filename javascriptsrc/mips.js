@@ -53,6 +53,9 @@ function initCommandRamHolder() {
     commandRamHolder.setPC = function(newPC){
         this.PC = newPC;
     };
+    commandRamHolder.getPC = function(){
+        return this.PC;
+    };
     commandRamHolder.addLabel = function(label){
         this.labels[label] = this.PC+1;
     };

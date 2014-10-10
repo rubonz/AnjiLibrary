@@ -17,21 +17,15 @@ public final class TeXUtil {
     private static final String simpleInit = "\\documentclass[paper=a4, fontsize=14pt]{article} % A4 paper and 11pt font size\n" +
             "\\usepackage{fullpage}\n" +
             "\\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs\n" +
-            "\\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default\n" +
             "\\usepackage[english,ukrainian]{babel} % English language/hyphenation\n" +
             "\\usepackage{amsmath,amsfonts,amsthm} % Math packages\n" +
             "\\usepackage[unicode,colorlinks]{hyperref}" +
             "\\usepackage[utf8x]{inputenc}\n" +
-            "\\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template\n" +
-            "\n" +
             "\\usepackage{sectsty} % Allows customizing section commands\n" +
             "\\allsectionsfont{\\centering \\normalfont\\scshape} % Make all sections centered, the default font and small caps\n" +
             "\\usepackage{geometry}\n" +
             "\\usepackage{graphicx}\n" +
             "\\usepackage{listings}\n" +
-            "\\usepackage{makeidx}\n" +
-            "\\usepackage{titling}\n" +
-            "\\usepackage{abstract}\n" +
             "\\usepackage{color}\n" +
             "\\usepackage{fancyhdr} % Custom headers and footers\n" +
             "\\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers\n" +
@@ -48,7 +42,7 @@ public final class TeXUtil {
             "\\begin{titlepage}\n" +
             "\n" +
             "\\begin{center}\n" +
-            "\\large Національний технічний університет \"Київський політехнічний інститут\"\\\\[4.5cm] \n" +
+            "\\large \\scshape Національний технічний університет \"Київський політехнічний інститут\"\\\\[4.5cm]\\normalfont \n" +
             "\\horrule{0.5pt} \\\\[0.4cm]\n" +
             "\\huge %s\\\\[0.6cm]\n" +
             "\\large %s\n" +
@@ -66,6 +60,7 @@ public final class TeXUtil {
             "\\thispagestyle{empty}\n" +
             "\\end{titlepage}\n" +
             "\\restoregeometry";
+
     private TeXUtil() {
     }
 
