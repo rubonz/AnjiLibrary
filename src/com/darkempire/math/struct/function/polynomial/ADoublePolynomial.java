@@ -14,6 +14,4 @@ public abstract class ADoublePolynomial implements IDoubleVectorProvider, ITeXOb
     public abstract int getDimentions();
 
     public abstract int getMaxPower();
-
-    public abstract void prop(double lambda);
 }

@@ -4,6 +4,8 @@ import com.darkempire.anji.annotation.AnjiUtil;
 
 @AnjiUtil
 public final class MathUtils {
+
+    //region Порівняння
     /**
      * Знаходить максимум між двома значеннями
      *
@@ -103,7 +105,9 @@ public final class MathUtils {
         }
         return min;
     }
+    //endregion
 
+    //region Дільникі і кратні
     /**
      * Знаходження найбільшого спільного дільника двох чисел
      *
@@ -163,4 +167,27 @@ public final class MathUtils {
     public static long lcm(long a, long b) {
         return Math.abs(a * b / gcd(a, b));
     }
+    //endregion
+
+    //region Комбінаторика
+    public static int fact(int n) {
+        int fact = 1;
+        for (int i = 2; i < n; i++) {
+            fact *= i;
+        }
+        fact *= n;
+        return fact;
+    }
+
+    public static int[] factArr(int n) {
+        int[] result = new int[n + 1];
+        n++;
+        result[0] = 1;
+        result[1] = 1;
+        for (int i = 2; i < n; i++) {
+            result[i] = result[i - 1] * i;
+        }
+        return result;
+    }
+    //endregion
 }

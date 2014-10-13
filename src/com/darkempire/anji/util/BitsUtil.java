@@ -24,4 +24,16 @@ public final class BitsUtil {
         return (v + (v >> 9) + (v >> 18) + (v >> 27)) & 0x3f;
     }
 
+    /**
+     * @param n число
+     * @return кількість бітів у числі
+     */
+    public static int getBitLength(int n) {
+        int k = 0;
+        while ((1 << k) < n) {
+            k++;
+        }
+        return k;
+    }
+
 }

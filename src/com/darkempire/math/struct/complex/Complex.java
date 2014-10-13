@@ -1,6 +1,6 @@
 package com.darkempire.math.struct.complex;
 
-import com.darkempire.math.struct.Calcable;
+import com.darkempire.math.struct.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,7 +9,7 @@ import com.darkempire.math.struct.Calcable;
  * Time: 15:49
  * To change this template use File | Settings | File Templates.
  */
-public class Complex implements Calcable<Complex> {
+public class Complex implements com.darkempire.math.struct.Number<Complex> {
     private double x;
     private double y;
     private int hash;
@@ -216,7 +216,42 @@ public class Complex implements Calcable<Complex> {
     //endregion
 
     @Override
+    public int intValue() {
+        return (int) getAbs();
+    }
+
+    @Override
+    public long longValue() {
+        return (long) getAbs();
+    }
+
+    @Override
+    public float floatValue() {
+        return (float) getAbs();
+    }
+
+    @Override
+    public double doubleValue() {
+        return getAbs();
+    }
+
+    @Override
+    public Complex getZero() {
+        return new Complex(0);
+    }
+
+    @Override
+    public Complex getOne() {
+        return new Complex(1);
+    }
+
+    @Override
     public Complex deepcopy() {
         return clone();
+    }
+
+    @Override
+    public int compareTo(Complex o) {
+        return Double.compare(getAbs(), o.getAbs());
     }
 }

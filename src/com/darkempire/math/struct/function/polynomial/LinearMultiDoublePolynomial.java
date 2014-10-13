@@ -203,6 +203,13 @@ public class LinearMultiDoublePolynomial extends ADoublePolynomial implements FD
         }
         return this;
     }
+
+    public LinearMultiDoublePolynomial iprop(double lambda) {
+        for (int i = 0; i < coefs.length; i++) {
+            coefs[i] *= lambda;
+        }
+        return this;
+    }
     //endregion
 
     //region Арифметичні операції
@@ -236,13 +243,6 @@ public class LinearMultiDoublePolynomial extends ADoublePolynomial implements FD
             newCoef[i] = -get(i);
         }
         return new LinearMultiDoublePolynomial(newCoef);
-    }
-
-    @Override
-    public void prop(double lambda) {
-        for (int i = 0; i < coefs.length; i++) {
-            coefs[i] *= lambda;
-        }
     }
     //endregion
 }

@@ -96,7 +96,7 @@ public class AnjiTODOProcessor extends AbstractProcessor {
             Set<? extends Element> standartized = roundEnv.getElementsAnnotatedWith(AnjiStandartize.class);
             if (standartized.size() > 0) {
                 pw.println();
-                pw.println("Класи та методи, які потрібно стандартизувати, адже вони дивні");
+                pw.println("Класи та методи, які потрібно стандартизувати та ввести у систему");
                 pw.println("---------------------------------------------------------------------");
                 pw.println();
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.OTHER, "Кількість AnjiStandartized елементів - " + standartized.size());

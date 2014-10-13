@@ -2,14 +2,11 @@ package com.darkempire.math.struct.function.polynomial;
 
 import com.darkempire.anji.annotation.AnjiStandartize;
 import com.darkempire.anji.annotation.AnjiUnknow;
-import com.darkempire.anji.document.tex.ITeXObject;
 import com.darkempire.anji.document.tex.TeXEventWriter;
+import com.darkempire.math.MathMachine;
 import com.darkempire.math.struct.Calcable;
 import com.darkempire.math.struct.LinearCalcable;
 import com.darkempire.math.struct.function.FDoubleDouble;
-import com.darkempire.math.struct.function.FDoubleVectorDouble;
-import com.darkempire.math.struct.function.polynomial.ADoublePolynomial;
-import com.darkempire.math.struct.vector.IDoubleVectorProvider;
 
 /**
  * Created by siredvin on 13.10.14.
@@ -35,6 +32,10 @@ public class DoublePolynomial extends ADoublePolynomial implements FDoubleDouble
             powered *= x;
         }
         return result;
+    }
+
+    public void set(int index, double coef) {
+        coefs[index] = coef;
     }
 
     //region Геттери
@@ -70,7 +71,7 @@ public class DoublePolynomial extends ADoublePolynomial implements FDoubleDouble
     public String toString() {
         StringBuilder builder = new StringBuilder();
         if (coefs[0] != 0) {
-            builder.append(coefs[0]);
+            builder.append(MathMachine.numberFormat.format(coefs[0]));
         }
         for (int i = 1; i < coefs.length; i++) {
             double temp = coefs[i];
@@ -79,13 +80,21 @@ public class DoublePolynomial extends ADoublePolynomial implements FDoubleDouble
                     if (builder.length() != 0) {
                         builder.append('+');
                     }
-                    builder.append(temp);
-                    builder.append("*x^");
-                    builder.append(i + 1);
+                    builder.append(MathMachine.numberFormat.format(temp));
+                    if (i == 1) {
+                        builder.append("*x");
+                    } else {
+                        builder.append("*x^");
+                        builder.append(i);
+                    }
                 } else {
-                    builder.append(temp);
-                    builder.append("*x^");
-                    builder.append(i + 1);
+                    builder.append(MathMachine.numberFormat.format(temp));
+                    if (i == 1) {
+                        builder.append("*x");
+                    } else {
+                        builder.append("*x^");
+                        builder.append(i);
+                    }
                 }
             }
         }
@@ -152,7 +161,16 @@ public class DoublePolynomial extends ADoublePolynomial implements FDoubleDouble
 
     @Override
     public DoublePolynomial imultiply(DoublePolynomial doublePolynomial) {
-        return null;//TODO:обробити
+        int size = coefs.length;
+        int asize = doublePolynomial.getSize();
+        double[] temp = new double[size + asize];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                temp[i + j] += coefs[i] * doublePolynomial.get(j);
+            }
+        }
+        coefs = temp;
+        return this;
     }
 
     @Override
@@ -165,6 +183,13 @@ public class DoublePolynomial extends ADoublePolynomial implements FDoubleDouble
     @AnjiUnknow
     public DoublePolynomial iinverse() {
         throw new UnsupportedOperationException();
+    }
+
+    public DoublePolynomial iprop(double lambda) {
+        for (int i = 0; i < coefs.length; i++) {
+            coefs[i] *= lambda;
+        }
+        return this;
     }
     //endregion
 
@@ -201,16 +226,25 @@ public class DoublePolynomial extends ADoublePolynomial implements FDoubleDouble
         return new DoublePolynomial(newCoef);
     }
 
-    @Override
-    public void prop(double lambda) {
+    public DoublePolynomial prop(double lambda) {
+        DoublePolynomial result = deepcopy();
         for (int i = 0; i < coefs.length; i++) {
-            coefs[i] *= lambda;
+            result.coefs[i] *= lambda;
         }
+        return result;
     }
 
     @Override
     public DoublePolynomial multiply(DoublePolynomial doublePolynomial) {
-        return null;//TODO:обробити
+        int size = coefs.length;
+        int asize = doublePolynomial.getSize();
+        DoublePolynomial result = new DoublePolynomial(new double[size + asize]);
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < asize; j++) {
+                result.coefs[i + j] += coefs[i] * doublePolynomial.get(j);
+            }
+        }
+        return result;
     }
 
     @Override
@@ -225,4 +259,19 @@ public class DoublePolynomial extends ADoublePolynomial implements FDoubleDouble
         throw new UnsupportedOperationException();
     }
     //endregion
+
+    public DoublePolynomial resize(int newLength) {
+        double[] newCoef = new double[newLength];
+        int size = Math.min(newLength, coefs.length);
+        System.arraycopy(coefs, 0, newCoef, 0, size);
+        return new DoublePolynomial(newCoef);
+    }
+
+    public DoublePolynomial iresize(int newLength) {
+        double[] newCoef = new double[newLength];
+        int size = Math.min(newLength, coefs.length);
+        System.arraycopy(coefs, 0, newCoef, 0, size);
+        coefs = newCoef;
+        return this;
+    }
 }

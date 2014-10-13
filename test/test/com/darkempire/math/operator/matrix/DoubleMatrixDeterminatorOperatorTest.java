@@ -11,7 +11,7 @@ import static com.darkempire.math.operator.matrix.DoubleMatrixDeterminantOperato
 /**
  * DoubleMatrixOperator Tester.
  *
- * @author <Authors name>
+ * @author SirEdvin
  * @version 1.0
  * @since <pre>вер. 8, 2014</pre>
  */

@@ -30,6 +30,20 @@ public abstract class NumberVector<T extends com.darkempire.math.struct.Number<T
 
     public abstract T scalar(NumberVector<T> vector);
 
+    //region Зрізи
+    public NumberVector<T> sliceFrom(int startIndex) {
+        return new NumberSliceVector<>(startIndex, getSize() - 1, this);
+    }
+
+    public NumberVector<T> sliceTo(int endIndex) {
+        return new NumberSliceVector<>(endIndex, this);
+    }
+
+    public NumberVector<T> slice(int startIndex, int endIndex) {
+        return new NumberSliceVector<>(startIndex, endIndex, this);
+    }
+    //endregion
+
     //region Заповнення
     public NumberVector fill(T value) {
         int size = getSize();
