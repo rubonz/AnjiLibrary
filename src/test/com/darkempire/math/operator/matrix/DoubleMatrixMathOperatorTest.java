@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import static com.darkempire.math.operator.matrix.DoubleMatrixCompareOperator.*;
-import static com.darkempire.math.operator.matrix.DoubleMatrixMathOperator.*;
+import static com.darkempire.math.operator.matrix.DoubleMatrixInverseOperator.*;
 
 /**
  * Created by siredvin on 10.09.14.
@@ -20,7 +20,7 @@ public class DoubleMatrixMathOperatorTest extends Assert {
                 0.28947368421052631579, -0.23684210526315789474,
                 0.36842105263157894737, -0.18421052631578947368,
                 0.10526315789473684211});
-        DoubleMatrix calced = calcInverseMatrix(DoubleFixedMatrix.createInstance(3, 3, new double[]{1, 2, 3, 6, 4, 0, 7, 0, -1}));
+        DoubleMatrix calced = inverse(DoubleFixedMatrix.createInstance(3, 3, new double[]{1, 2, 3, 6, 4, 0, 7, 0, -1}));
         assertTrue(result + "\n" + calced, isEqualsMachineHalfEps(result, calced));
         //TODO:додати більше тестів
     }

@@ -2,7 +2,7 @@ package com.darkempire.math.utils;
 
 import com.darkempire.anji.annotation.AnjiUtil;
 import com.darkempire.math.struct.SignType;
-import com.darkempire.math.struct.function.LinearMultiPolynomial;
+import com.darkempire.math.struct.function.polynomial.LinearMultiDoublePolynomial;
 import com.darkempire.math.struct.logic.SimpleLinearBoundConditional;
 
 import java.util.Arrays;
@@ -32,7 +32,7 @@ public final class BoundUtils {
             case NO_EQL:
                 throw new UnsupportedOperationException();
         }
-        return new SimpleLinearBoundConditional(new LinearMultiPolynomial(coefs), SignType.EQL, conditional.getRightPart());
+        return new SimpleLinearBoundConditional(new LinearMultiDoublePolynomial(coefs), SignType.EQL, conditional.getRightPart());
     }
 
     public static SimpleLinearBoundConditional transformToСanonicalForm(SimpleLinearBoundConditional conditional, int systemSize) {
@@ -51,6 +51,6 @@ public final class BoundUtils {
             case NO_EQL:
                 throw new UnsupportedOperationException();
         }
-        return new SimpleLinearBoundConditional(new LinearMultiPolynomial(coefs), SignType.EQL, conditional.getRightPart());
+        return new SimpleLinearBoundConditional(new LinearMultiDoublePolynomial(coefs), SignType.EQL, conditional.getRightPart());
     }
 }

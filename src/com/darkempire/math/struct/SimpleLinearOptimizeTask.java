@@ -2,7 +2,7 @@ package com.darkempire.math.struct;
 
 import com.darkempire.anji.document.tex.ITeXObject;
 import com.darkempire.anji.document.tex.TeXEventWriter;
-import com.darkempire.math.struct.function.LinearMultiPolynomial;
+import com.darkempire.math.struct.function.polynomial.LinearMultiDoublePolynomial;
 import com.darkempire.math.struct.logic.SimpleLinearBoundConditional;
 import com.darkempire.math.struct.vector.IDoubleVectorProvider;
 
@@ -14,10 +14,10 @@ import java.util.List;
  */
 public class SimpleLinearOptimizeTask implements Iterable<SimpleLinearBoundConditional>, ITeXObject {
     private boolean isMaximize;
-    private LinearMultiPolynomial targetFunction;
+    private LinearMultiDoublePolynomial targetFunction;
     private List<SimpleLinearBoundConditional> conditionals;
 
-    public SimpleLinearOptimizeTask(boolean isMaximize, LinearMultiPolynomial targetFunction, List<SimpleLinearBoundConditional> conditionals) {
+    public SimpleLinearOptimizeTask(boolean isMaximize, LinearMultiDoublePolynomial targetFunction, List<SimpleLinearBoundConditional> conditionals) {
         this.isMaximize = isMaximize;
         this.targetFunction = targetFunction;
         this.conditionals = conditionals;
@@ -51,7 +51,7 @@ public class SimpleLinearOptimizeTask implements Iterable<SimpleLinearBoundCondi
         return isMaximize;
     }
 
-    public LinearMultiPolynomial getTargetFunction() {
+    public LinearMultiDoublePolynomial getTargetFunction() {
         return targetFunction;
     }
 

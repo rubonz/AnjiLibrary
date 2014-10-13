@@ -1,5 +1,6 @@
 package com.darkempire.math.struct.set;
 
+import com.darkempire.anji.annotation.AnjiStandartize;
 import com.darkempire.anji.document.tex.ITeXObject;
 import com.darkempire.anji.document.wolfram.IWolframObject;
 
@@ -9,6 +10,7 @@ import java.util.List;
  * Created by siredvin on 05.10.14.
  */
 //TODO:секціонувати
+@AnjiStandartize
 public abstract class DoubleInterval implements IDoubleInterval, SetCalcable<DoubleInterval>, ITeXObject, IWolframObject {
     /*public abstract double getStart(int index);
     public abstract void setStart(int index,double value);

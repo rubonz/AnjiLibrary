@@ -4,7 +4,7 @@ import com.darkempire.anji.document.tex.ITeXObject;
 import com.darkempire.anji.document.tex.TeXEventWriter;
 import com.darkempire.math.struct.SignType;
 import com.darkempire.math.struct.function.FSomeBoolean;
-import com.darkempire.math.struct.function.LinearMultiPolynomial;
+import com.darkempire.math.struct.function.polynomial.LinearMultiDoublePolynomial;
 import com.darkempire.math.struct.vector.IDoubleVectorProvider;
 
 /**
@@ -17,7 +17,7 @@ public class SimpleLinearBoundConditional implements FSomeBoolean<IDoubleVectorP
     /**
      * Ліва частина обмеження
      */
-    private LinearMultiPolynomial polynomial;
+    private LinearMultiDoublePolynomial polynomial;
     /**
      * Знак обмеження
      */
@@ -27,7 +27,7 @@ public class SimpleLinearBoundConditional implements FSomeBoolean<IDoubleVectorP
      */
     private double rightPart;
 
-    public SimpleLinearBoundConditional(LinearMultiPolynomial polynomial, SignType sign, double rightPart) {
+    public SimpleLinearBoundConditional(LinearMultiDoublePolynomial polynomial, SignType sign, double rightPart) {
         this.polynomial = polynomial;
         this.sign = sign;
         this.rightPart = rightPart;

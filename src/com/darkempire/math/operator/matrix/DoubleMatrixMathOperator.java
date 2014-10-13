@@ -129,39 +129,4 @@ public final class DoubleMatrixMathOperator {
     }
     //endregion
 
-    //region Обчислення обернених матриць
-    public static DoubleMatrix calcInverseMatrix(DoubleMatrix matrix) {
-        int rowCount = matrix.getRowCount();
-        int columnCount = matrix.getColumnCount();
-        if (rowCount != columnCount) {
-            throw new MatrixSizeException(MatrixSizeException.MATRIX_IS_NOT_SQUARE);
-        }
-        DoubleMatrix temp = matrix.clone();
-        DoubleMatrix result = DoubleMatrixGenerateOperator.generateDiagonalMatrix(rowCount, temp);
-        //Починаємо цикл
-        for (int index = 0; index < columnCount; index++) {
-            double baseElement = temp.get(index, index);
-            if (baseElement != 0) {//Гілка, якщо базовий елемент не нульовий
-                for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-                    if (rowIndex == index)
-                        continue;
-                    double nextElement = -temp.get(rowIndex, index) / baseElement;
-                    if (nextElement != 0) {
-                        addRow(temp, rowIndex, index, nextElement);
-                        addRow(result, rowIndex, index, nextElement);
-                    }
-                }
-            } else {//Якщо базовий елемент таки нульовий
-                return null;
-            }
-        }
-        //А тепер приводимо матрицю temp з діагонального до одиничного виду
-        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-            double baseElement = temp.get(rowIndex, rowIndex);
-            temp.operateRow(rowIndex, d -> d / baseElement);
-            result.operateRow(rowIndex, d -> d / baseElement);
-        }
-        return result;
-    }
-    //endregion
 }

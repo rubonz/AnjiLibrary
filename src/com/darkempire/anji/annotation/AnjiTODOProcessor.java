@@ -83,11 +83,24 @@ public class AnjiTODOProcessor extends AbstractProcessor {
             Set<? extends Element> experimental = roundEnv.getElementsAnnotatedWith(AnjiExperimental.class);
             if (experimental.size() > 0) {
                 pw.println();
-                pw.println("Класи та методи, які потрібно стандартизувати, адже вони дивні");
+                pw.println("Класи та методи, які були введені експериментально і вимагають допрацювання");
                 pw.println("---------------------------------------------------------------------");
                 pw.println();
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.OTHER, "Кількість AnjiExperimental елементів - " + experimental.size());
                 for (Element e : experimental) {
+                    pw.print("* ");
+                    pw.println(parseElement(e));
+                }
+                pw.println();
+            }
+            Set<? extends Element> standartized = roundEnv.getElementsAnnotatedWith(AnjiStandartize.class);
+            if (standartized.size() > 0) {
+                pw.println();
+                pw.println("Класи та методи, які потрібно стандартизувати, адже вони дивні");
+                pw.println("---------------------------------------------------------------------");
+                pw.println();
+                processingEnv.getMessager().printMessage(Diagnostic.Kind.OTHER, "Кількість AnjiStandartized елементів - " + standartized.size());
+                for (Element e : standartized) {
                     pw.print("* ");
                     pw.println(parseElement(e));
                 }

@@ -11,6 +11,9 @@ import static com.darkempire.math.operator.matrix.DoubleMatrixTransformOperator.
  */
 @AnjiUtil
 public final class DoubleMatrixDeterminantOperator {
+    public static final int UPPER_TRIANGLE_METHOD = 0;
+    public static final int LOWER_TRIANGLE_METHOD = 1;
+
     private DoubleMatrixDeterminantOperator() {
 
     }
@@ -31,7 +34,7 @@ public final class DoubleMatrixDeterminantOperator {
     public static double det(DoubleMatrix matrix, int method) {
         double det;
         switch (method) {
-            case 1:
+            case LOWER_TRIANGLE_METHOD:
                 det = detWithLowerTriangle(matrix);
                 break;
             default:

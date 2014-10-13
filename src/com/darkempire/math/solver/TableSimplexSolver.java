@@ -7,7 +7,7 @@ import com.darkempire.anji.document.tex.TeXFlowObjectManager;
 import com.darkempire.math.operator.matrix.LinearMatrixOperator;
 import com.darkempire.math.struct.SignType;
 import com.darkempire.math.struct.SimpleLinearOptimizeTask;
-import com.darkempire.math.struct.function.LinearMultiPolynomial;
+import com.darkempire.math.struct.function.polynomial.LinearMultiDoublePolynomial;
 import com.darkempire.math.struct.logic.SimpleLinearBoundConditional;
 import com.darkempire.math.struct.matrix.*;
 import com.darkempire.math.struct.number.Fraction;
@@ -327,6 +327,6 @@ public class TableSimplexSolver {
             case LOWER_THEN:
                 throw new UnsupportedOperationException();
         }
-        return new SimpleLinearBoundConditional(new LinearMultiPolynomial(coefs), SignType.EQL, conditional.getRightPart());
+        return new SimpleLinearBoundConditional(new LinearMultiDoublePolynomial(coefs), SignType.EQL, conditional.getRightPart());
     }
 }

@@ -7,7 +7,7 @@ import com.darkempire.anji.document.tex.TeXProjectManager;
 import com.darkempire.math.solver.TableSimplexSolver;
 import com.darkempire.math.struct.SignType;
 import com.darkempire.math.struct.SimpleLinearOptimizeTask;
-import com.darkempire.math.struct.function.LinearMultiPolynomial;
+import com.darkempire.math.struct.function.polynomial.LinearMultiDoublePolynomial;
 import com.darkempire.math.struct.logic.SimpleLinearBoundConditional;
 
 import java.io.File;
@@ -31,12 +31,12 @@ public final class SimplexSolverMain {
         TeXProjectManager projectManager = new TeXProjectManager(dir, "main1.tex");
         TeXUtil.initSimpleHeader(projectManager.getMainFileManager().getEventWriter()).openEnvironment("document");
         TableSimplexSolver solver = new TableSimplexSolver(projectManager.getMainFileManager());
-        LinearMultiPolynomial targetFunction = new LinearMultiPolynomial(7, 6);
+        LinearMultiDoublePolynomial targetFunction = new LinearMultiDoublePolynomial(7, 6);
         ArrayList<SimpleLinearBoundConditional> conditionalList = new ArrayList<>();
-        conditionalList.add(new SimpleLinearBoundConditional(new LinearMultiPolynomial(2, 5), SignType.GREAT_THEN_OR_EQL, 10));
-        conditionalList.add(new SimpleLinearBoundConditional(new LinearMultiPolynomial(5, 2), SignType.GREAT_THEN_OR_EQL, 10));
-        conditionalList.add(new SimpleLinearBoundConditional(new LinearMultiPolynomial(1, 0), SignType.LOWER_THEN_OR_EQL, 6));
-        conditionalList.add(new SimpleLinearBoundConditional(new LinearMultiPolynomial(0, 1), SignType.LOWER_THEN_OR_EQL, 5));
+        conditionalList.add(new SimpleLinearBoundConditional(new LinearMultiDoublePolynomial(2, 5), SignType.GREAT_THEN_OR_EQL, 10));
+        conditionalList.add(new SimpleLinearBoundConditional(new LinearMultiDoublePolynomial(5, 2), SignType.GREAT_THEN_OR_EQL, 10));
+        conditionalList.add(new SimpleLinearBoundConditional(new LinearMultiDoublePolynomial(1, 0), SignType.LOWER_THEN_OR_EQL, 6));
+        conditionalList.add(new SimpleLinearBoundConditional(new LinearMultiDoublePolynomial(0, 1), SignType.LOWER_THEN_OR_EQL, 5));
         solver.solve(new SimpleLinearOptimizeTask(true, targetFunction, conditionalList));
         projectManager.getMainFileManager().getEventWriter().closeEnvironment();
         Process process = null;
