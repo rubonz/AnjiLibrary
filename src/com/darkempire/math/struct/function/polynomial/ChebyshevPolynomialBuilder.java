@@ -46,7 +46,7 @@ public abstract class ChebyshevPolynomialBuilder implements IInteratedPolynomial
      * Обчислює поліном за індексом і , або повертає такий, якщо він вже був обчислений
      *
      * @param index індекс і
-     * @return L_{i}(x)
+     * @return T_{i}(x)
      */
     @Override
     public DoublePolynomial calcIndexed(int index) {
