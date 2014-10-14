@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author siredvin
  */
-public class LaguerrePolynomialBuilder {
+public class LaguerrePolynomialBuilder implements IInteratedPolynomialBuilder<DoublePolynomial> {
     private static final DoublePolynomial L_0 = new DoublePolynomial(1);
     private static final DoublePolynomial L_1 = new DoublePolynomial(1, -1);
 
@@ -23,6 +23,10 @@ public class LaguerrePolynomialBuilder {
         polynomials.add(L_1.deepcopy());
     }
 
+    /**
+     * @return Індекс останнього поліному, який був обчислений
+     */
+    @Override
     public int getMaxIndex() {
         return polynomials.size() - 1;
     }
@@ -33,12 +37,13 @@ public class LaguerrePolynomialBuilder {
      *
      * @return L_{k+1}(x)
      */
+    @Override
     public DoublePolynomial calcNext() {
         int k = polynomials.size() - 1;
         DoublePolynomial lk_1 = polynomials.get(k - 1), lk = polynomials.get(k);
-        DoublePolynomial klP1 = lk.multiply(new DoublePolynomial(2 * k + 1, -1)).isubtract(lk_1.prop(k)).iprop(1.0 / (k + 1));
-        polynomials.add(klP1);
-        return klP1;
+        DoublePolynomial lkP1 = lk.multiply(new DoublePolynomial(2 * k + 1, -1)).isubtract(lk_1.prop(k)).iprop(1.0 / (k + 1));
+        polynomials.add(lkP1);
+        return lkP1;
     }
 
     /**
@@ -47,6 +52,7 @@ public class LaguerrePolynomialBuilder {
      * @param index індекс і
      * @return L_{i}(x)
      */
+    @Override
     public DoublePolynomial calcIndexed(int index) {
         int size = polynomials.size();
         if (index < size) {
@@ -60,7 +66,12 @@ public class LaguerrePolynomialBuilder {
         return result;
     }
 
-
+    /**
+     * Обчислює поліном Лаггера за індексом, не використовуючи ітеративну формулу, а за прямою.
+     * L_n(x) = \sum\limits_{k=0}^n C_k^n \cfrac{(-1)^k}{k!} x^k
+     * @param index індекс поліному (n)
+     * @return L_n(x)
+     */
     public static DoublePolynomial calcStandalone(int index) {
         DoublePolynomial result = new DoublePolynomial(new double[index + 1]);
         int[] factArr = MathUtils.factArr(index);

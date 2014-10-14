@@ -165,7 +165,7 @@ public class DoublePolynomial extends ADoublePolynomial implements FDoubleDouble
         int asize = doublePolynomial.getSize();
         double[] temp = new double[size + asize];
         for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+            for (int j = 0; j < asize; j++) {
                 temp[i + j] += coefs[i] * doublePolynomial.get(j);
             }
         }

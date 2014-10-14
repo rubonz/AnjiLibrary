@@ -1,6 +1,7 @@
 package sample;
 
 import com.darkempire.anji.log.Log;
+import com.darkempire.math.struct.function.polynomial.ChebyshevPolynomialBuilder;
 import com.darkempire.math.struct.function.polynomial.DoublePolynomial;
 import com.darkempire.math.struct.function.polynomial.LaguerrePolynomialBuilder;
 
@@ -11,8 +12,9 @@ import com.darkempire.math.struct.function.polynomial.LaguerrePolynomialBuilder;
 public class Main2 {
 
     public static void main(String[] args) {
-        Log.log(Log.debugIndex, LaguerrePolynomialBuilder.calcStandalone(3));
-        Log.log(Log.debugIndex, LaguerrePolynomialBuilder.calcStandalone(6));
+        ChebyshevPolynomialBuilder builder = ChebyshevPolynomialBuilder.createFirstKindBuilder();
+        Log.log(Log.debugIndex, builder.calcIndexed(3));
+        Log.log(Log.debugIndex, builder.calcIndexed(5));
     }
 
 }
