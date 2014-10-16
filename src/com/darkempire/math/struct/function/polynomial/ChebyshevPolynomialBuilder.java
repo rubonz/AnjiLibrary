@@ -1,8 +1,5 @@
 package com.darkempire.math.struct.function.polynomial;
 
-import com.darkempire.anji.annotation.AnjiUtil;
-import com.darkempire.anji.log.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +8,8 @@ import java.util.List;
  *
  * @author siredvin
  */
-public abstract class ChebyshevPolynomialBuilder implements IInteratedPolynomialBuilder<DoublePolynomial> {
-    protected List<DoublePolynomial> polynomials;
+public abstract class ChebyshevPolynomialBuilder implements IIteratedPolynomialBuilder<ArrayDoublePolynomial> {
+    protected List<ArrayDoublePolynomial> polynomials;
 
     public ChebyshevPolynomialBuilder() {
         polynomials = new ArrayList<>();
@@ -34,10 +31,10 @@ public abstract class ChebyshevPolynomialBuilder implements IInteratedPolynomial
      * @see com.darkempire.math.struct.function.polynomial.ChebyshevPolynomialBuilder#impl_next
      */
     @Override
-    public DoublePolynomial calcNext() {
+    public ArrayDoublePolynomial calcNext() {
         int k = polynomials.size() - 1;
-        DoublePolynomial lk_1 = polynomials.get(k - 1), lk = polynomials.get(k);
-        DoublePolynomial lkP1 = impl_next(lk_1, lk);
+        ArrayDoublePolynomial lk_1 = polynomials.get(k - 1), lk = polynomials.get(k);
+        ArrayDoublePolynomial lkP1 = impl_next(lk_1, lk);
         polynomials.add(lkP1);
         return lkP1;
     }
@@ -49,13 +46,13 @@ public abstract class ChebyshevPolynomialBuilder implements IInteratedPolynomial
      * @return T_{i}(x)
      */
     @Override
-    public DoublePolynomial calcIndexed(int index) {
+    public ArrayDoublePolynomial calcIndexed(int index) {
         int size = polynomials.size();
         if (index < size) {
             return polynomials.get(index);
         }
         int calc_count = index - size + 1;
-        DoublePolynomial result = null;
+        ArrayDoublePolynomial result = null;
         for (int i = 0; i < calc_count; i++) {
             result = calcNext();
         }
@@ -70,7 +67,7 @@ public abstract class ChebyshevPolynomialBuilder implements IInteratedPolynomial
      * @param lk   Поліном з індексом k
      * @return Поліном з індексом k +1
      */
-    protected abstract DoublePolynomial impl_next(DoublePolynomial lk_1, DoublePolynomial lk);
+    protected abstract ArrayDoublePolynomial impl_next(ArrayDoublePolynomial lk_1, ArrayDoublePolynomial lk);
 
     /**
      * Клас, який відповідає многочленам Чебишева першого роду.
@@ -85,13 +82,13 @@ public abstract class ChebyshevPolynomialBuilder implements IInteratedPolynomial
     private static class FirstKind extends ChebyshevPolynomialBuilder {
         public FirstKind() {
             super();
-            polynomials.add(new DoublePolynomial(1));
-            polynomials.add(new DoublePolynomial(0, 1));
+            polynomials.add(new ArrayDoublePolynomial(1));
+            polynomials.add(new ArrayDoublePolynomial(0, 1));
         }
 
         @Override
-        protected DoublePolynomial impl_next(DoublePolynomial lk_1, DoublePolynomial lk) {
-            return new DoublePolynomial(0, 2).imultiply(lk).isubtract(lk_1);
+        protected ArrayDoublePolynomial impl_next(ArrayDoublePolynomial lk_1, ArrayDoublePolynomial lk) {
+            return new ArrayDoublePolynomial(0, 2).imultiply(lk).isubtract(lk_1);
         }
     }
 
@@ -108,13 +105,13 @@ public abstract class ChebyshevPolynomialBuilder implements IInteratedPolynomial
     private static class SecondKind extends ChebyshevPolynomialBuilder {
         public SecondKind() {
             super();
-            polynomials.add(new DoublePolynomial(1));
-            polynomials.add(new DoublePolynomial(0, 2));
+            polynomials.add(new ArrayDoublePolynomial(1));
+            polynomials.add(new ArrayDoublePolynomial(0, 2));
         }
 
         @Override
-        protected DoublePolynomial impl_next(DoublePolynomial lk_1, DoublePolynomial lk) {
-            return new DoublePolynomial(0, 2).imultiply(lk).isubtract(lk_1);
+        protected ArrayDoublePolynomial impl_next(ArrayDoublePolynomial lk_1, ArrayDoublePolynomial lk) {
+            return new ArrayDoublePolynomial(0, 2).imultiply(lk).isubtract(lk_1);
         }
     }
 

@@ -5,7 +5,7 @@ package com.darkempire.math.struct.function.polynomial;
  *
  * @author siredvin
  */
-public interface IInteratedPolynomialBuilder<T extends ADoublePolynomial> {
+public interface IIteratedPolynomialBuilder<T extends DoublePolynomial> {
     public int getMaxIndex();
 
     public T calcNext();

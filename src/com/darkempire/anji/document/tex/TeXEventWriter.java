@@ -1,7 +1,11 @@
 package com.darkempire.anji.document.tex;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.text.NumberFormat;
+import java.util.Scanner;
 import java.util.Stack;
 
 /**
@@ -611,14 +615,20 @@ public class TeXEventWriter {
     }
     //endregion
 
-
     //region Спеціальні функції
     public TeXEventWriter write(ITeXObject object) {
         object.write(this);
         return this;
     }
-    //endregion
 
+    public TeXEventWriter inject(File f) throws FileNotFoundException {
+        Scanner in = new Scanner(new FileInputStream(f));
+        while (in.hasNextLine()) {
+            out.println(in.nextLine());
+        }
+        return this;
+    }
+    //endregion
 
     public void close() {
         while (environmentStack.size() > 0) {

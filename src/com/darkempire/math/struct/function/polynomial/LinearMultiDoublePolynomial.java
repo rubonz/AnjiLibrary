@@ -13,7 +13,7 @@ import com.darkempire.math.struct.vector.IDoubleVectorProvider;
  * @author siredvin
  */
 @AnjiStandartize
-public class LinearMultiDoublePolynomial extends ADoublePolynomial implements FDoubleVectorDouble, LinearCalcable<LinearMultiDoublePolynomial> {
+public class LinearMultiDoublePolynomial implements FDoubleVectorDouble, LinearCalcable<LinearMultiDoublePolynomial>, IDoubleVectorProvider, ITeXObject {
     private double[] coefs;
 
     //region Конструктори
@@ -40,12 +40,10 @@ public class LinearMultiDoublePolynomial extends ADoublePolynomial implements FD
         return coefs[index];
     }
 
-    @Override
     public int getDimentions() {
         return coefs.length;
     }
 
-    @Override
     public int getMaxPower() {
         return 1;
     }

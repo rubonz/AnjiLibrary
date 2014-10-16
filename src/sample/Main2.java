@@ -1,10 +1,7 @@
 package sample;
 
 import com.darkempire.anji.log.Log;
-import com.darkempire.math.struct.function.polynomial.ChebyshevPolynomialBuilder;
-import com.darkempire.math.struct.function.polynomial.DoublePolynomial;
 import com.darkempire.math.struct.function.polynomial.HermitePolynomialBuilder;
-import com.darkempire.math.struct.function.polynomial.LaguerrePolynomialBuilder;
 
 /**
  * Create in 10:19

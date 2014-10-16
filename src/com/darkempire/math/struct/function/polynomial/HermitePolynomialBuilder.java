@@ -8,8 +8,8 @@ import java.util.List;
  *
  * @author siredvin
  */
-public abstract class HermitePolynomialBuilder implements IInteratedPolynomialBuilder<DoublePolynomial> {
-    protected List<DoublePolynomial> polynomials;
+public abstract class HermitePolynomialBuilder implements IIteratedPolynomialBuilder<ArrayDoublePolynomial> {
+    protected List<ArrayDoublePolynomial> polynomials;
 
     protected HermitePolynomialBuilder() {
         polynomials = new ArrayList<>();
@@ -31,10 +31,10 @@ public abstract class HermitePolynomialBuilder implements IInteratedPolynomialBu
      * @see com.darkempire.math.struct.function.polynomial.ChebyshevPolynomialBuilder#impl_next
      */
     @Override
-    public DoublePolynomial calcNext() {
+    public ArrayDoublePolynomial calcNext() {
         int k = polynomials.size() - 1;
-        DoublePolynomial lk_1 = polynomials.get(k - 1), lk = polynomials.get(k);
-        DoublePolynomial lkP1 = impl_next(lk_1, lk, k);
+        ArrayDoublePolynomial lk_1 = polynomials.get(k - 1), lk = polynomials.get(k);
+        ArrayDoublePolynomial lkP1 = impl_next(lk_1, lk, k);
         polynomials.add(lkP1);
         return lkP1;
     }
@@ -46,13 +46,13 @@ public abstract class HermitePolynomialBuilder implements IInteratedPolynomialBu
      * @return H_{i}(x)
      */
     @Override
-    public DoublePolynomial calcIndexed(int index) {
+    public ArrayDoublePolynomial calcIndexed(int index) {
         int size = polynomials.size();
         if (index < size) {
             return polynomials.get(index);
         }
         int calc_count = index - size + 1;
-        DoublePolynomial result = null;
+        ArrayDoublePolynomial result = null;
         for (int i = 0; i < calc_count; i++) {
             result = calcNext();
         }
@@ -68,7 +68,7 @@ public abstract class HermitePolynomialBuilder implements IInteratedPolynomialBu
      * @param k    Власне, індекс
      * @return Поліном з індексом k +1
      */
-    protected abstract DoublePolynomial impl_next(DoublePolynomial lk_1, DoublePolynomial lk, int k);
+    protected abstract ArrayDoublePolynomial impl_next(ArrayDoublePolynomial lk_1, ArrayDoublePolynomial lk, int k);
 
     /**
      * Клас, який відповідає поліномам Ерміта у їх ймовірнісній формі. Послідовність така:
@@ -82,13 +82,13 @@ public abstract class HermitePolynomialBuilder implements IInteratedPolynomialBu
     private static class ProbabilistsPolynomial extends HermitePolynomialBuilder {
         public ProbabilistsPolynomial() {
             super();
-            polynomials.add(new DoublePolynomial(1));
-            polynomials.add(new DoublePolynomial(0, 1));
+            polynomials.add(new ArrayDoublePolynomial(1));
+            polynomials.add(new ArrayDoublePolynomial(0, 1));
         }
 
         @Override
-        protected DoublePolynomial impl_next(DoublePolynomial lk_1, DoublePolynomial lk, int k) {
-            return new DoublePolynomial(0, 1).imultiply(lk).isubtract(lk_1.prop(k));
+        protected ArrayDoublePolynomial impl_next(ArrayDoublePolynomial lk_1, ArrayDoublePolynomial lk, int k) {
+            return new ArrayDoublePolynomial(0, 1).imultiply(lk).isubtract(lk_1.prop(k));
         }
     }
 
@@ -104,13 +104,13 @@ public abstract class HermitePolynomialBuilder implements IInteratedPolynomialBu
     private static class PhysicistsPolynomial extends HermitePolynomialBuilder {
         public PhysicistsPolynomial() {
             super();
-            polynomials.add(new DoublePolynomial(1));
-            polynomials.add(new DoublePolynomial(0, 2));
+            polynomials.add(new ArrayDoublePolynomial(1));
+            polynomials.add(new ArrayDoublePolynomial(0, 2));
         }
 
         @Override
-        protected DoublePolynomial impl_next(DoublePolynomial lk_1, DoublePolynomial lk, int k) {
-            return new DoublePolynomial(0, 2).imultiply(lk).isubtract(lk_1.prop(k * 2));
+        protected ArrayDoublePolynomial impl_next(ArrayDoublePolynomial lk_1, ArrayDoublePolynomial lk, int k) {
+            return new ArrayDoublePolynomial(0, 2).imultiply(lk).isubtract(lk_1.prop(k * 2));
         }
     }
 

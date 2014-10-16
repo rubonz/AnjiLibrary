@@ -2,6 +2,7 @@ package com.darkempire.anjifx.scene.chart;
 
 import com.darkempire.anjifx.beans.property.AnjiColorProperty;
 import com.darkempire.anjifx.dialog.DialogUtil;
+import com.darkempire.anjifx.util.AnjiFXColorUtil;
 import com.darkempire.anjifx.util.AnjiFXStringConverter;
 import com.darkempire.internal.anji.LocalHolder;
 import javafx.beans.InvalidationListener;
@@ -17,6 +18,7 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -34,13 +36,15 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
         super(xAxis, yAxis);
         colorValues = new ArrayList<>();
         this.setCreateSymbols(false);
+        Random rand = new Random();
         getData().addListener((ListChangeListener<Series<X, Y>>) c -> {
             List<? extends Series<X, Y>> list = c.getList();
             int size = list.size();
             int listSize = colorValues.size();
             for (int i = listSize; i < size; i++) {
                 Series<X, Y> series = list.get(i);
-                AnjiColorProperty tempValue = new AnjiColorProperty(LocalHolder.anji_resourceBundle.getString("anjifx.scene.colorforchart") + series.getName(), Color.gray(Math.random() * 0.5 + 0.3));
+                Color color = AnjiFXColorUtil.randomColor();
+                AnjiColorProperty tempValue = new AnjiColorProperty(LocalHolder.anji_resourceBundle.getString("anjifx.scene.colorforchart") + series.getName(), color);
                 tempValue.addListener(updateColor);
                 colorValues.add(tempValue);
             }

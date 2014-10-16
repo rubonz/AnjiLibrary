@@ -1,6 +1,5 @@
 package com.darkempire.math.struct.function.polynomial;
 
-import com.darkempire.anji.log.Log;
 import com.darkempire.math.utils.MathUtils;
 
 import java.util.ArrayList;
@@ -11,11 +10,11 @@ import java.util.List;
  *
  * @author siredvin
  */
-public class LaguerrePolynomialBuilder implements IInteratedPolynomialBuilder<DoublePolynomial> {
-    private static final DoublePolynomial L_0 = new DoublePolynomial(1);
-    private static final DoublePolynomial L_1 = new DoublePolynomial(1, -1);
+public class LaguerrePolynomialBuilder implements IIteratedPolynomialBuilder<ArrayDoublePolynomial> {
+    private static final ArrayDoublePolynomial L_0 = new ArrayDoublePolynomial(1);
+    private static final ArrayDoublePolynomial L_1 = new ArrayDoublePolynomial(1, -1);
 
-    private List<DoublePolynomial> polynomials;
+    private List<ArrayDoublePolynomial> polynomials;
 
     public LaguerrePolynomialBuilder() {
         polynomials = new ArrayList<>();
@@ -38,10 +37,10 @@ public class LaguerrePolynomialBuilder implements IInteratedPolynomialBuilder<Do
      * @return L_{k+1}(x)
      */
     @Override
-    public DoublePolynomial calcNext() {
+    public ArrayDoublePolynomial calcNext() {
         int k = polynomials.size() - 1;
-        DoublePolynomial lk_1 = polynomials.get(k - 1), lk = polynomials.get(k);
-        DoublePolynomial lkP1 = lk.multiply(new DoublePolynomial(2 * k + 1, -1)).isubtract(lk_1.prop(k)).iprop(1.0 / (k + 1));
+        ArrayDoublePolynomial lk_1 = polynomials.get(k - 1), lk = polynomials.get(k);
+        ArrayDoublePolynomial lkP1 = lk.multiply(new ArrayDoublePolynomial(2 * k + 1, -1)).isubtract(lk_1.prop(k)).iprop(1.0 / (k + 1));
         polynomials.add(lkP1);
         return lkP1;
     }
@@ -53,13 +52,13 @@ public class LaguerrePolynomialBuilder implements IInteratedPolynomialBuilder<Do
      * @return L_{i}(x)
      */
     @Override
-    public DoublePolynomial calcIndexed(int index) {
+    public ArrayDoublePolynomial calcIndexed(int index) {
         int size = polynomials.size();
         if (index < size) {
             return polynomials.get(index);
         }
         int calc_count = index - size + 1;
-        DoublePolynomial result = null;
+        ArrayDoublePolynomial result = null;
         for (int i = 0; i < calc_count; i++) {
             result = calcNext();
         }
@@ -69,11 +68,12 @@ public class LaguerrePolynomialBuilder implements IInteratedPolynomialBuilder<Do
     /**
      * Обчислює поліном Лаггера за індексом, не використовуючи ітеративну формулу, а за прямою.
      * L_n(x) = \sum\limits_{k=0}^n C_k^n \cfrac{(-1)^k}{k!} x^k
+     *
      * @param index індекс поліному (n)
      * @return L_n(x)
      */
-    public static DoublePolynomial calcStandalone(int index) {
-        DoublePolynomial result = new DoublePolynomial(new double[index + 1]);
+    public static ArrayDoublePolynomial calcStandalone(int index) {
+        ArrayDoublePolynomial result = new ArrayDoublePolynomial(new double[index + 1]);
         int[] factArr = MathUtils.factArr(index);
         int one = 1;
         int n = index;
