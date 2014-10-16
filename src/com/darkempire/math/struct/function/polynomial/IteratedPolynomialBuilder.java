@@ -33,7 +33,19 @@ public abstract class IteratedPolynomialBuilder {
         /**
          * Многочлен Лежандра
          */
-        LEGENDRE
+        LEGENDRE,
+        /**
+         * Зміщений поліном Чебишева першого роду
+         */
+        CHEBYSHEV_SHIFTED_FIRST_KIND,
+        /**
+         * Зміщенний поліном Чебишева другого роду
+         */
+        CHEBYSHEV_SHIFTED_SECOND_KIND,
+        /**
+         * Зміщенний поліном Лежандра
+         */
+        LEGENDRE_SHIFTED
     }
 
     //region Загальна імплементація
@@ -173,6 +185,29 @@ public abstract class IteratedPolynomialBuilder {
     }
 
     /**
+     * Клас, який відповідає зміщенним многочленам Чебишева першого роду.
+     * Послідовність складається так:
+     * T_0^*(x) = 1
+     * T_1^*(x) = -1+2x
+     * T_{k+1}^*(x) = (-2+4x) T_k^*(x) - T_{k-1}^*(x)
+     * <p>
+     * Самі ці поліноми знаходяться за точною формулою:
+     * T_k^*(x) = T_k(2x-1)
+     */
+    private static class ChebyshevShiftedFirstKindPolynomialBuilder extends IteratedPolynomialBuilder {
+        public ChebyshevShiftedFirstKindPolynomialBuilder() {
+            super();
+            polynomials.add(new ArrayDoublePolynomial(1));
+            polynomials.add(new ArrayDoublePolynomial(-1, 2));
+        }
+
+        @Override
+        protected ArrayDoublePolynomial impl_next(ArrayDoublePolynomial lk_1, ArrayDoublePolynomial lk, int k) {
+            return new ArrayDoublePolynomial(-2, 4).imultiply(lk).isubtract(lk_1);
+        }
+    }
+
+    /**
      * Клас, який відповідає многочленам Чебишева першого роду.
      * Послідовність складається так:
      * U_0(x) = 1
@@ -192,6 +227,29 @@ public abstract class IteratedPolynomialBuilder {
         @Override
         protected ArrayDoublePolynomial impl_next(ArrayDoublePolynomial lk_1, ArrayDoublePolynomial lk, int k) {
             return new ArrayDoublePolynomial(0, 2).imultiply(lk).isubtract(lk_1);
+        }
+    }
+
+    /**
+     * Клас, який відповідає зміщеним многочленам Чебишева першого роду.
+     * Послідовність складається так:
+     * U_0^*(x) = 1
+     * U_1^*(x) = 4x-2
+     * U_{k+1}^*(x) = (4x-2) U_k^*(x) - U_{k-1}^*(x)
+     * <p>
+     * Самі ці поліноми знаходяться за точною формулою:
+     * U_k^*(x) = U_k(2x-1)
+     */
+    private static class ChebyshevShiftedSecondKindPolynomialBuilder extends IteratedPolynomialBuilder {
+        public ChebyshevShiftedSecondKindPolynomialBuilder() {
+            super();
+            polynomials.add(new ArrayDoublePolynomial(1));
+            polynomials.add(new ArrayDoublePolynomial(0, 2));
+        }
+
+        @Override
+        protected ArrayDoublePolynomial impl_next(ArrayDoublePolynomial lk_1, ArrayDoublePolynomial lk, int k) {
+            return new ArrayDoublePolynomial(-2, 4).imultiply(lk).isubtract(lk_1);
         }
     }
     //endregion
@@ -246,6 +304,30 @@ public abstract class IteratedPolynomialBuilder {
             return new ArrayDoublePolynomial(0, (2.0 * k + 1) / (k + 1)).imultiply(lk).isubtract(lk_1.prop(k / (k + 1.0)));
         }
     }
+
+    /**
+     * Клас, який відповідає зміщеним многочленам Лежандра.
+     * Послідовність складається так:
+     * P_0^*(x) = 1
+     * P_1^*(x) = 2x-1
+     * P_{k+1}^*(x) = \cfrac{2k+1}{k+1}(2x - 1)P_k^*(x) - \cfrac{k}{k+1} P_{k-1}^*(x)
+     * <p>
+     * Самі ці поліноми визначаються як:
+     * P_n^*(x) = P_n(2x-1)
+     */
+    private static class LegendreShiftedPolynomialBuilder extends IteratedPolynomialBuilder {
+        private LegendreShiftedPolynomialBuilder() {
+            super();
+            polynomials.add(new ArrayDoublePolynomial(1));
+            polynomials.add(new ArrayDoublePolynomial(-1, 2));
+        }
+
+        @Override
+        protected ArrayDoublePolynomial impl_next(ArrayDoublePolynomial lk_1, ArrayDoublePolynomial lk, int k) {
+            double coef1 = (2.0 * k + 1) / (k + 1);
+            return new ArrayDoublePolynomial(-coef1, 2 * coef1).imultiply(lk).isubtract(lk_1.prop(k / (k + 1.0)));
+        }
+    }
     //endregion
 
 
@@ -263,6 +345,12 @@ public abstract class IteratedPolynomialBuilder {
                 return new LaguerrePolynomialBuilder();
             case LEGENDRE:
                 return new LegendrePolynomialBuilder();
+            case CHEBYSHEV_SHIFTED_FIRST_KIND:
+                return new ChebyshevShiftedFirstKindPolynomialBuilder();
+            case CHEBYSHEV_SHIFTED_SECOND_KIND:
+                return new ChebyshevShiftedSecondKindPolynomialBuilder();
+            case LEGENDRE_SHIFTED:
+                return new LegendreShiftedPolynomialBuilder();
         }
         return null;
     }
