@@ -11,4 +11,6 @@ public interface IIteratedPolynomialBuilder<T extends DoublePolynomial> {
     public T calcNext();
 
     public T calcIndexed(int index);
+
+    public void clearCache();
 }

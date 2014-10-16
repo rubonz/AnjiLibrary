@@ -233,8 +233,8 @@ public strictfp class MersenneTwisterFastGenerator extends Random implements Ser
     public Object clone() {
         try {
             MersenneTwisterFastGenerator f = (MersenneTwisterFastGenerator) (super.clone());
-            f.mt = (int[]) (mt.clone());
-            f.mag01 = (int[]) (mag01.clone());
+            f.mt = mt.clone();
+            f.mag01 = mag01.clone();
             return f;
         } catch (CloneNotSupportedException e) {
             throw new InternalError();
@@ -345,7 +345,7 @@ public strictfp class MersenneTwisterFastGenerator extends Random implements Ser
             mt[mti] = (1812433253 * (mt[mti - 1] ^ (mt[mti - 1] >>> 30)) + mti);
             /* See Knuth TAOCP Vol2. 3rd Ed. P.106 for multiplier. */
             /* In the previous versions, MSBs of the seed affect */
-			/* only MSBs of the array mt[]. */
+            /* only MSBs of the array mt[]. */
 			/* 2002/01/09 modified by Makoto Matsumoto */
             // mt[mti] &= 0xffffffff;
 			/* for >32 bit machines */

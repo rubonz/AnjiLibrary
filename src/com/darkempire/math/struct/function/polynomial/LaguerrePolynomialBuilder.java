@@ -86,4 +86,9 @@ public class LaguerrePolynomialBuilder implements IIteratedPolynomialBuilder<Arr
         return result;
     }
 
+    @Override
+    public void clearCache() {
+        polynomials.clear();
+    }
+
 }

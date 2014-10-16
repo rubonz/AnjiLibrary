@@ -69,6 +69,11 @@ public abstract class ChebyshevPolynomialBuilder implements IIteratedPolynomialB
      */
     protected abstract ArrayDoublePolynomial impl_next(ArrayDoublePolynomial lk_1, ArrayDoublePolynomial lk);
 
+    @Override
+    public void clearCache() {
+        polynomials.clear();
+    }
+
     /**
      * Клас, який відповідає многочленам Чебишева першого роду.
      * Послідовність складається так:

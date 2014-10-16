@@ -59,6 +59,11 @@ public abstract class HermitePolynomialBuilder implements IIteratedPolynomialBui
         return result;
     }
 
+    @Override
+    public void clearCache() {
+        polynomials.clear();
+    }
+
     /**
      * Абстрактний метод, який допомагає розрізняти многочлени Ерміта першого та другого роду та знаходити
      * наступний з двох попередніх
