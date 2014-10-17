@@ -18,8 +18,9 @@ public final class AnjiImageCache {
     private static List<Image> imageList = new ArrayList<>();
 
     public static int addImage(Image image) {
+        int index = imageList.size();
         imageList.add(image);
-        return imageList.size() - 1;
+        return index;
     }
 
     public static Image getImage(int index) {

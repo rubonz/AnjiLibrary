@@ -5,6 +5,7 @@ import com.darkempire.math.deep.LinearSpace;
 import com.darkempire.math.deep.LinearSpaceElement;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,9 +25,7 @@ public class VectorSpaceElement<K extends FieldElement<K>> implements LinearSpac
 
     public VectorSpaceElement(K... ks) {
         this();
-        for (K k : ks) {
-            vector.add(k);
-        }
+        Collections.addAll(vector, ks);
     }
 
     public VectorSpaceElement(List<K> vector) {

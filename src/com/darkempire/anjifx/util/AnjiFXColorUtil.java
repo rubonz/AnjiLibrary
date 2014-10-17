@@ -20,4 +20,8 @@ public final class AnjiFXColorUtil {
     public static Color randomColor() {
         return Color.rgb(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
     }
+
+    public static Color randomGray() {
+        return Color.gray(rand.nextDouble(), rand.nextDouble());
+    }
 }
