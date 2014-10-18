@@ -1,5 +1,6 @@
 package com.darkempire.math.solver;
 
+import com.darkempire.anji.log.Log;
 import com.darkempire.math.random.randomgenerator.DoubleRandom;
 import com.darkempire.math.struct.matrix.DoubleMatrix;
 import com.darkempire.math.struct.vector.DoubleFixedVector;
@@ -11,14 +12,14 @@ import java.util.*;
  * Created by Сергій on 17.10.2014.
  */
 public class RandomLinearSystemSolver implements ILinearEquationSystemSolver {
-    private static final double EPSILON = 0.1;
-    private static final long MAX_ITERATION = 100_000;
+    private static final double EPSILON = 0.05;
+    private static final long MAX_ITERATION = 10_000;
 
-    private static final int POPULATION_SIZE = 26;
+    private static final int POPULATION_SIZE = 36;
     private static final int TOURNAMENT_SIZE = 2;
     private static final int CROSSING_COUNT = 1;
     private static final double CROSSING_PROBABILITY = 0.5;// to 0.3
-    private static final double MUTATION_PROBABILITY = 0.03; //0.0075
+    private static final double MUTATION_PROBABILITY = 0.05; //0.0075
 
     private DoubleVector fitnessVector;
     private Random random;
@@ -41,11 +42,12 @@ public class RandomLinearSystemSolver implements ILinearEquationSystemSolver {
 
         for(int k=0; k<fitness.getSize(); k++){
             DoubleVector vector = m.multy(populations.get(k)).subtract(b);
-            double x = 0;
-            for(int i=0; i<vector.getSize(); i++){
-                x += Math.abs(vector.get(i));
-            }
-            fitness.set(k, x);
+//            double x = 0;
+//            for(int i=0; i<vector.getSize(); i++){
+//                x += Math.abs(vector.get(i));
+//            }
+//            fitness.set(k, x);
+            fitness.set(k, vector.norm());
         }
         return fitness;
     }
@@ -61,7 +63,7 @@ public class RandomLinearSystemSolver implements ILinearEquationSystemSolver {
         List<DoubleVector> population = initPopulation();
         fitnessVector = calculateFitnessVector(population);
         for(int i=0; i<MAX_ITERATION; i++) {
-            population = selectionAndCrossing(population);
+            population = selectionAndCrossingByRange(population);//selectionAndCrossing(population);
             population = mutation(population);
             fitnessVector = calculateFitnessVector(population);
             for(int j=0; j<fitnessVector.getSize(); j++){
@@ -70,8 +72,10 @@ public class RandomLinearSystemSolver implements ILinearEquationSystemSolver {
                     x_result = population.get(j);
                 }
             }
-            if(got_result)
+            if(got_result) {
+                Log.log(Log.logIndex, "Less Iterations: "+ x_result.toString());
                 return x_result;
+            }
             if(i%10_000==0) {
                 double min = Double.MAX_VALUE;
                 for(int j=0; j<POPULATION_SIZE; j++){
@@ -97,7 +101,6 @@ public class RandomLinearSystemSolver implements ILinearEquationSystemSolver {
 
         return x_result;
     }
-
 
     private List<DoubleVector> initPopulation(){
         double findmax = 0;
@@ -127,8 +130,6 @@ public class RandomLinearSystemSolver implements ILinearEquationSystemSolver {
         return newPopulation;
     }
 
-
-
     private List<DoubleVector> selectionAndCrossing(List<DoubleVector> population){
         List<DoubleVector> parentPool = new ArrayList<>(POPULATION_SIZE);
 
@@ -151,31 +152,13 @@ public class RandomLinearSystemSolver implements ILinearEquationSystemSolver {
             double cross_probability = random.nextDouble();
             if(cross_probability < CROSSING_PROBABILITY){
                 //todo: abstract crossing with TOURNAMENT_SIZE
-                int genes_count = parentPool.get(0).getSize();
                 DoubleVector first_parent = parentPool.get(currentCrossingGroupIndexes[0]);
                 DoubleVector second_parent = parentPool.get(currentCrossingGroupIndexes[1]);
-                DoubleVector first = new DoubleFixedVector(genes_count);
-                DoubleVector second = new DoubleFixedVector(genes_count);
-                int crossing_point = random.nextInt(genes_count - 1 ) + 1;  //warning!!!!!!!!!!!!!
 
-                crossing_point_set.add(crossing_point);
-
-                /*first.fillSubvector(0, crossing_point, index -> first_parent.get(index));
-                second.fillSubvector(0, crossing_point, index -> second_parent.get(index));
-                first.fillSubvector(crossing_point, genes_count-1, index ->second_parent.get(index));
-                second.fillSubvector(crossing_point, genes_count-1, index -> first_parent.get(index));*/
-
-                for(int j=0; j<crossing_point; j++){
-                    first.set(j,first_parent.get(j));
-                    second.set(j,second_parent.get(j));
+                List<DoubleVector> list = crossing(first_parent,second_parent);
+                for(DoubleVector v : list){
+                    newPopulation.add(v);
                 }
-                for (int j=crossing_point; j<genes_count; j++){
-                    first.set(j,second_parent.get(j));
-                    second.set(j,first_parent.get(j));
-                }
-
-                newPopulation.add(first);
-                newPopulation.add(second);
             }else{
                 for(int num : currentCrossingGroupIndexes){
                     newPopulation.add(parentPool.get(num));
@@ -189,15 +172,59 @@ public class RandomLinearSystemSolver implements ILinearEquationSystemSolver {
         return newPopulation;
     }
 
+    private List<DoubleVector> selectionAndCrossingByRange(List<DoubleVector> population){
+        Collections.sort(population, new DoubleVectorComparator());
+
+        /*DoubleVector[] vector = new DoubleVector[population.size()];
+        for(int i=0; i<vector.length; i++){
+            vector[i] = population.get(i);
+        }
+        Arrays.sort(vector, new DoubleVectorComparator());
+        */
+        DoubleVector best = population.get(0);//vector[0];
+        List<DoubleVector> newPopulation = new ArrayList<>();
+        for(int i=1; i<population.size()/2; i++){
+            List<DoubleVector> list = crossing(best, population.get(i));
+            for(DoubleVector v : list){
+                newPopulation.add(v);
+            }
+        }
+        for(int i=newPopulation.size(); i<POPULATION_SIZE; i = newPopulation.size()){//warning
+            newPopulation.add(best);
+        }
+
+        return newPopulation;
+    }
+
+    private List<DoubleVector> crossing(DoubleVector parent1, DoubleVector parent2){
+        int genes_count = parent1.getSize();
+        int crossing_point = random.nextInt(genes_count - 1 ) + 1;  //warning!!!!!!!!!!!!!
+
+        DoubleVector child1 = new DoubleFixedVector(genes_count);
+        DoubleVector child2 = new DoubleFixedVector(genes_count);
+        for(int i=0; i<crossing_point; i++){
+            child1.set(i,parent1.get(i));
+            child2.set(i,parent2.get(i));
+        }
+        for(int i=crossing_point; i<genes_count; i++){
+            child1.set(i,parent2.get(i));
+            child2.set(i,parent1.get(i));
+        }
+
+        List <DoubleVector> list = new ArrayList<>();
+        list.add(child1);
+        list.add(child2);
+        return list;
+    }
+
     private List<DoubleVector> mutation(List<DoubleVector> population) {
-        boolean muted = false;
         for(DoubleVector v : population){
-            if(random.nextDouble()<=MUTATION_PROBABILITY){//
-                DoubleRandom doubleRandom = new DoubleRandom(random);
-                final double finalMax = max_m_value;
-                final double finalMin = min_m_value;
-                v.fill(index -> doubleRandom.getRandomNumber(finalMin, finalMax));
-                muted = true;
+            for(int i=0; i<v.getSize(); i++) {
+                if (random.nextDouble() <= MUTATION_PROBABILITY) {
+                    DoubleRandom doubleRandom = new DoubleRandom(random);
+
+                    v.set(i,doubleRandom.getRandomNumber(min_m_value,max_m_value));
+                }
             }
         }
 
@@ -224,5 +251,14 @@ public class RandomLinearSystemSolver implements ILinearEquationSystemSolver {
        // Log.log(Log.logIndex, "min: " + min + " max: "  + max);
     }
 
+    private class DoubleVectorComparator implements Comparator<DoubleVector>{
+        @Override
+        public int compare(DoubleVector o1, DoubleVector o2) {
+            double n1 = m.multy(o1).subtract(b).norm();
+            double n2 = m.multy(o2).subtract(b).norm();
+
+            return n1 == n2 ? 0 : (n1<n2 ? -1: 1);
+        }
+    }
 
 }
