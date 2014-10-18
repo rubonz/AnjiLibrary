@@ -330,7 +330,6 @@ public abstract class IteratedPolynomialBuilder {
     }
     //endregion
 
-
     public static IteratedPolynomialBuilder createBuilder(PolynomialType type) {
         switch (type) {
             case CHEBYSHEV_FIRST_KIND:

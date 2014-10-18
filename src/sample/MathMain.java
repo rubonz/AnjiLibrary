@@ -1,14 +1,16 @@
 package sample;
 
-import com.darkempire.math.struct.matrix.DoubleFixedMatrix;
 import com.darkempire.anji.document.wolfram.util.WolframConvertUtils;
+import com.darkempire.math.struct.matrix.DoubleFixedMatrix;
+import com.darkempire.math.struct.matrix.DoubleMatrix;
+import com.darkempire.math.struct.vector.DoubleVector;
 import com.wolfram.jlink.KernelLink;
 import com.wolfram.jlink.MathLinkException;
 import com.wolfram.jlink.MathLinkFactory;
 
-import static java.lang.System.out;
-
 import java.util.Random;
+
+import static java.lang.System.out;
 
 /**
  * Create in 0:33
@@ -60,6 +62,8 @@ public class MathMain {
                 out.print(",new double[]{");
                 out.print(temp);
                 out.println("}));");
+                DoubleMatrix a;
+                DoubleVector b,x;
             }
         } catch (MathLinkException e) {
             System.out.println("MathLinkException occurred: " + e.getMessage());
