@@ -511,6 +511,7 @@ public class SimpleLog implements ILog {
             for (PrintStream stream : streamList) {
                 impl_prefix(name, stream);
                 stream.printf(format, objects);
+                stream.println();
             }
         }
     }

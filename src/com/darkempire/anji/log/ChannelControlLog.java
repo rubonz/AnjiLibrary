@@ -429,6 +429,7 @@ public class ChannelControlLog extends AdvancedLog {
                 if (!hideChannel.get(i)) {
                     impl_prefix(name, stream);
                     stream.printf(format, objects);
+                    stream.println();
                 }
             }
         }
