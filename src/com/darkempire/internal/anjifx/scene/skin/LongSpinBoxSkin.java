@@ -60,14 +60,13 @@ public class LongSpinBoxSkin extends SkinBase<LongSpinBox> {
     public LongSpinBoxSkin(LongSpinBox control) {
         super(control);
         this.control = control;
+        this.textField = control.impl_getField();
         createNodes();
         initFocusSimulation();
         getSkinnable().requestLayout();
     }
 
     private void createNodes() {
-        textField = new LongField();
-        control.impl_setField(textField);
         textField.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             switch (event.getCode()) {
                 case UP:

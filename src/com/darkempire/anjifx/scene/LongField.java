@@ -1,6 +1,7 @@
 package com.darkempire.anjifx.scene;
 
 import com.darkempire.anji.annotation.AnjiRewrite;
+import com.darkempire.anjifx.beans.property.AnjiBoundedLongProperty;
 import com.darkempire.anjifx.beans.property.AnjiLongProperty;
 import com.darkempire.anjifx.beans.property.AnjiObjectProperty;
 import javafx.beans.binding.Bindings;
@@ -19,7 +20,7 @@ import java.text.ParseException;
  */
 @AnjiRewrite
 public class LongField extends TextField {
-    private AnjiLongProperty valueProperty;
+    private AnjiBoundedLongProperty valueProperty;
     private AnjiObjectProperty<NumberFormat> numberFormatProperty;
 
     //region Конструктори
@@ -28,7 +29,7 @@ public class LongField extends TextField {
         setStyle(null);
         setFocusTraversable(true);
         getStyleClass().add("long-field");
-        valueProperty = new AnjiLongProperty(this, "value", v);
+        valueProperty = new AnjiBoundedLongProperty(this, "value", Long.MIN_VALUE, Long.MAX_VALUE, v);
         numberFormatProperty = new AnjiObjectProperty<>(this, "numberFormat", NumberFormat.getIntegerInstance());
         setText(getNumberFormat().format(getValue()));
         focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -80,6 +81,14 @@ public class LongField extends TextField {
     public NumberFormat getNumberFormat() {
         return numberFormatProperty.getValue();
     }
+
+    public long getMinValue() {
+        return valueProperty.getMinValue();
+    }
+
+    public long getMaxValue() {
+        return valueProperty.getMaxValue();
+    }
     //endregion
 
     //region Сеттери
@@ -90,10 +99,18 @@ public class LongField extends TextField {
     public void setNumberFormat(NumberFormat numberFormat) {
         numberFormatProperty.setValue(numberFormat);
     }
+
+    public void setMaxValue(long max) {
+        valueProperty.setMaxValue(max);
+    }
+
+    public void setMinValue(long min) {
+        valueProperty.setMinValue(min);
+    }
     //endregion
 
     //region Властивості
-    public AnjiLongProperty valueProperty() {
+    public AnjiBoundedLongProperty valueProperty() {
         return valueProperty;
     }
 

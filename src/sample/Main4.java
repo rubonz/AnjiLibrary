@@ -1,6 +1,5 @@
 package sample;
 
-import com.darkempire.math.solver.GeneticLinearEquationSystemSolver;
 import com.darkempire.math.struct.matrix.DoubleFixedMatrix;
 import com.darkempire.math.struct.matrix.DoubleMatrix;
 import com.darkempire.math.struct.vector.DoubleFixedVector;
@@ -21,17 +20,15 @@ public class Main4 {
         DoubleVector b = new DoubleFixedVector(rows);
         b.fill(index -> r.getRandomNumber(-0.5,0.5));
         */
-        DoubleMatrix m = DoubleFixedMatrix.createInstance(3, 6, new double[]{
+        /*DoubleMatrix m = DoubleFixedMatrix.createInstance(3, 6, new double[]{
                 2, -3, -1, 0.1, 4, 3,
                 -3, 5, 2, -0.1, 2, -5,
                 -1, 2, 1, 1, 5, 0
         });
-        DoubleVector b = new DoubleFixedVector(new double[]{
-                -7, 19, 12
-        });
+        DoubleVector b = new DoubleFixedVector(-7, 19, 12);
 
         GeneticLinearEquationSystemSolver solver = new GeneticLinearEquationSystemSolver();
-        DoubleVector x = solver.solve(m,b);
+        DoubleVector x = solver.solve(m,b);*/
 
         /*for(double p_crossing = 0.3; p_crossing <= 0.5 ; p_crossing += 0.1){
             System.out.printf("============= %3.3f ==============%n", p_crossing);

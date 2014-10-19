@@ -54,7 +54,7 @@ public class AnjiBoundedLongProperty extends AbstractAnjiProperty<Long> implemen
     }
 
     public boolean inBounds(long value) {
-        return (value > minValue) && (value < maxValue);
+        return (value >= minValue) && (value <= maxValue);
     }
 
     public void inc() {
@@ -75,10 +75,16 @@ public class AnjiBoundedLongProperty extends AbstractAnjiProperty<Long> implemen
 
     public void setMaxValue(long maxValue) {
         this.maxValue = maxValue;
+        if (value > maxValue) {
+            setValue(maxValue);
+        }
     }
 
     public void setMinValue(long minValue) {
         this.minValue = minValue;
+        if (value < minValue) {
+            setValue(minValue);
+        }
     }
 
     @Override

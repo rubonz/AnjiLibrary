@@ -13,7 +13,7 @@
 }
 
 .long-spin-box:disabled {
-    -fx-opacity: -fx-disabled-opacity;
+    -fx-opacity: 0.5;
 }
 
 .long-spin-box .arrow-button {
@@ -54,7 +54,7 @@
 }
 
 .double-spin-box:disabled {
-    -fx-opacity: -fx-disabled-opacity;
+    -fx-opacity: 0.5;
 }
 
 .double-spin-box .arrow-button {
