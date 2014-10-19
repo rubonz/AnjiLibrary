@@ -101,5 +101,7 @@ public class AnjiBoundedLongProperty extends AbstractAnjiProperty<Long> implemen
     public void setValue(Long value) {
         if (inBounds(value))
             super.setValue(value);
+        else
+            super.setValue(this.value);
     }
 }

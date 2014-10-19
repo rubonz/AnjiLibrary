@@ -31,11 +31,11 @@ public class IntegerField extends TextField {
         valueProperty = new AnjiIntegerProperty(this, "value", v);
         numberFormatProperty = new AnjiObjectProperty<>(this, "numberFormat", NumberFormat.getIntegerInstance());
         setText(getNumberFormat().format(getValue()));
-        focusedProperty().addListener((observable, oldValue, newValue) -> {
+        /*focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 parse();
             }
-        });
+        });*/
         Bindings.bindBidirectional(textProperty(), valueProperty, new StringConverter<Integer>() {
             @Override
             public String toString(Integer object) {

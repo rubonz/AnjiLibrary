@@ -1,10 +1,5 @@
 package sample;
 
-import com.darkempire.math.struct.matrix.DoubleFixedMatrix;
-import com.darkempire.math.struct.matrix.DoubleMatrix;
-import com.darkempire.math.struct.vector.DoubleFixedVector;
-import com.darkempire.math.struct.vector.DoubleVector;
-
 /**
  * Created by Сергій on 18.10.2014.
  */

@@ -54,7 +54,7 @@ public class AnjiBoundedDoubleProperty extends AbstractAnjiProperty<Double> impl
     }
 
     public boolean inBounds(double value) {
-        return (value > minValue) && (value < maxValue);
+        return (value >= minValue) && (value <= maxValue);
     }
 
     public double getMaxValue() {
@@ -67,10 +67,16 @@ public class AnjiBoundedDoubleProperty extends AbstractAnjiProperty<Double> impl
 
     public void setMaxValue(double maxValue) {
         this.maxValue = maxValue;
+        if (value > maxValue) {
+            setValue(maxValue);
+        }
     }
 
     public void setMinValue(double minValue) {
         this.minValue = minValue;
+        if (value < minValue) {
+            setValue(minValue);
+        }
     }
 
     @Override
@@ -87,5 +93,7 @@ public class AnjiBoundedDoubleProperty extends AbstractAnjiProperty<Double> impl
     public void setValue(Double value) {
         if (inBounds(value))
             super.setValue(value);
+        else
+            super.setValue(this.value);
     }
 }

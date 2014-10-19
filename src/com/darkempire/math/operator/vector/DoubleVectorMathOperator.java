@@ -21,4 +21,56 @@ public final class DoubleVectorMathOperator {
         }
         return sum;
     }
+
+    public static double max(DoubleVector vector) {
+        double max = vector.get(0);
+        int size = vector.getSize();
+        for (int i = 1; i < size; i++) {
+            double temp = vector.get(i);
+            if (temp > max) {
+                max = temp;
+            }
+        }
+        return max;
+    }
+
+    public static double min(DoubleVector vector) {
+        double min = vector.get(0);
+        int size = vector.getSize();
+        for (int i = 1; i < size; i++) {
+            double temp = vector.get(i);
+            if (temp < min) {
+                min = temp;
+            }
+        }
+        return min;
+    }
+
+    /**
+     * Нормалізує вектор (тобто всі його координати будуть лежати від 0 до 1)
+     *
+     * @param vector вектор
+     * @return нормальнізований вектор
+     */
+    public static DoubleVector normalize(DoubleVector vector) {
+        double max = vector.get(0);
+        double min = max;
+        int size = vector.getSize();
+        for (int i = 1; i < size; i++) {
+            double temp = vector.get(i);
+            if (temp > max) {
+                max = temp;
+            }
+            if (temp < min) {
+                min = temp;
+            }
+        }
+        double delta = max - min;
+        for (int i = 0; i < size; i++) {
+            double temp = vector.get(i);
+            vector.set(i, (temp - min) / delta);
+        }
+        return vector;
+    }
+
 }

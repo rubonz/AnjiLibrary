@@ -1,9 +1,11 @@
 package sample.anjifx;
 
 import com.darkempire.anji.log.Log;
+import com.darkempire.anjifx.beans.property.AnjiBoundedLongProperty;
 import com.darkempire.anjifx.beans.property.AnjiIntegerProperty;
 import com.darkempire.anjifx.beans.property.AnjiLongProperty;
 import com.darkempire.anjifx.dialog.DialogUtil;
+import com.darkempire.anjifx.monolog.MonologGeneratorPane;
 import com.darkempire.anjifx.scene.LongSpinBox;
 import com.darkempire.anjifx.scene.chart.AnjiLineChart;
 import com.darkempire.internal.anji.LocalHolder;
@@ -28,13 +30,9 @@ public class LongFieldTest extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        VBox vBox = new VBox();
-        LongSpinBox spinBox = new LongSpinBox();
-        spinBox.setMaxValue(2);
-        spinBox.setMinValue(1);
-        vBox.getChildren().addAll(spinBox);
-        primaryStage.setScene(new Scene(vBox));
+        DialogUtil.createDialog(new AnjiLongProperty("test")).show();
         primaryStage.show();
+        primaryStage.hide();
     }
 
     public static void main(String[] args) {
