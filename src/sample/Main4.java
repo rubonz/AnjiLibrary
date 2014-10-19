@@ -1,13 +1,10 @@
 package sample;
 
-import com.darkempire.math.random.randomgenerator.DoubleRandom;
 import com.darkempire.math.solver.GeneticLinearEquationSystemSolver;
 import com.darkempire.math.struct.matrix.DoubleFixedMatrix;
 import com.darkempire.math.struct.matrix.DoubleMatrix;
 import com.darkempire.math.struct.vector.DoubleFixedVector;
 import com.darkempire.math.struct.vector.DoubleVector;
-
-import java.util.Random;
 
 /**
  * Created by Сергій on 18.10.2014.
@@ -15,7 +12,7 @@ import java.util.Random;
 public class Main4 {
 
     public static void main(String[] args) {
-       int rows = 10, cols = 10;
+       /*int rows = 10, cols = 10;
         Random random = new Random();
         random.setSeed(System.currentTimeMillis());
         DoubleMatrix m = DoubleFixedMatrix.createInstance(rows,cols);
@@ -23,15 +20,15 @@ public class Main4 {
         m.fill((i1,i2) -> r.getRandomNumber(-0.8,0.8));
         DoubleVector b = new DoubleFixedVector(rows);
         b.fill(index -> r.getRandomNumber(-0.5,0.5));
-
-//        DoubleMatrix m = DoubleFixedMatrix.createInstance(3, 6, new double[]{
-//                2, -3, -1, 0.1, 4, 3,
-//                -3, 5, 2, -0.1, 2, -5,
-//                -1, 2, 1, 1, 5, 0
-//        });
-//        DoubleVector b = new DoubleFixedVector(new double[]{
-//                -7, 19, 12
-//        });
+        */
+        DoubleMatrix m = DoubleFixedMatrix.createInstance(3, 6, new double[]{
+                2, -3, -1, 0.1, 4, 3,
+                -3, 5, 2, -0.1, 2, -5,
+                -1, 2, 1, 1, 5, 0
+        });
+        DoubleVector b = new DoubleFixedVector(new double[]{
+                -7, 19, 12
+        });
 
         GeneticLinearEquationSystemSolver solver = new GeneticLinearEquationSystemSolver();
         DoubleVector x = solver.solve(m,b);

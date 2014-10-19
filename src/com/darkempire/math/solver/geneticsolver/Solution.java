@@ -13,6 +13,6 @@ public interface Solution {
 
     @ListParams(length = "itemsCount",
                 elementRange = @Range(min = "minElement", max = "maxElement"),
-                elementMutationRange = @MutationRange(value = "10%"))
+                elementMutationRange = @MutationRange(value = "10%", gaussian = "false"))
     List<Double> getX();
 }

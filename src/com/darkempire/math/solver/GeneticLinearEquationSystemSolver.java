@@ -7,7 +7,7 @@ import com.darkempire.math.struct.vector.DoubleFixedVector;
 import com.darkempire.math.struct.vector.DoubleVector;
 import net.sourceforge.evoj.GenePool;
 import net.sourceforge.evoj.core.DefaultPoolFactory;
-import net.sourceforge.evoj.handlers.DefaultHandler;
+import net.sourceforge.evoj.handlers.MultithreadedHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +16,11 @@ import java.util.Map;
  * Created by Сергій on 19.10.2014.
  */
 public class GeneticLinearEquationSystemSolver implements ILinearEquationSystemSolver{
+
+    private final static double EPSILON = 1e-3;
+    private final static int POPULATION_SIZE = 26;//40
+    private final static int THREADS_NUMBER = 10;
+
     @Override
     public DoubleVector solve(DoubleMatrix m, DoubleVector b) {
 
@@ -26,11 +31,17 @@ public class GeneticLinearEquationSystemSolver implements ILinearEquationSystemS
         context.put("maxElement", Double.toString(max));
 
         DefaultPoolFactory poolFactory = new DefaultPoolFactory();
-        GenePool<Solution> genePool = poolFactory.createPool(40, Solution.class, context);
+        GenePool<Solution> genePool = poolFactory.createPool(POPULATION_SIZE, Solution.class, context);
         Rating rating = new Rating(m,b);
-        DefaultHandler handler = new DefaultHandler(rating);
 
-        handler.iterate(genePool, 200_000);
+        MultithreadedHandler handler = new MultithreadedHandler(THREADS_NUMBER, rating);
+        try{
+            handler.iterate(genePool, o -> rating.calcFunction((Solution)o)<EPSILON , 20_000);
+        }
+        finally {
+            handler.shutdown();
+        }
+
 
         double val = rating.calcFunction(genePool.getBestSolution());
         System.out.printf("norm: %3.7f", val);
