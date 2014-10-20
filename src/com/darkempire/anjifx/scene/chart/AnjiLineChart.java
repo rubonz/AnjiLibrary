@@ -31,11 +31,13 @@ import java.util.*;
 @AnjiExperimental
 public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
     private Map<Series, AnjiColorProperty> colorValues;
+    private Map<Series, LabelListener> listenerMap;
     private InvalidationListener updateColor = observable -> updateStyle();
 
     public AnjiLineChart(@NamedArg("xAxis") Axis<X> xAxis, @NamedArg("yAxis") Axis<Y> yAxis) {
         super(xAxis, yAxis);
         colorValues = new HashMap<>();
+        listenerMap = new HashMap<>();
         this.setCreateSymbols(false);
         getData().addListener((ListChangeListener<Series<X, Y>>) c -> {
             while (c.next()) {
@@ -45,7 +47,10 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
                     tempValue.addListener(updateColor);
                     colorValues.put(s, tempValue);
                 }
-                c.getRemoved().forEach(colorValues::remove);
+                for (Series s : c.getRemoved()) {
+                    colorValues.remove(s);
+                    listenerMap.remove(s);
+                }
             }
             updateLabel();
             updateStyle();
@@ -95,27 +100,35 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
     }
 
     public void hideSeries(int index) {
-        AnjiColorProperty value = colorValues.get(getData().get(index));
-        if (value != null)
+        Series s = getData().get(index);
+        AnjiColorProperty value = colorValues.get(s);
+        if (value != null && value.getValue().getOpacity() > 0) {
             value.setOpticaly(0);
+            listenerMap.get(s).hide();
+        }
     }
 
     public void showSeries(int index) {
-        AnjiColorProperty value = colorValues.get(getData().get(index));
-        if (value != null)
+        Series s = getData().get(index);
+        AnjiColorProperty value = colorValues.get(s);
+        if (value != null && value.getValue().getOpacity() < 1) {
             value.setOpticaly(1);
+            listenerMap.get(s).show();
+        }
     }
 
-    public void hideSeries(Series index) {
+    private void hideSeries(Series index) {
         AnjiColorProperty value = colorValues.get(index);
-        if (value != null)
+        if (value != null) {
             value.setOpticaly(0);
+        }
     }
 
-    public void showSeries(Series index) {
+    private void showSeries(Series index) {
         AnjiColorProperty value = colorValues.get(index);
-        if (value != null)
+        if (value != null) {
             value.setOpticaly(1);
+        }
     }
 
 
@@ -124,7 +137,10 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
         for (Node node : getLegend().lookupAll(".label")) {
             Label label = (Label) node;
             if (label.getOnMouseClicked() == null) {
-                label.setOnMouseClicked(new LabelListener(getData().get(i)));
+                Series data = getData().get(i);
+                LabelListener value = new LabelListener(data);
+                listenerMap.put(data, value);
+                label.setOnMouseClicked(value);
             }
             i++;
         }
@@ -139,18 +155,25 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
             savedData = null;
         }
 
+        public void show() {
+            showSeries(number);
+            number.setData(savedData);
+        }
+
+        public void hide() {
+            hideSeries(number);
+            savedData = number.getData();
+            number.setData(FXCollections.emptyObservableList());
+        }
         @Override
         public void handle(MouseEvent event) {
             switch (event.getButton()) {
                 case PRIMARY:
                     boolean dis = colorValues.get(number).getValue().getOpacity() == 0;
                     if (dis) {
-                        showSeries(number);
-                        number.setData(savedData);
+                        show();
                     } else {
-                        hideSeries(number);
-                        savedData = number.getData();
-                        number.setData(FXCollections.emptyObservableList());
+                        hide();
                     }
                     break;
                 case SECONDARY:
