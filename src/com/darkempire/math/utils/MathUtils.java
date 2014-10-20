@@ -6,6 +6,7 @@ import com.darkempire.anji.annotation.AnjiUtil;
 public final class MathUtils {
 
     //region Порівняння
+
     /**
      * Знаходить максимум між двома значеннями
      *
@@ -108,6 +109,7 @@ public final class MathUtils {
     //endregion
 
     //region Дільникі і кратні
+
     /**
      * Знаходження найбільшого спільного дільника двох чисел
      *
@@ -188,6 +190,46 @@ public final class MathUtils {
             result[i] = result[i - 1] * i;
         }
         return result;
+    }
+    //endregion
+
+    //region Обчислення характеристик
+
+    /**
+     * Обчислює середнєарифметичне вибори
+     *
+     * @param values виборка
+     * @return сережднєарифметичне
+     */
+    public static double middle(double... values) {
+        double temp = 0;
+        int count = values.length;
+        for (double v : values) {
+            temp += v / count;
+        }
+        return temp;
+    }
+
+    /**
+     * Обчислює середнє значення виборки через min,max за формулою
+     * mid = (max + min)/2;
+     *
+     * @param values виборка
+     * @return mid
+     */
+    public static double minMaxMiddle(double... values) {
+        double max = values[0];
+        double min = values[0];
+        for (int i = 1; i < values.length; i++) {
+            double temp = values[i];
+            if (temp > max) {
+                max = temp;
+            }
+            if (temp < min) {
+                min = temp;
+            }
+        }
+        return (max + min) / 2;
     }
     //endregion
 }

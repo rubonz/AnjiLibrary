@@ -4,6 +4,7 @@ import com.darkempire.anji.annotation.AnjiUtil;
 import com.darkempire.math.MathMachine;
 import com.darkempire.math.struct.function.FDoubleDouble;
 import com.darkempire.math.struct.function.FDoublesDouble;
+import com.darkempire.math.struct.function.MultiParamSum;
 import com.darkempire.math.utils.ArrayUtils;
 
 import java.util.ArrayList;
@@ -22,62 +23,34 @@ public final class FunctionArithmeticUtil {
     }
 
 
-    public static FDoublesDouble createMultiParamSum(FDoubleDouble... functions) {
+    public static MultiParamSum createMultiParamSum(FDoubleDouble... functions) {
         List<FDoubleDouble> functionsL = new ArrayList<>();
         Collections.addAll(functionsL, functions);
         return new MultiParamSum(functionsL);
     }
 
-    public static FDoublesDouble createMultiParamSum(List<FDoubleDouble> functions, double[] coefs) {
+    public static MultiParamSum createMultiParamSum(List<FDoubleDouble> functions, double[] coefs) {
         return new MultiParamSum(functions, coefs);
     }
 
-
-    private static class MultiParamSum implements FDoublesDouble {
-        private double[] coefs;
-        private List<FDoubleDouble> functions;
-
-        public MultiParamSum(List<FDoubleDouble> functions, double[] coefs) {
-            this.coefs = coefs;
-            this.functions = functions;
+    public static MultiParamSum createMultiParamSumFromSum(List<MultiParamSum> functions, double[] coefs) {
+        int size = functions.size();
+        int coefCount = 0;
+        List<FDoubleDouble> functionsList = new ArrayList<>();
+        for (MultiParamSum sum : functions) {
+            functionsList.addAll(sum.getFunctions());
+            coefCount += sum.getCoefs().length;
         }
-
-        public MultiParamSum(List<FDoubleDouble> functions) {
-            this.functions = functions;
-            coefs = new double[functions.size()];
-            Arrays.fill(coefs, 1);
-        }
-
-        @Override
-        public double calc(double... doubles) {
-            double sum = 0;
-            for (int i = 0; i < doubles.length; i++) {
-                sum += functions.get(i).calc(doubles[i]) * coefs[i];
+        double[] nCoefs = new double[coefCount];
+        int index = 0;
+        for (int i = 0; i < size; i++) {
+            MultiParamSum sum = functions.get(i);
+            double[] sCoef = sum.getCoefs();
+            for (double aSCoef : sCoef) {
+                nCoefs[index] = aSCoef * coefs[i];
+                index++;
             }
-            return sum;
         }
-
-        @Override
-        public String toString() {
-            StringBuilder builder = new StringBuilder();
-            int size = coefs.length;
-            builder.append(MathMachine.numberFormat.format(coefs[0]));
-            builder.append("*(");
-            builder.append(functions.get(0).toString());
-            builder.append(')');
-            for (int i = 1; i < size; i++) {
-                double temp = coefs[i];
-                if (temp != 0) {
-                    if (temp > 0) {
-                        builder.append('+');
-                    }
-                    builder.append(temp);
-                    builder.append("*(");
-                    builder.append(functions.get(i).toString());
-                    builder.append(')');
-                }
-            }
-            return builder.toString();
-        }
+        return new MultiParamSum(functionsList, nCoefs);
     }
 }

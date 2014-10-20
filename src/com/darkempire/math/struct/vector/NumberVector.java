@@ -53,6 +53,7 @@ public abstract class NumberVector<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
+
     public NumberVector<T> fill(FIndexToNumber<T> function) {
         int size = getSize();
         for (int i = 0; i < size; i++) {
@@ -71,24 +72,44 @@ public abstract class NumberVector<T extends com.darkempire.math.struct.Number<T
     //endregion
 
     //region Заповнення частин векторів
+
+    /**
+     * Заповнення підвектору від початку (включаючи) до кінця (виключаючи)
+     *
+     * @param start початок
+     * @param end   кінець
+     * @param value значення
+     * @return вектор
+     */
     public NumberVector<T> fillSubvector(int start, int end, T value) {
-        end++;
         for (int i = start; i < end; i++) {
             set(i, value.deepcopy());
         }
         return this;
     }
 
+    /**
+     * Заповнення підвектору від початку (включаючи) до кінця (виключаючи)
+     * @param start початок
+     * @param end кінець
+     * @param function функція
+     * @return вектор
+     */
     public NumberVector<T> fillSubvector(int start, int end, FIndexToNumber<T> function) {
-        end++;
         for (int i = start; i < end; i++) {
             set(i, function.calc(i));
         }
         return this;
     }
 
+    /**
+     * Заповнення підвектору від початку (включаючи) до кінця (виключаючи)
+     * @param start початок
+     * @param end кінець
+     * @param function функція
+     * @return вектор
+     */
     public NumberVector<T> fillSubvector(int start, int end, FNumberVectorAndIndexToNumber<T> function) {
-        end++;
         for (int i = start; i < end; i++) {
             set(i, function.calc(this, i));
         }

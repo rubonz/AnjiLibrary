@@ -3,6 +3,8 @@ package com.darkempire.math.utils;
 import com.darkempire.anji.annotation.AnjiUtil;
 import com.darkempire.math.struct.function.interfaces.FIndexToDouble;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: siredvin
@@ -81,5 +83,63 @@ public final class ArrayUtils {
             arr[i2] = k;
         }
         return arr;
+    }
+
+    /**
+     * Поєднує багато масивів в один
+     * [1,2,3],[4,5] -> [1,2,3,4,5]
+     *
+     * @param arrays масиви
+     * @return об’єднаний масив
+     */
+    public static double[] append(double[]... arrays) {
+        int length = 0;
+        for (double[] arr : arrays) {
+            length += arr.length;
+        }
+        double[] result = new double[length];
+        int counter = 0;
+        for (double[] arr : arrays) {
+            for (double d : arr) {
+                result[counter] = d;
+                counter++;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Поєднує багато масивів в один
+     * [1,2,3],[4,5] -> [1,2,3,4,5]
+     *
+     * @param arrays масиви
+     * @return об’єднаний масив
+     */
+    public static double[] append(List<double[]> arrays) {
+        int length = 0;
+        for (double[] arr : arrays) {
+            length += arr.length;
+        }
+        double[] result = new double[length];
+        int counter = 0;
+        for (double[] arr : arrays) {
+            for (double d : arr) {
+                result[counter] = d;
+                counter++;
+            }
+        }
+        return result;
+    }
+
+    public static double[] subarray(double[] array, int startIndex, int endIndex) {
+        double[] result = new double[endIndex - startIndex + 1];
+        System.arraycopy(array, startIndex, result, 0, endIndex - startIndex + 1);
+        return result;
+    }
+
+    public static int[] subarray(int[] array, int startIndex, int endIndex) {
+        int[] result = new int[endIndex - startIndex + 1];
+        System.arraycopy(array, startIndex, result, 0, endIndex - startIndex + 1);
+        return result;
     }
 }

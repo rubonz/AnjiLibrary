@@ -81,8 +81,10 @@ public class ProgressMonologController<V> {
         progressBar.progressProperty().bind(task.progressProperty());
         task.setOnSucceeded(event -> {
             okButton.setDisable(false);
-            if (autoclose)
+            if (autoclose) {
                 monolog.close();
+                value = task.getValue();
+            }
         });
     }
 

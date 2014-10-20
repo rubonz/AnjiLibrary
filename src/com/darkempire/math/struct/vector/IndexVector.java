@@ -51,24 +51,44 @@ public abstract class IndexVector implements LinearCalcable<IndexVector>, IIndex
     //endregion
 
     //region Заповнювачі підвекторів
+
+    /**
+     * Заповнення підвектору від початку (включаючи) до кінця (виключаючи)
+     *
+     * @param start початок
+     * @param end   кінець
+     * @param value значення
+     * @return вектор
+     */
     public IndexVector fillSubvector(int start, int end, int value) {
-        end++;
         for (int i = start; i < end; i++) {
             set(i, value);
         }
         return this;
     }
 
+    /**
+     * Заповнення підвектору від початку (включаючи) до кінця (виключаючи)
+     * @param start початок
+     * @param end кінець
+     * @param function функція
+     * @return вектор
+     */
     public IndexVector fillSubvector(int start, int end, FIndexToIndex function) {
-        end++;
         for (int i = start; i < end; i++) {
             set(i, function.calc(i));
         }
         return this;
     }
 
+    /**
+     * Заповнення підвектору від початку (включаючи) до кінця (виключаючи)
+     * @param start початок
+     * @param end кінець
+     * @param function функція
+     * @return вектор
+     */
     public IndexVector fillSubvector(int start, int end, FIndexVectorAndIndexToIndex function) {
-        end++;
         for (int i = start; i < end; i++) {
             set(i, function.calc(this, i));
         }

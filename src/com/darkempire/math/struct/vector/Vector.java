@@ -46,16 +46,30 @@ public abstract class Vector<T> implements IVectorProvider<T> {
     //endregion
 
     //region Заповнювачі підвекторів
+
+    /**
+     * Заповнення підвектору від початку (включаючи) до кінця (виключаючи)
+     *
+     * @param start    початок
+     * @param end      кінець
+     * @param function функція
+     * @return вектор
+     */
     public Vector<T> fillSubvector(int start, int end, FIndexToSome<T> function) {
-        end++;
         for (int i = start; i < end; i++) {
             set(i, function.calc(i));
         }
         return this;
     }
 
+    /**
+     * Заповнення підвектору від початку (включаючи) до кінця (виключаючи)
+     * @param start початок
+     * @param end кінець
+     * @param function функція
+     * @return вектор
+     */
     public Vector<T> fillSubvector(int start, int end, FVectorIndexToSome<T> function) {
-        end++;
         for (int i = start; i < end; i++) {
             set(i, function.calc(this, i));
         }

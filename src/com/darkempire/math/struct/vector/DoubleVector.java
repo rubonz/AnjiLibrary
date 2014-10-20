@@ -79,24 +79,44 @@ public abstract class DoubleVector implements LinearCalcable<DoubleVector>, IDou
     //endregion
 
     //region Заповнення підвектора
+
+    /**
+     * Заповнення підвектору від початку (включаючи) до кінця (виключаючи)
+     *
+     * @param start початок
+     * @param end   кінець
+     * @param value значення
+     * @return вектор
+     */
     public DoubleVector fillSubvector(int start, int end, double value) {
-        end++;
         for (int i = start; i < end; i++) {
             set(i, value);
         }
         return this;
     }
 
+    /**
+     * Заповнення підвектору від початку (включаючи) до кінця (виключаючи)
+     * @param start початок
+     * @param end кінець
+     * @param function функція
+     * @return вектор
+     */
     public DoubleVector fillSubvector(int start, int end, FIndexToDouble function) {
-        end++;
         for (int i = start; i < end; i++) {
             set(i, function.calc(i));
         }
         return this;
     }
 
+    /**
+     * Заповнення підвектору від початку (включаючи) до кінця (виключаючи)
+     * @param start початок
+     * @param end кінець
+     * @param function функція
+     * @return вектор
+     */
     public DoubleVector fillSubvector(int start, int end, FDoubleVectorIndexDouble function) {
-        end++;
         for (int i = start; i < end; i++) {
             set(i, function.calc(this, i));
         }
