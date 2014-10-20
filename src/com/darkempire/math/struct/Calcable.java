@@ -7,6 +7,5 @@ package com.darkempire.math.struct;
  * Time: 14:50
  * To change this template use File | Settings | File Templates.
  */
-public interface Calcable<T extends Calcable<T>> extends Assignable<T>, Modifable<T> {
-    public T deepcopy();
+public interface Calcable<T extends Calcable<T>> extends Assignable<T>, Modifable<T>, IDeepcopy<T> {
 }

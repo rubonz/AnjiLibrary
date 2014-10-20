@@ -4,12 +4,13 @@ import com.darkempire.anji.annotation.AnjiStandartize;
 import com.darkempire.anji.annotation.AnjiUnknow;
 import com.darkempire.anji.document.tex.TeXEventWriter;
 import com.darkempire.math.MathMachine;
-import com.darkempire.math.struct.Calcable;
-import com.darkempire.math.struct.LinearCalcable;
+import com.darkempire.math.struct.*;
+import com.darkempire.math.struct.function.doublefunction.DoubleFunction;
 import com.darkempire.math.struct.vector.IDoubleVectorProvider;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Created by siredvin on 13.10.14.
@@ -17,11 +18,14 @@ import java.util.Comparator;
  * @author siredvin
  */
 @AnjiStandartize
-public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVectorProvider, LinearCalcable<ArrayDoublePolynomial>, Calcable<ArrayDoublePolynomial> {
+public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVectorProvider, LinearAssignable<ArrayDoublePolynomial>, Assignable<ArrayDoublePolynomial> {
     private double[] coefs;
 
     //region Конструктори
     public ArrayDoublePolynomial(double... coefs) {
+        if (coefs.length == 0) {
+            this.coefs = new double[]{0};
+        }
         this.coefs = coefs;
     }
     //endregion
@@ -73,6 +77,8 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
+        if (coefs[0] == 0 && coefs.length == 1)
+            return builder.append('0').toString();
         if (coefs[0] != 0) {
             builder.append(MathMachine.numberFormat.format(coefs[0]));
         }
@@ -205,7 +211,8 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
         throw new UnsupportedOperationException();
     }
 
-    public ArrayDoublePolynomial iprop(double lambda) {
+    @Override
+    public ArrayDoublePolynomial iprod(double lambda) {
         for (int i = 0; i < coefs.length; i++) {
             coefs[i] *= lambda;
         }
@@ -215,7 +222,8 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
 
     //region Арифметичні операції
     @Override
-    public ArrayDoublePolynomial add(ArrayDoublePolynomial arrayDoublePolynomial) {
+    public ArrayDoublePolynomial add(DoublePolynomial doublePolynomial) {
+        ArrayDoublePolynomial arrayDoublePolynomial = doublePolynomial.toRawPolynomial();
         int elseSize = arrayDoublePolynomial.getSize();
         int size = Math.max(coefs.length, elseSize);
         double[] newCoef = new double[size];
@@ -226,12 +234,13 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
     }
 
     @Override
-    public ArrayDoublePolynomial subtract(ArrayDoublePolynomial arrayDoublePolynomial) {
-        int elseSize = arrayDoublePolynomial.getSize();
+    public ArrayDoublePolynomial subtract(DoublePolynomial arrayDoublePolynomial) {
+        ArrayDoublePolynomial polynomial = arrayDoublePolynomial.toRawPolynomial();
+        int elseSize = polynomial.getSize();
         int size = Math.max(coefs.length, elseSize);
         double[] newCoef = new double[size];
         for (int i = 0; i < size; i++) {
-            newCoef[i] = get(i) - arrayDoublePolynomial.get(i);
+            newCoef[i] = get(i) - polynomial.get(i);
         }
         return new ArrayDoublePolynomial(newCoef);
     }
@@ -246,7 +255,8 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
         return new ArrayDoublePolynomial(newCoef);
     }
 
-    public ArrayDoublePolynomial prop(double lambda) {
+    @Override
+    public ArrayDoublePolynomial prod(double lambda) {
         ArrayDoublePolynomial result = deepcopy();
         for (int i = 0; i < coefs.length; i++) {
             result.coefs[i] *= lambda;
@@ -255,7 +265,8 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
     }
 
     @Override
-    public ArrayDoublePolynomial multiply(ArrayDoublePolynomial arrayDoublePolynomial) {
+    public ArrayDoublePolynomial multiply(DoublePolynomial doublePolynomial) {
+        ArrayDoublePolynomial arrayDoublePolynomial = doublePolynomial.toRawPolynomial();
         int size = coefs.length;
         int asize = arrayDoublePolynomial.getSize();
         ArrayDoublePolynomial result = new ArrayDoublePolynomial(new double[size + asize]);
@@ -269,7 +280,7 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
 
     @Override
     @AnjiUnknow
-    public ArrayDoublePolynomial divide(ArrayDoublePolynomial arrayDoublePolynomial) {
+    public ArrayDoublePolynomial divide(DoublePolynomial doublePolynomial) {
         throw new UnsupportedOperationException();
     }
 
@@ -297,8 +308,27 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
     }
     //endregion
 
+    @Override
+    public ArrayDoublePolynomial toRawPolynomial() {
+        return this;
+    }
+
     public static ArrayDoublePolynomial sum(ArrayDoublePolynomial... polynomials) {
         int maxSize = Arrays.stream(polynomials).map(ArrayDoublePolynomial::getSize)
+                .max(Comparator.<Integer>naturalOrder()).get();
+        ArrayDoublePolynomial result = new ArrayDoublePolynomial(new double[maxSize]);
+        for (int pi = 0; pi < maxSize; pi++) {
+            double sum = 0;
+            for (ArrayDoublePolynomial polynomial : polynomials) {
+                sum += polynomial.get(pi);
+            }
+            result.set(pi, sum);
+        }
+        return result;
+    }
+
+    public static ArrayDoublePolynomial sum(List<ArrayDoublePolynomial> polynomials) {
+        int maxSize = polynomials.stream().map(ArrayDoublePolynomial::getSize)
                 .max(Comparator.<Integer>naturalOrder()).get();
         ArrayDoublePolynomial result = new ArrayDoublePolynomial(new double[maxSize]);
         for (int pi = 0; pi < maxSize; pi++) {

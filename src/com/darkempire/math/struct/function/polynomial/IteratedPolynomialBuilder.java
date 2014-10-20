@@ -132,7 +132,7 @@ public abstract class IteratedPolynomialBuilder {
 
         @Override
         protected ArrayDoublePolynomial impl_next(ArrayDoublePolynomial lk_1, ArrayDoublePolynomial lk, int k) {
-            return new ArrayDoublePolynomial(0, 1).imultiply(lk).isubtract(lk_1.prop(k));
+            return new ArrayDoublePolynomial(0, 1).imultiply(lk).isubtract(lk_1.prod(k));
         }
     }
 
@@ -154,7 +154,7 @@ public abstract class IteratedPolynomialBuilder {
 
         @Override
         protected ArrayDoublePolynomial impl_next(ArrayDoublePolynomial lk_1, ArrayDoublePolynomial lk, int k) {
-            return new ArrayDoublePolynomial(0, 2).imultiply(lk).isubtract(lk_1.prop(k * 2));
+            return new ArrayDoublePolynomial(0, 2).imultiply(lk).isubtract(lk_1.prod(k * 2));
         }
     }
     //endregion
@@ -275,7 +275,7 @@ public abstract class IteratedPolynomialBuilder {
 
         @Override
         protected ArrayDoublePolynomial impl_next(ArrayDoublePolynomial lk_1, ArrayDoublePolynomial lk, int k) {
-            return lk.multiply(new ArrayDoublePolynomial(2 * k + 1, -1)).isubtract(lk_1.prop(k)).iprop(1.0 / (k + 1));
+            return lk.multiply(new ArrayDoublePolynomial(2 * k + 1, -1)).isubtract(lk_1.prod(k)).iprod(1.0 / (k + 1));
         }
     }
     //endregion
@@ -301,7 +301,7 @@ public abstract class IteratedPolynomialBuilder {
 
         @Override
         protected ArrayDoublePolynomial impl_next(ArrayDoublePolynomial lk_1, ArrayDoublePolynomial lk, int k) {
-            return new ArrayDoublePolynomial(0, (2.0 * k + 1) / (k + 1)).imultiply(lk).isubtract(lk_1.prop(k / (k + 1.0)));
+            return new ArrayDoublePolynomial(0, (2.0 * k + 1) / (k + 1)).imultiply(lk).isubtract(lk_1.prod(k / (k + 1.0)));
         }
     }
 
@@ -325,7 +325,7 @@ public abstract class IteratedPolynomialBuilder {
         @Override
         protected ArrayDoublePolynomial impl_next(ArrayDoublePolynomial lk_1, ArrayDoublePolynomial lk, int k) {
             double coef1 = (2.0 * k + 1) / (k + 1);
-            return new ArrayDoublePolynomial(-coef1, 2 * coef1).imultiply(lk).isubtract(lk_1.prop(k / (k + 1.0)));
+            return new ArrayDoublePolynomial(-coef1, 2 * coef1).imultiply(lk).isubtract(lk_1.prod(k / (k + 1.0)));
         }
     }
     //endregion

@@ -6,6 +6,7 @@ import com.darkempire.anjifx.util.AnjiFXColorUtil;
 import com.darkempire.anjifx.util.AnjiFXStringConverter;
 import com.darkempire.internal.anji.LocalHolder;
 import javafx.beans.InvalidationListener;
+import javafx.beans.NamedArg;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -32,11 +33,10 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
     private List<AnjiColorProperty> colorValues;
     private InvalidationListener updateColor = observable -> updateStyle();
 
-    public AnjiLineChart(Axis<X> xAxis, Axis<Y> yAxis) {
+    public AnjiLineChart(@NamedArg("xAxis") Axis<X> xAxis, @NamedArg("yAxis") Axis<Y> yAxis) {
         super(xAxis, yAxis);
         colorValues = new ArrayList<>();
         this.setCreateSymbols(false);
-        Random rand = new Random();
         getData().addListener((ListChangeListener<Series<X, Y>>) c -> {
             List<? extends Series<X, Y>> list = c.getList();
             int size = list.size();
