@@ -30,9 +30,17 @@ public class LongFieldTest extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        DialogUtil.createDialog(new AnjiLongProperty("test")).show();
+        VBox vBox = new VBox();
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        xAxis.setForceZeroInRange(false);
+        yAxis.setForceZeroInRange(false);
+        AnjiLineChart chart = new AnjiLineChart(xAxis, yAxis);
+        vBox.getChildren().addAll(chart);
+        chart.getData().addAll(new XYChart.Series<>("test1", FXCollections.observableArrayList(new XYChart.Data(1, 10), new XYChart.Data<>(2, 100))),
+                new XYChart.Series<>("test2", FXCollections.observableArrayList(new XYChart.Data(1, 2), new XYChart.Data<>(2, 3))));
+        primaryStage.setScene(new Scene(vBox));
         primaryStage.show();
-        primaryStage.hide();
     }
 
     public static void main(String[] args) {

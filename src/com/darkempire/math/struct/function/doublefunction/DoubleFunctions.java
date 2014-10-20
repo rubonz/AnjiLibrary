@@ -5,9 +5,7 @@ import com.darkempire.math.MathMachine;
 import com.darkempire.math.exception.SizeMissmatchException;
 import com.darkempire.math.struct.IDeepcopy;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -1,5 +1,6 @@
 package com.darkempire.anjifx.scene.chart;
 
+import com.darkempire.anji.annotation.AnjiExperimental;
 import com.darkempire.anjifx.beans.property.AnjiColorProperty;
 import com.darkempire.anjifx.dialog.DialogUtil;
 import com.darkempire.anjifx.util.AnjiFXColorUtil;
@@ -7,6 +8,7 @@ import com.darkempire.anjifx.util.AnjiFXStringConverter;
 import com.darkempire.internal.anji.LocalHolder;
 import javafx.beans.InvalidationListener;
 import javafx.beans.NamedArg;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -17,10 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,24 +28,24 @@ import java.util.Set;
  * Time: 8:25
  * To change this template use File | Settings | File Templates.
  */
+@AnjiExperimental
 public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
-    private List<AnjiColorProperty> colorValues;
+    private Map<Series, AnjiColorProperty> colorValues;
     private InvalidationListener updateColor = observable -> updateStyle();
 
     public AnjiLineChart(@NamedArg("xAxis") Axis<X> xAxis, @NamedArg("yAxis") Axis<Y> yAxis) {
         super(xAxis, yAxis);
-        colorValues = new ArrayList<>();
+        colorValues = new HashMap<>();
         this.setCreateSymbols(false);
         getData().addListener((ListChangeListener<Series<X, Y>>) c -> {
-            List<? extends Series<X, Y>> list = c.getList();
-            int size = list.size();
-            int listSize = colorValues.size();
-            for (int i = listSize; i < size; i++) {
-                Series<X, Y> series = list.get(i);
-                Color color = AnjiFXColorUtil.randomColor();
-                AnjiColorProperty tempValue = new AnjiColorProperty(LocalHolder.anji_resourceBundle.getString("anjifx.scene.colorforchart") + series.getName(), color);
-                tempValue.addListener(updateColor);
-                colorValues.add(tempValue);
+            while (c.next()) {
+                for (Series s : c.getAddedSubList()) {
+                    Color color = AnjiFXColorUtil.randomColor();
+                    AnjiColorProperty tempValue = new AnjiColorProperty(s, LocalHolder.anji_resourceBundle.getString("anjifx.scene.colorforchart") + s.getName(), color);
+                    tempValue.addListener(updateColor);
+                    colorValues.put(s, tempValue);
+                }
+                c.getRemoved().forEach(colorValues::remove);
             }
             updateLabel();
             updateStyle();
@@ -58,22 +57,23 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
     }
 
     public AnjiColorProperty lineStrokeColor(int index) {
-        return colorValues.get(index);
+        return colorValues.get(getData().get(index));
     }
 
     public void setColor(int index, Color color) {
-        colorValues.get(index).setValue(color);
+        colorValues.get(getData().get(index)).setValue(color);
     }
 
     public void clearColor(int lineIndex) {
-        colorValues.get(lineIndex).setValue(Color.gray(Math.random() * 0.5 + 0.3));
+        colorValues.get(getData().get(lineIndex)).setValue(AnjiFXColorUtil.randomColor());
     }
 
     private void updateStyle() {
+        requestChartLayout();
         int size = colorValues.size();
         for (int i = 0; i < size; i++) {
             Set<Node> nodeSet = lookupAll(".chart-series-line.series" + i);
-            Color c = colorValues.get(i).getValue();
+            Color c = colorValues.get(getData().get(i)).getValue();
             if (c != null && nodeSet != null) {
                 for (Node node : nodeSet) {
                     node.setStyle(String.format("-fx-stroke: %s;", AnjiFXStringConverter.colorToRGBString(c)));
@@ -83,7 +83,7 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
         int i = 0;
         for (Node node : getLegend().lookupAll(".label")) {
             Label label = (Label) node;
-            Color temp = colorValues.get(i).getValue();
+            Color temp = colorValues.get(getData().get(i)).getValue();
             if (temp.getOpacity() == 1) {
                 label.getGraphic().setStyle(String.format("-fx-background-color:%s;", AnjiFXStringConverter.colorToRGBString(temp)));
             } else {
@@ -94,14 +94,28 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
         }
     }
 
-    private void hideSeries(int index) {
-        AnjiColorProperty value = colorValues.get(index);
-        value.setOpticaly(0);
+    public void hideSeries(int index) {
+        AnjiColorProperty value = colorValues.get(getData().get(index));
+        if (value != null)
+            value.setOpticaly(0);
     }
 
-    private void showSeries(int index) {
+    public void showSeries(int index) {
+        AnjiColorProperty value = colorValues.get(getData().get(index));
+        if (value != null)
+            value.setOpticaly(1);
+    }
+
+    public void hideSeries(Series index) {
         AnjiColorProperty value = colorValues.get(index);
-        value.setOpticaly(1);
+        if (value != null)
+            value.setOpticaly(0);
+    }
+
+    public void showSeries(Series index) {
+        AnjiColorProperty value = colorValues.get(index);
+        if (value != null)
+            value.setOpticaly(1);
     }
 
 
@@ -110,17 +124,19 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
         for (Node node : getLegend().lookupAll(".label")) {
             Label label = (Label) node;
             if (label.getOnMouseClicked() == null) {
-                label.setOnMouseClicked(new LabelListener(i));
+                label.setOnMouseClicked(new LabelListener(getData().get(i)));
             }
             i++;
         }
     }
 
     private class LabelListener implements EventHandler<MouseEvent> {
-        private int number;
+        private Series number;
+        private ObservableList<Data> savedData;
 
-        public LabelListener(int number) {
+        public LabelListener(Series number) {
             this.number = number;
+            savedData = null;
         }
 
         @Override
@@ -130,8 +146,11 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
                     boolean dis = colorValues.get(number).getValue().getOpacity() == 0;
                     if (dis) {
                         showSeries(number);
+                        number.setData(savedData);
                     } else {
                         hideSeries(number);
+                        savedData = number.getData();
+                        number.setData(FXCollections.emptyObservableList());
                     }
                     break;
                 case SECONDARY:
