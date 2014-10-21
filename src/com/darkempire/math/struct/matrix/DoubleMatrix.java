@@ -8,6 +8,7 @@ import com.darkempire.math.struct.function.interfaces.FDoubleMatrixElementAndMat
 import com.darkempire.math.struct.function.interfaces.FMatrixIndexToDouble;
 import com.darkempire.math.struct.vector.DoubleMatrixVector;
 import com.darkempire.math.struct.vector.DoubleVector;
+import com.darkempire.math.struct.vector.IDoubleVectorProvider;
 
 import java.util.stream.Stream;
 
@@ -317,6 +318,14 @@ public abstract class DoubleMatrix implements IMatrix<DoubleMatrix, Double>, IDo
         return this;
     }
 
+    public DoubleMatrix fillRow(int rowIndex, IDoubleVectorProvider provider) {
+        int columnCount = getColumnCount();
+        for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+            set(rowIndex, columnIndex, provider.get(columnIndex));
+        }
+        return this;
+    }
+
     public DoubleMatrix fillFirstRow(FMatrixIndexToDouble function) {
         return fillRow(0, function);
     }
@@ -329,6 +338,10 @@ public abstract class DoubleMatrix implements IMatrix<DoubleMatrix, Double>, IDo
         return fillRow(0, value);
     }
 
+    public DoubleMatrix fillFirstRow(IDoubleVectorProvider provider) {
+        return fillRow(0, provider);
+    }
+
     public DoubleMatrix fillLastRow(FDoubleMatrixAndIndexToDouble function) {
         return fillRow(getRowCount() - 1, function);
     }
@@ -339,6 +352,10 @@ public abstract class DoubleMatrix implements IMatrix<DoubleMatrix, Double>, IDo
 
     public DoubleMatrix fillLastRow(double value) {
         return fillRow(getRowCount() - 1, value);
+    }
+
+    public DoubleMatrix fillLastRow(IDoubleVectorProvider provider) {
+        return fillRow(getRowCount() - 1, provider);
     }
     //endregion
 
@@ -378,6 +395,14 @@ public abstract class DoubleMatrix implements IMatrix<DoubleMatrix, Double>, IDo
         return this;
     }
 
+    public DoubleMatrix fillColumn(int columnIndex, IDoubleVectorProvider provider) {
+        int rowCount = getRowCount();
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            set(rowIndex, columnIndex, provider.get(rowIndex));
+        }
+        return this;
+    }
+
     public DoubleMatrix fillFirstColumn(FDoubleMatrixAndIndexToDouble function) {
         return fillColumn(0, function);
     }
@@ -390,6 +415,10 @@ public abstract class DoubleMatrix implements IMatrix<DoubleMatrix, Double>, IDo
         return fillColumn(0, value);
     }
 
+    public DoubleMatrix fillFirstColumn(IDoubleVectorProvider provider) {
+        return fillColumn(0, provider);
+    }
+
     public DoubleMatrix fillLastColumn(FDoubleMatrixAndIndexToDouble function) {
         return fillColumn(getColumnCount() - 1, function);
     }
@@ -400,6 +429,10 @@ public abstract class DoubleMatrix implements IMatrix<DoubleMatrix, Double>, IDo
 
     public DoubleMatrix fillLastColumn(double value) {
         return fillColumn(getColumnCount() - 1, value);
+    }
+
+    public DoubleMatrix fillLastColumn(IDoubleVectorProvider provider) {
+        return fillColumn(getColumnCount() - 1, provider);
     }
     //endregion
     //endregion

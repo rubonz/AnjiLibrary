@@ -102,12 +102,24 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
         }
     }
 
+    public void hideSeries(int... indexes) {
+        for (int i : indexes) {
+            hideSeries(i);
+        }
+    }
+
     public void hideSeries(int index) {
         Series s = getData().get(index);
         AnjiColorProperty value = colorValues.get(s);
         if (value != null && value.getValue().getOpacity() > 0) {
             value.setOpticaly(0);
             listenerMap.get(s).hide();
+        }
+    }
+
+    public void showSeries(int... indexes) {
+        for (int i : indexes) {
+            showSeries(i);
         }
     }
 
@@ -171,6 +183,7 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
             savedData = number.getData();
             number.setData(FXCollections.emptyObservableList());
         }
+
         @Override
         public void handle(MouseEvent event) {
             switch (event.getButton()) {

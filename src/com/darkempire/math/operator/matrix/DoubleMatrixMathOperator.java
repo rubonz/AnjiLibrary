@@ -6,6 +6,7 @@ import com.darkempire.math.struct.matrix.DoubleMatrix;
 import com.darkempire.math.struct.matrix.MatrixIndex;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 /**
@@ -126,6 +127,24 @@ public final class DoubleMatrixMathOperator {
             }
         }
         return res;
+    }
+
+    /**
+     * Обчислює кількість ненульових елементів на головній діагоналі матриці.
+     * Корисна допоміжна функція. Використовується, наприклад, для обчислення рангу трапецевидної матриці
+     *
+     * @param matrix матриця A
+     * @return кількість ненульових елементів на головній діагоналі
+     */
+    public static int calcUnZeroDiagonalElementCount(DoubleMatrix matrix) {
+        int size = Math.min(matrix.getRowCount(), matrix.getColumnCount());
+        int result = 0;
+        for (int i = 0; i < size; i++) {
+            if (matrix.get(i, i) != 0) {
+                result++;
+            }
+        }
+        return result;
     }
     //endregion
 

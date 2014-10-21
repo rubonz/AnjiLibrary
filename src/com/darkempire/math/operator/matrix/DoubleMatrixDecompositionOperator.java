@@ -1,10 +1,19 @@
 package com.darkempire.math.operator.matrix;
 
 import com.darkempire.anji.annotation.AnjiUtil;
+import com.darkempire.anji.log.Log;
 import com.darkempire.math.exception.MatrixSizeException;
 import com.darkempire.math.exception.MatrixTypeException;
 import com.darkempire.math.struct.matrix.DoubleFixedMatrix;
 import com.darkempire.math.struct.matrix.DoubleMatrix;
+import com.darkempire.math.struct.matrix.DoubleMatrixIndexHolder;
+import com.darkempire.math.struct.vector.DoubleVector;
+import com.darkempire.math.struct.vector.IDoubleVectorProvider;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.darkempire.math.struct.matrix.DoubleMatrixIndexHolder.indexWrap;
 
 /**
  * Created by siredvin on 17.10.14.
@@ -127,10 +136,95 @@ public final class DoubleMatrixDecompositionOperator {
         public DoubleMatrix L;
         public DoubleMatrix D;
 
-        public LDLDecompositionResult(DoubleMatrix l, DoubleMatrix d) {
+        protected LDLDecompositionResult(DoubleMatrix l, DoubleMatrix d) {
             L = l;
             D = d;
         }
     }
+    //endregion
+
+    //region Декомпозиція прямокутних матриць (скелетна декомпозиція)
+
+    /**
+     * Виконується скелетний розклад матриці А.
+     * Нехай ранг матриці А rank(A) = r;
+     * Сама матриця A розмірності n x m
+     * Тоді, ми розкладаємо матрицю A на дві матриці B та C так, щоб
+     * A = B * C при чому rank(B) = rank(C) = rank(A) = r
+     * та C має розмірність r x m, а розмірність B - n x r
+     * <p>
+     * Матриці B та C обчислюються за таким алгоритмом:
+     * 1. Знаходяться r лінійнонезалежних рядків матриці A і з них складаємо матрицю C
+     * 2. Після чого знаходимо матрицю B за формулою : B = A.C^+ де C^+ - псевдообернена матриця для C
+     * Обчислюється за формулою: С^t * (C*C^t)^{-1}
+     *
+     * @param a матрица A
+     * @return матриці B та С
+     */
+    public static SkeletonDecompositionResult skeletonDecomposition(DoubleMatrix a) {
+        return skeletonDecomposition(a, false);
+    }
+
+    /**
+     * Виконується скелетний розклад матриці А.
+     * Нехай ранг матриці А rank(A) = r;
+     * Сама матриця A розмірності n x m
+     * Тоді, ми розкладаємо матрицю A на дві матриці B та C так, щоб
+     * A = B * C при чому rank(B) = rank(C) = rank(A) = r
+     * та C має розмірність r x m, а розмірність B - n x r
+     * <p>
+     * Матриці B та C обчислюються за таким алгоритмом:
+     * 1. Знаходяться r лінійнонезалежних рядків матриці A і з них складаємо матрицю C
+     * 2. Після чого знаходимо матрицю B за формулою : B = A.C^+ де C^+ - псевдообернена матриця для C
+     * Обчислюється за формулою: С^t * (C*C^t)^{-1}
+     *
+     * @param a                  матрица A
+     * @param withCPseudoInverse Чи повертати у результаті псевдообернену матрицю C
+     * @return матриці B та С
+     */
+    public static SkeletonDecompositionResult skeletonDecomposition(DoubleMatrix a, boolean withCPseudoInverse) {
+        DoubleMatrixIndexHolder aIndexHolder = indexWrap(a.clone());
+        DoubleMatrixTransformOperator.makeUpperTrapeze(aIndexHolder, true);
+        int rank = DoubleMatrixMathOperator.calcUnZeroDiagonalElementCount(aIndexHolder);
+        int rowCount = a.getRowCount();
+        int columnCount = a.getColumnCount();
+        int size = Math.min(rowCount, columnCount);
+        //Якщо ранг матриці дорівнює її розмірності, то розклад стає елеменатарним.
+        //Одна з матриць - це сама матриця A, а інша - діагональна
+        if (rank == size) {
+            if (size == rowCount) {//Якщо кількість рядків (тобто n) менше за кількість стовчиків, то одиничною буде матриця B
+                return new SkeletonDecompositionResult(DoubleMatrixGenerateOperator.generateFixedDiagonalMatrix(size), a.clone(), null);
+            } else {//Інакше матриця C
+                return new SkeletonDecompositionResult(a.clone(), DoubleMatrixGenerateOperator.generateFixedDiagonalMatrix(size), null);
+            }
+        }
+        //Далі продовжуватися буде лише тоді, коли розмірності матриці A більше за її ранг
+        //Обираємо усі лінійнонезалежні вектори
+        //Їх індекси як раз будуть першими у трапецивидній матриці, що утворена з A
+        List<IDoubleVectorProvider> vectorList = new ArrayList<>();
+        for (int i = 0; i < rank; i++) {
+            vectorList.add(a.row(aIndexHolder.getRowIndex(i)));
+        }
+        DoubleMatrix c = DoubleMatrixGenerateOperator.fixedFromRows(vectorList);
+        vectorList.clear();
+        //Далі за формулами рахуємо B
+        DoubleMatrix c_tr = c.transpose();
+        DoubleMatrix c_p = c_tr.multy(DoubleMatrixInverseOperator.inverse(c.multy(c_tr)));
+        DoubleMatrix b = a.multy(c_p);
+        return new SkeletonDecompositionResult(b, c, withCPseudoInverse ? c_p : null);
+    }
+
+    public static class SkeletonDecompositionResult {
+        public DoubleMatrix B;
+        public DoubleMatrix C;
+        public DoubleMatrix CPseudoInverse;
+
+        protected SkeletonDecompositionResult(DoubleMatrix b, DoubleMatrix c, DoubleMatrix cPseudoInverse) {
+            B = b;
+            C = c;
+            CPseudoInverse = cPseudoInverse;
+        }
+    }
+
     //endregion
 }

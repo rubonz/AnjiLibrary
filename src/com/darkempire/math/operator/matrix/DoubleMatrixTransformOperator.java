@@ -1,6 +1,7 @@
 package com.darkempire.math.operator.matrix;
 
 import com.darkempire.anji.annotation.AnjiUtil;
+import com.darkempire.anji.log.Log;
 import com.darkempire.math.exception.MatrixSizeException;
 import com.darkempire.math.struct.matrix.DoubleFixedMatrix;
 import com.darkempire.math.struct.matrix.DoubleMatrix;
@@ -52,10 +53,12 @@ public final class DoubleMatrixTransformOperator {
                     /*
                     Виправляємо це таким чином:
                     - Міняємо місцями поточний рядок та рядок з ненульовим елементом
+                    - Замінюємо baseElement на потрібний!
                     - Виконаємо ітерацію очищення
                     - Профіт!
                      */
                         matrix.switchRows(noZeroIndex, index);
+                        baseElement = matrix.get(index, index);
                         for (int rowIndex = index + 1; rowIndex < rowCount; rowIndex++) {
                             double nextElement = -matrix.get(rowIndex, index) / baseElement;
                             if (nextElement != 0) {
@@ -107,10 +110,12 @@ public final class DoubleMatrixTransformOperator {
                     /*
                     Виправляємо це таким чином:
                     - Міняємо місцями поточний рядок та рядок з ненульовим елементом
+                    - Заміюємо baseElement на потрібний!
                     - Виконаємо ітерацію очищення
                     - Профіт!
                      */
                         matrix.switchRows(noZeroIndex, index);
+                        baseElement = matrix.get(index, index);
                         for (int rowIndex = 0; rowIndex < index; rowIndex++) {
                             double nextElement = -matrix.get(rowIndex, index) / baseElement;
                             if (nextElement != 0) {
@@ -124,6 +129,68 @@ public final class DoubleMatrixTransformOperator {
                     return null;
                 }
             }
+        }
+        return matrix;
+    }
+    //endregion
+
+    //region Трапецевидні форми
+    public static DoubleMatrix makeUpperTrapeze(DoubleMatrix matrix) {
+        return makeUpperTrapeze(matrix, false);
+    }
+
+    public static DoubleMatrix makeUpperTrapeze(DoubleMatrix matrix, boolean rowSwitchAllow) {
+        int rowCount = matrix.getRowCount();
+        int columnCount = matrix.getColumnCount();
+        int size = Math.min(rowCount, columnCount);
+        //Починаємо цикл
+        for (int index = 0; index < size; index++) {
+            double baseElement = matrix.get(index, index);
+            if (baseElement != 0) {//Гілка, якщо базовий елемент не нульовий
+                for (int rowIndex = index + 1; rowIndex < rowCount; rowIndex++) {
+                    double nextElement = -matrix.get(rowIndex, index) / baseElement;
+                    if (nextElement != 0) {
+                        addRow(matrix, rowIndex, index, nextElement);
+                    }
+                }
+            } else {//Якщо базовий елемент таки нульовий
+                if (rowSwitchAllow) {
+                    int noZeroIndex = -1;
+                    //Шукаємо, чи є ненульовий елемент у нижньому трикутнику матриці
+                    for (int rowIndex = index + 1; rowIndex < rowCount; rowIndex++) {
+                        if (matrix.get(rowIndex, index) != 0) {
+                            noZeroIndex = rowIndex;
+                            break;
+                        }
+                    }
+                    if (noZeroIndex != -1) {//Якщо є такий ненульовий елемент, то потрібно щось робити
+                    /*
+                    Виправляємо це таким чином:
+                    - Міняємо місцями поточний рядок та рядок з ненульовим елементом
+                    - Замінюємо baseElement на потрібний!
+                    - Виконаємо ітерацію очищення
+                    - Профіт!
+                     */
+                        matrix.switchRows(noZeroIndex, index);
+                        baseElement = matrix.get(index, index);
+                        for (int rowIndex = index + 1; rowIndex < rowCount; rowIndex++) {
+                            double nextElement = -matrix.get(rowIndex, index) / baseElement;
+                            if (nextElement != 0) {
+                                addRow(matrix, rowIndex, index, nextElement);
+                            }
+                        }
+                    } else { //Ненульового елементу немає, тоді матриця вже трапецивидної форми
+                        return matrix;
+                    }
+                } else {
+                    return null; // Не можна міняти місцями рядки, тобто привести до трапецивидної форми за
+                    //таких обмежень неможливо
+                }
+            }
+        }
+        for (int rowIndex = size; rowIndex < rowCount; rowIndex++) {
+            Log.log(Log.debugIndex, rowIndex);
+            matrix.fillRow(rowIndex, 0);
         }
         return matrix;
     }
@@ -166,10 +233,12 @@ public final class DoubleMatrixTransformOperator {
                     /*
                     Виправляємо це таким чином:
                     - Міняємо місцями поточний рядок та рядок з ненульовим елементом
+                    - Замінюємо baseElement на потрібний!
                     - Виконаємо ітерацію очищення
                     - Профіт!
                      */
                         matrix.switchRows(noZeroIndex, index);
+                        baseElement = matrix.get(index, index);
                         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
                             if (rowIndex == index)
                                 continue;

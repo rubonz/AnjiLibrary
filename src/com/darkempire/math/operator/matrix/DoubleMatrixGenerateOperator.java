@@ -4,6 +4,9 @@ import com.darkempire.anji.annotation.AnjiUtil;
 import com.darkempire.math.struct.matrix.DoubleMatrix;
 import com.darkempire.math.struct.matrix.DoubleFixedMatrix;
 import com.darkempire.math.struct.matrix.DoubleResizeMatrix;
+import com.darkempire.math.struct.vector.IDoubleVectorProvider;
+
+import java.util.List;
 
 /**
  * Created by siredvin on 08.09.14.
@@ -29,6 +32,9 @@ public final class DoubleMatrixGenerateOperator {
         }
         if (type instanceof DoubleResizeMatrix) {
             result = generateResizeDiagonalMatrix(size);
+        }
+        if (result == null) {
+            result = generateFixedDiagonalMatrix(size);
         }
         return result;
     }
@@ -60,5 +66,80 @@ public final class DoubleMatrixGenerateOperator {
         }
         return result;
     }
+    //endregion
+
+    //region Матриці з векторів
+
+    //region Вектори як рядки
+    public static DoubleFixedMatrix fixedFromRows(IDoubleVectorProvider... rows) {
+        DoubleFixedMatrix matrix = DoubleFixedMatrix.createInstance(rows.length, rows[0].getSize());
+        for (int rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+            matrix.fillRow(rowIndex, rows[rowIndex]);
+        }
+        return matrix;
+    }
+
+    public static DoubleFixedMatrix fixedFromRows(List<IDoubleVectorProvider> rows) {
+        int size = rows.size();
+        DoubleFixedMatrix matrix = DoubleFixedMatrix.createInstance(size, rows.get(0).getSize());
+        for (int rowIndex = 0; rowIndex < size; rowIndex++) {
+            matrix.fillRow(rowIndex, rows.get(rowIndex));
+        }
+        return matrix;
+    }
+
+    public static DoubleResizeMatrix resizeFromRows(IDoubleVectorProvider... rows) {
+        DoubleResizeMatrix matrix = DoubleResizeMatrix.createInstance(rows.length, rows[0].getSize());
+        for (int rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+            matrix.fillRow(rowIndex, rows[rowIndex]);
+        }
+        return matrix;
+    }
+
+    public static DoubleResizeMatrix resizeFromRows(List<IDoubleVectorProvider> rows) {
+        int size = rows.size();
+        DoubleResizeMatrix matrix = DoubleResizeMatrix.createInstance(size, rows.get(0).getSize());
+        for (int rowIndex = 0; rowIndex < size; rowIndex++) {
+            matrix.fillRow(rowIndex, rows.get(rowIndex));
+        }
+        return matrix;
+    }
+    //endregion
+
+    //region Вектори як стовпчики
+    public static DoubleFixedMatrix fixedFromColumns(IDoubleVectorProvider... columns) {
+        DoubleFixedMatrix matrix = DoubleFixedMatrix.createInstance(columns.length, columns[0].getSize());
+        for (int columnIndex = 0; columnIndex < columns.length; columnIndex++) {
+            matrix.fillColumn(columnIndex, columns[columnIndex]);
+        }
+        return matrix;
+    }
+
+    public static DoubleFixedMatrix fixedFromColumns(List<IDoubleVectorProvider> columns) {
+        int size = columns.size();
+        DoubleFixedMatrix matrix = DoubleFixedMatrix.createInstance(size, columns.get(0).getSize());
+        for (int columnIndex = 0; columnIndex < size; columnIndex++) {
+            matrix.fillColumn(columnIndex, columns.get(columnIndex));
+        }
+        return matrix;
+    }
+
+    public static DoubleResizeMatrix resizeFromColumns(IDoubleVectorProvider... columns) {
+        DoubleResizeMatrix matrix = DoubleResizeMatrix.createInstance(columns.length, columns[0].getSize());
+        for (int columnIndex = 0; columnIndex < columns.length; columnIndex++) {
+            matrix.fillColumn(columnIndex, columns[columnIndex]);
+        }
+        return matrix;
+    }
+
+    public static DoubleResizeMatrix resizeFromColumns(List<IDoubleVectorProvider> columns) {
+        int size = columns.size();
+        DoubleResizeMatrix matrix = DoubleResizeMatrix.createInstance(size, columns.get(0).getSize());
+        for (int columnIndex = 0; columnIndex < size; columnIndex++) {
+            matrix.fillColumn(columnIndex, columns.get(columnIndex));
+        }
+        return matrix;
+    }
+    //endregion
     //endregion
 }

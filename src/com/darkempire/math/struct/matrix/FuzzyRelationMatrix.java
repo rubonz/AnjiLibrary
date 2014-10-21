@@ -8,6 +8,7 @@ import com.darkempire.math.struct.function.interfaces.FMatrixIndexToDouble;
 import com.darkempire.math.struct.set.SetOperable;
 import com.darkempire.math.struct.vector.DoubleResizeVector;
 import com.darkempire.math.struct.vector.DoubleVector;
+import com.darkempire.math.struct.vector.IDoubleVectorProvider;
 
 import java.util.Arrays;
 
@@ -163,6 +164,16 @@ public class FuzzyRelationMatrix extends DoubleMatrix implements SetOperable<Fuz
         }
         return this;
     }
+
+    @Override
+    public FuzzyRelationMatrix fillRow(int rowIndex, IDoubleVectorProvider provider) {
+        int pos = rowIndex * columnCount;
+        for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+            arr[pos] = provider.get(columnIndex);
+            pos++;
+        }
+        return this;
+    }
     //endregion
 
     //region Заповнювачі колонок
@@ -191,6 +202,16 @@ public class FuzzyRelationMatrix extends DoubleMatrix implements SetOperable<Fuz
         int pos = columnIndex;
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             arr[pos] = function.calc(this, rowIndex, columnIndex);
+            pos += columnCount;
+        }
+        return this;
+    }
+
+    @Override
+    public FuzzyRelationMatrix fillColumn(int columnIndex, IDoubleVectorProvider provider) {
+        int pos = columnIndex;
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            arr[pos] = provider.get(rowIndex);
             pos += columnCount;
         }
         return this;

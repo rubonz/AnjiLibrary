@@ -1,17 +1,11 @@
 package sample;
 
+import com.darkempire.anji.document.wolfram.util.WolframConvertUtils;
 import com.darkempire.anji.log.Log;
-import com.darkempire.math.operator.matrix.DoubleMatrixDecompositionOperator;
+import com.darkempire.math.operator.matrix.DoubleMatrixInverseOperator;
 import com.darkempire.math.operator.matrix.DoubleMatrixTransformOperator;
 import com.darkempire.math.struct.matrix.DoubleFixedMatrix;
-import com.darkempire.math.struct.matrix.DoubleMatrix;
-import com.darkempire.math.struct.vector.DoubleFixedVector;
-import com.darkempire.math.struct.vector.DoubleVector;
-import com.darkempire.math.utils.ArrayUtils;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import com.darkempire.math.struct.matrix.DoubleMatrixIndexHolder;
 
 /**
  * Create in 10:19
@@ -20,8 +14,13 @@ import java.util.List;
 public class Main2 {
 
     public static void main(String[] args) {
-        List<String> list = Arrays.asList("t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8");
-        Log.log(Log.debugIndex, list.subList(1, 5));
+        DoubleMatrixIndexHolder matrix = new DoubleMatrixIndexHolder(DoubleFixedMatrix.createInstance(3, 4, new double[]{
+                1, 2, 3, 4,
+                1, 2, 3, 4,
+                5, 4, 3, 1
+        }));
+        Log.log(Log.debugIndex, WolframConvertUtils.convertDoubleMatrix(matrix));
+        Log.log(Log.debugIndex, WolframConvertUtils.convertDoubleMatrix(DoubleMatrixInverseOperator.pseudoInverse(matrix)));
     }
 
 }

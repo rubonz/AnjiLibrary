@@ -1,6 +1,8 @@
 package com.darkempire.math.operator.matrix;
 
+import com.darkempire.anji.annotation.AnjiExperimental;
 import com.darkempire.anji.annotation.AnjiUtil;
+import com.darkempire.anji.log.Log;
 import com.darkempire.math.exception.MatrixSizeException;
 import com.darkempire.math.struct.matrix.DoubleMatrix;
 
@@ -53,23 +55,64 @@ public final class DoubleMatrixInverseOperator {
     //endregion
 
     /**
+     * Обчислення псевдооберненої матриці за допомогою скелетного розкладу матриці A
+     * на матриці B та С і використання формули:
+     * A^+ = C^+ * B^+ , причому A = BC
+     * @param matrix матриця A
+     * @return A^+
+     */
+    @AnjiExperimental
+    public static DoubleMatrix pseudoInverse(DoubleMatrix matrix) {
+        DoubleMatrixDecompositionOperator.SkeletonDecompositionResult result = DoubleMatrixDecompositionOperator.skeletonDecomposition(matrix, true);
+        int rowCount = matrix.getRowCount();
+        int columnCount = matrix.getColumnCount();
+        if (result.CPseudoInverse == null) {//Отже, ранг матриці A дорівнює одній з її розмірностей
+            //Потрібно з’ясувати якій, адже для знаходження псевдооберненої матриці це має значення (праве або ліве множення)
+            //Очевидно, що це буде мінімальний, тому просто знайдемо мінімальний серед двох
+            if (rowCount < columnCount) {//Отже, матриця A прихована у матриці B.
+                DoubleMatrix b = result.B;
+                DoubleMatrix b_t = b.transpose();
+                return inverse(b_t.multy(b)).multy(b_t);
+            } else {//Отже, матриця A прихована у матриці С
+                DoubleMatrix c = result.C;
+                DoubleMatrix c_t = c.transpose();
+                return c_t.multy(inverse(c.multy(c_t)));
+            }
+        }
+        //Якщо ми дійшли сюди, то ранг матриці A менший за її розміри
+        //Будуємо псевдообернену для матриці B
+        DoubleMatrix b = result.B;
+        DoubleMatrix b_t = b.transpose();
+        DoubleMatrix b_p = inverse(b_t.multy(b)).multy(b_t);
+        return result.CPseudoInverse.multy(b_p);
+    }
+
+    /**
      * Будує обернену матрицю за заданим методом
      * 0 - через метод Гауса
      *
      * @param matrix матриця
-     * @param method метод
+     * @param type метод
      * @return обернена матриця
      */
-    public static DoubleMatrix inverse(DoubleMatrix matrix, int method) {
-        DoubleMatrix inverse;
-        switch (method) {
-            default:
+    public static DoubleMatrix inverse(DoubleMatrix matrix, InverseMethodType type) {
+        DoubleMatrix inverse = null;
+        switch (type) {
+            case GAUSSIAN_ELIMINATION:
                 inverse = inverseWithGauss(matrix);
+                break;
         }
         return inverse;
     }
 
     public static DoubleMatrix inverse(DoubleMatrix matrix) {
-        return inverse(matrix, 0);
+        return inverse(matrix, InverseMethodType.GAUSSIAN_ELIMINATION);
+    }
+
+    public static enum InverseMethodType {
+        /**
+         * Обчислення оберненної методом Гауса
+         */
+        GAUSSIAN_ELIMINATION
     }
 }
