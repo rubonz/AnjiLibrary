@@ -86,16 +86,19 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
             }
         }
         int i = 0;
-        for (Node node : getLegend().lookupAll(".label")) {
-            Label label = (Label) node;
-            Color temp = colorValues.get(getData().get(i)).getValue();
-            if (temp.getOpacity() == 1) {
-                label.getGraphic().setStyle(String.format("-fx-background-color:%s;", AnjiFXStringConverter.colorToRGBString(temp)));
-            } else {
-                temp = Color.color(temp.getRed(), temp.getGreen(), temp.getBlue(), 1);
-                label.getGraphic().setStyle(String.format("-fx-background-color:%s,white;", AnjiFXStringConverter.colorToRGBString(temp)));
+        Node legend = getLegend();//Може бути null тоді, коли getData().size==0
+        if (legend != null) {
+            for (Node node : legend.lookupAll(".label")) {
+                Label label = (Label) node;
+                Color temp = colorValues.get(getData().get(i)).getValue();
+                if (temp.getOpacity() == 1) {
+                    label.getGraphic().setStyle(String.format("-fx-background-color:%s;", AnjiFXStringConverter.colorToRGBString(temp)));
+                } else {
+                    temp = Color.color(temp.getRed(), temp.getGreen(), temp.getBlue(), 1);
+                    label.getGraphic().setStyle(String.format("-fx-background-color:%s,white;", AnjiFXStringConverter.colorToRGBString(temp)));
+                }
+                i++;
             }
-            i++;
         }
     }
 
@@ -134,15 +137,18 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
 
     private void updateLabel() {
         int i = 0;
-        for (Node node : getLegend().lookupAll(".label")) {
-            Label label = (Label) node;
-            if (label.getOnMouseClicked() == null) {
-                Series data = getData().get(i);
-                LabelListener value = new LabelListener(data);
-                listenerMap.put(data, value);
-                label.setOnMouseClicked(value);
+        Node legend = getLegend();
+        if (legend != null) {//Може бути null тоді, коли getData().size==0
+            for (Node node : legend.lookupAll(".label")) {
+                Label label = (Label) node;
+                if (label.getOnMouseClicked() == null) {
+                    Series data = getData().get(i);
+                    LabelListener value = new LabelListener(data);
+                    listenerMap.put(data, value);
+                    label.setOnMouseClicked(value);
+                }
+                i++;
             }
-            i++;
         }
     }
 

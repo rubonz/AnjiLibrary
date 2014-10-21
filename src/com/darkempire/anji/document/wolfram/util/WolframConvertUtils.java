@@ -32,7 +32,7 @@ public final class WolframConvertUtils {
             }
             stringJoiner.add(joiner.toString());
         }
-        return stringJoiner.toString();
+        return stringJoiner.toString().replace("E", "^");
     }
 
     public static String convertDoubleVector(IDoubleVectorProvider vector) {
@@ -41,7 +41,7 @@ public final class WolframConvertUtils {
         for (int i = 0; i < size; i++) {
             joiner.add(String.valueOf(vector.get(i)));
         }
-        return joiner.toString();
+        return joiner.toString().replace("E", "^");
     }
 
     public static DoubleFixedVector convertResultToDoubleFixedVector(String result) {

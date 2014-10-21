@@ -86,6 +86,11 @@ public class ProgressMonologController<V> {
                 value = task.getValue();
             }
         });
+        task.exceptionProperty().addListener((observable, oldValue, newValue) -> {
+            MonologGeneratorPane.showErrorDialog(newValue.getLocalizedMessage());
+            monolog.close();
+            value = null;
+        });
     }
 
     public void start() {
