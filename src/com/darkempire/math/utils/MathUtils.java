@@ -1,6 +1,7 @@
 package com.darkempire.math.utils;
 
 import com.darkempire.anji.annotation.AnjiUtil;
+import com.darkempire.anji.log.Log;
 
 @AnjiUtil
 public final class MathUtils {
@@ -183,12 +184,22 @@ public final class MathUtils {
 
     public static int[] factArr(int n) {
         int[] result = new int[n + 1];
-        n++;
         result[0] = 1;
         result[1] = 1;
         for (int i = 2; i < n; i++) {
             result[i] = result[i - 1] * i;
         }
+        result[n] = result[n - 1] * n;
+        return result;
+    }
+
+    public static int[] binomailCoefs(int n) {
+        int[] result = new int[n + 1];
+        int[] facts = factArr(n);
+        for (int k = 0; k < n; k++) {
+            result[k] = facts[n] / (facts[k] * facts[n - k]);
+        }
+        result[n] = 1;
         return result;
     }
     //endregion

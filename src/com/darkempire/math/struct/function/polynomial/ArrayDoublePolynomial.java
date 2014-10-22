@@ -3,10 +3,12 @@ package com.darkempire.math.struct.function.polynomial;
 import com.darkempire.anji.annotation.AnjiStandartize;
 import com.darkempire.anji.annotation.AnjiUnknow;
 import com.darkempire.anji.document.tex.TeXEventWriter;
+import com.darkempire.anji.log.Log;
 import com.darkempire.math.MathMachine;
 import com.darkempire.math.struct.*;
 import com.darkempire.math.struct.function.doublefunction.DoubleFunction;
 import com.darkempire.math.struct.vector.IDoubleVectorProvider;
+import com.darkempire.math.utils.ArrayUtils;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -29,6 +31,34 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
         this.coefs = coefs;
     }
     //endregion
+
+    public static ArrayDoublePolynomial sum(ArrayDoublePolynomial... polynomials) {
+        int maxSize = Arrays.stream(polynomials).map(ArrayDoublePolynomial::getSize)
+                .max(Comparator.<Integer>naturalOrder()).get();
+        ArrayDoublePolynomial result = new ArrayDoublePolynomial(new double[maxSize]);
+        for (int pi = 0; pi < maxSize; pi++) {
+            double sum = 0;
+            for (ArrayDoublePolynomial polynomial : polynomials) {
+                sum += polynomial.get(pi);
+            }
+            result.set(pi, sum);
+        }
+        return result;
+    }
+
+    public static ArrayDoublePolynomial sum(List<ArrayDoublePolynomial> polynomials) {
+        int maxSize = polynomials.stream().map(ArrayDoublePolynomial::getSize)
+                .max(Comparator.<Integer>naturalOrder()).get();
+        ArrayDoublePolynomial result = new ArrayDoublePolynomial(new double[maxSize]);
+        for (int pi = 0; pi < maxSize; pi++) {
+            double sum = 0;
+            for (ArrayDoublePolynomial polynomial : polynomials) {
+                sum += polynomial.get(pi);
+            }
+            result.set(pi, sum);
+        }
+        return result;
+    }
 
     @Override
     public double calc(double x) {
@@ -62,6 +92,7 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
     public int getMaxPower() {
         return coefs.length;
     }
+    //endregion
 
     @Override
     public int getSize() {
@@ -71,14 +102,14 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
     public double[] getCoefs() {
         return coefs;
     }
-    //endregion
 
     //region Системні функції
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        if (coefs[0] == 0 && coefs.length == 1)
-            return builder.append('0').toString();
+        if (coefs.length == 1) {
+            return builder.append(coefs[0]).toString();
+        }
         if (coefs[0] != 0) {
             builder.append(MathMachine.numberFormat.format(coefs[0]));
         }
@@ -120,13 +151,13 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
         return new ArrayDoublePolynomial(coefs.clone());
     }
 
+    //endregion
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ArrayDoublePolynomial)) return false;
-
         ArrayDoublePolynomial that = (ArrayDoublePolynomial) o;
-
         return Arrays.equals(coefs, that.coefs);
 
     }
@@ -135,8 +166,6 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
     public int hashCode() {
         return Arrays.hashCode(coefs);
     }
-
-    //endregion
 
     //region Арифметичні операції з присвоєнням
     @Override
@@ -204,6 +233,7 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
     public ArrayDoublePolynomial idivide(ArrayDoublePolynomial arrayDoublePolynomial) {
         throw new UnsupportedOperationException();
     }
+    //endregion
 
     @Override
     @AnjiUnknow
@@ -218,7 +248,6 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
         }
         return this;
     }
-    //endregion
 
     //region Арифметичні операції
     @Override
@@ -269,7 +298,7 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
         ArrayDoublePolynomial arrayDoublePolynomial = doublePolynomial.toRawPolynomial();
         int size = coefs.length;
         int asize = arrayDoublePolynomial.getSize();
-        ArrayDoublePolynomial result = new ArrayDoublePolynomial(new double[size + asize]);
+        ArrayDoublePolynomial result = new ArrayDoublePolynomial(new double[size + asize - 1]);
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < asize; j++) {
                 result.coefs[i + j] += coefs[i] * arrayDoublePolynomial.get(j);
@@ -277,6 +306,7 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
         }
         return result;
     }
+    //endregion
 
     @Override
     @AnjiUnknow
@@ -306,38 +336,9 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
         coefs = newCoef;
         return this;
     }
-    //endregion
 
     @Override
     public ArrayDoublePolynomial toRawPolynomial() {
         return this;
-    }
-
-    public static ArrayDoublePolynomial sum(ArrayDoublePolynomial... polynomials) {
-        int maxSize = Arrays.stream(polynomials).map(ArrayDoublePolynomial::getSize)
-                .max(Comparator.<Integer>naturalOrder()).get();
-        ArrayDoublePolynomial result = new ArrayDoublePolynomial(new double[maxSize]);
-        for (int pi = 0; pi < maxSize; pi++) {
-            double sum = 0;
-            for (ArrayDoublePolynomial polynomial : polynomials) {
-                sum += polynomial.get(pi);
-            }
-            result.set(pi, sum);
-        }
-        return result;
-    }
-
-    public static ArrayDoublePolynomial sum(List<ArrayDoublePolynomial> polynomials) {
-        int maxSize = polynomials.stream().map(ArrayDoublePolynomial::getSize)
-                .max(Comparator.<Integer>naturalOrder()).get();
-        ArrayDoublePolynomial result = new ArrayDoublePolynomial(new double[maxSize]);
-        for (int pi = 0; pi < maxSize; pi++) {
-            double sum = 0;
-            for (ArrayDoublePolynomial polynomial : polynomials) {
-                sum += polynomial.get(pi);
-            }
-            result.set(pi, sum);
-        }
-        return result;
     }
 }

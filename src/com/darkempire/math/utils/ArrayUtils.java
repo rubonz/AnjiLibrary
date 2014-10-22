@@ -1,6 +1,7 @@
 package com.darkempire.math.utils;
 
 import com.darkempire.anji.annotation.AnjiUtil;
+import com.darkempire.math.MathMachine;
 import com.darkempire.math.struct.function.interfaces.FIndexToDouble;
 
 import java.util.List;
@@ -159,5 +160,25 @@ public final class ArrayUtils {
         int[] result = new int[delta];
         System.arraycopy(array, startIndex, result, 0, delta);
         return result;
+    }
+
+    /**
+     * Порівняння двох масивів з точнітсю MathMachine.EPS
+     *
+     * @param a перший массив
+     * @param b другий массив
+     * @return a==b
+     */
+    public static boolean equalsEps(double[] a, double[] b) {
+        if (a == b)
+            return true;
+        if (a == null || b == null)
+            return false;
+        for (int i = 0; i < a.length; i++) {
+            if (Math.abs(a[i] - b[i]) > MathMachine.MACHINE_EPS) {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -60,24 +60,4 @@ public final class FunctionArithmeticUtil {
         }
         return new MultiParamSum(functionsList, nCoefs);
     }
-
-    /**
-     * Розкриває поліном виду p(ax+b)
-     *
-     * @param polynomial p(x)
-     * @param xCoef      a
-     * @param free       b
-     * @return p(ax + b) як поліном
-     */
-    public static ArrayDoublePolynomial expand(ArrayDoublePolynomial polynomial, double xCoef, double free) {
-        double nFree = 0;
-        int size = polynomial.getSize();
-        for (int i = 1; i < size; i++) {
-            double temp = polynomial.get(i);
-            nFree += free * temp;
-            polynomial.set(i, temp * xCoef);
-        }
-        polynomial.set(0, polynomial.get(0) + nFree);
-        return polynomial;
-    }
 }

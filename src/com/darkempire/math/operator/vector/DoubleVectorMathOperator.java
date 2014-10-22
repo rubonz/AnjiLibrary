@@ -13,10 +13,63 @@ public final class DoubleVectorMathOperator {
     private DoubleVectorMathOperator() {
     }
 
+    /**
+     * Обчислює суму елементів вектору
+     *
+     * @param vector вектор
+     * @return сума
+     */
     public static double sum(DoubleVector vector) {
         double sum = 0;
         int size = vector.getSize();
         for (int i = 0; i < size; i++) {
+            sum += vector.get(i);
+        }
+        return sum;
+    }
+
+    /**
+     * Обчислює суму елементів вектору від індексу e включно
+     *
+     * @param vector     вектор
+     * @param startIndex індекс е
+     * @return сума
+     */
+    public static double sumFrom(DoubleVector vector, int startIndex) {
+        double sum = 0;
+        int size = vector.getSize();
+        for (int i = startIndex; i < size; i++) {
+            sum += vector.get(i);
+        }
+        return sum;
+    }
+
+    /**
+     * Обчислює суму елементів вектору до індексу e невключно
+     *
+     * @param vector   вектор
+     * @param endIndex індекс е
+     * @return сума
+     */
+    public static double sumTo(DoubleVector vector, int endIndex) {
+        double sum = 0;
+        for (int i = 0; i < endIndex; i++) {
+            sum += vector.get(i);
+        }
+        return sum;
+    }
+
+    /**
+     * Обчислює суму елементів вектору від індексу с до індексу e невключно
+     *
+     * @param vector     вектор
+     * @param startIndex індекс с
+     * @param endIndex   індекс е
+     * @return сума
+     */
+    public static double sum(DoubleVector vector, int startIndex, int endIndex) {
+        double sum = 0;
+        for (int i = startIndex; i < endIndex; i++) {
             sum += vector.get(i);
         }
         return sum;
