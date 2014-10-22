@@ -8,10 +8,24 @@ import com.darkempire.math.struct.matrix.DoubleMatrix;
  * За замовучанням створюються нові ResizeDoubleVector
  */
 public abstract class DoubleMatrixVector extends DoubleVector {
+    //region Отримання частин матриці
+    public static DoubleVector row(int rowIndex, DoubleMatrix matrix) {
+        return new DoubleMatrixRow(rowIndex, matrix);
+    }
+    //endregion
+
+    public static DoubleVector column(int columnIndex, DoubleMatrix matrix) {
+        return new DoubleMatrixColumn(columnIndex, matrix);
+    }
+
+    public static DoubleVector diagonal(DoubleMatrix matrix) {
+        return new DoubleMatrixDiagonal(matrix);
+    }
+    //endregion
+
     //region Сеттери
     @Override
     public abstract void set(int index, double value);
-    //endregion
 
     //region Геттери
     @Override
@@ -19,7 +33,6 @@ public abstract class DoubleMatrixVector extends DoubleVector {
 
     @Override
     public abstract int getSize();
-    //endregion
 
     @Override
     public DoubleVector deepcopy() {
@@ -45,6 +58,7 @@ public abstract class DoubleMatrixVector extends DoubleVector {
         }
         return temp;
     }
+    //endregion
 
     //region Арифметичні операції з присвоєнням
     @Override
@@ -73,7 +87,6 @@ public abstract class DoubleMatrixVector extends DoubleVector {
         }
         return this;
     }
-    //endregion
 
     //region Арифметичні операції
     @Override
@@ -85,6 +98,7 @@ public abstract class DoubleMatrixVector extends DoubleVector {
         }
         return new DoubleResizeVector(p);
     }
+    //endregion
 
     @Override
     public DoubleVector subtract(DoubleVector vector) {
@@ -114,7 +128,6 @@ public abstract class DoubleMatrixVector extends DoubleVector {
         }
         return new DoubleFixedVector(arr);
     }
-    //endregion
 
     private static class DoubleMatrixRow extends DoubleMatrixVector {
         private DoubleMatrix matrix;
@@ -236,13 +249,64 @@ public abstract class DoubleMatrixVector extends DoubleVector {
         }
     }
 
-    //region Отримання частин матриці
-    public static DoubleVector row(int rowIndex, DoubleMatrix matrix) {
-        return new DoubleMatrixRow(rowIndex, matrix);
-    }
+    private static class DoubleMatrixDiagonal extends DoubleMatrixVector {
+        private DoubleMatrix matrix;
+        private int size;
 
-    public static DoubleVector column(int columnIndex, DoubleMatrix matrix) {
-        return new DoubleMatrixColumn(columnIndex, matrix);
+        //region Конструктори
+        private DoubleMatrixDiagonal(DoubleMatrix matrix) {
+            this.matrix = matrix;
+            size = Math.min(matrix.getRowCount(), matrix.getColumnCount());
+        }
+        //endregion
+
+        //region Сеттери
+        @Override
+        public void set(int index, double value) {
+            matrix.set(index, index, value);
+        }
+        //endregion
+
+        //region Отримання підвекторів
+        @Override
+        public DoubleVector subvector(int length) {
+            double[] result = new double[length];
+            for (int i = 0; i < length; i++) {
+                result[i] = get(i);
+            }
+            return new DoubleResizeVector(result);
+        }
+
+        @Override
+        public DoubleVector subvector(int startIndex, int length) {
+            double[] result = new double[length];
+            for (int i = 0; i < length; i++) {
+                result[i] = get(i + startIndex);
+            }
+            return new DoubleResizeVector(result);
+        }
+        //endregion
+
+        //region Геттери
+        @Override
+        public double get(int index) {
+            return matrix.get(index, index);
+        }
+
+        @Override
+        public int getSize() {
+            return size;
+        }
+        //endregion
+
+        @Override
+        public DoubleVector clone() {
+            double[] temp = new double[size];
+            for (int i = 0; i < temp.length; i++) {
+                temp[i] = get(i);
+            }
+            return new DoubleFixedVector(temp);
+        }
     }
     //endregion
 }

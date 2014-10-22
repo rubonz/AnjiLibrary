@@ -4,7 +4,7 @@ import com.darkempire.anji.log.Log;
 import com.darkempire.anji.document.tex.TeXDocumentManager;
 import com.darkempire.anji.document.tex.TeXEventWriter;
 import com.darkempire.anji.document.tex.TeXFlowObjectManager;
-import com.darkempire.math.operator.matrix.LinearMatrixOperator;
+import com.darkempire.math.operator.matrix.NumberMatrixOperator;
 import com.darkempire.math.struct.SignType;
 import com.darkempire.math.struct.SimpleLinearOptimizeTask;
 import com.darkempire.math.struct.function.polynomial.LinearMultiDoublePolynomial;
@@ -25,6 +25,18 @@ public class TableSimplexSolver {
     private boolean enableLog;
     private boolean enableTeX;
 
+    public TableSimplexSolver(TeXDocumentManager manager) {
+        if (manager != null) {
+            out = manager.getEventWriter();
+            flowManager = manager.getFlowObjectManager();
+            enableTeX = true;
+            enableLog = false;
+        } else {
+            enableLog = true;
+            enableTeX = false;
+        }
+    }
+
     public boolean isEnableLog() {
         return enableLog;
     }
@@ -39,18 +51,6 @@ public class TableSimplexSolver {
 
     public void setEnableTeX(boolean enableTeX) {
         this.enableTeX = enableTeX;
-    }
-
-    public TableSimplexSolver(TeXDocumentManager manager) {
-        if (manager != null) {
-            out = manager.getEventWriter();
-            flowManager = manager.getFlowObjectManager();
-            enableTeX = true;
-            enableLog = false;
-        } else {
-            enableLog = true;
-            enableTeX = false;
-        }
     }
 
     public NumberVector<Fraction> solve(SimpleLinearOptimizeTask task) {
@@ -295,7 +295,7 @@ public class TableSimplexSolver {
         if (enableLog) {
             Log.log(Log.debugIndex, "Робимо ітерацію методом Гауса");
         }
-        LinearMatrixOperator.makeBaseColumn(simplexMatrix, newIndex.getRowIndex(), newIndex.getColumnIndex() + 1);
+        NumberMatrixOperator.makeBaseColumn(simplexMatrix, newIndex.getRowIndex(), newIndex.getColumnIndex() + 1);
         if (enableLog) {
             Log.log(Log.debugIndex, simplexMatrix);
         }

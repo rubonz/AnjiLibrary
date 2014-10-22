@@ -132,19 +132,6 @@ public final class DoubleMatrixDecompositionOperator {
         return new LDLDecompositionResult(l, d);
     }
 
-    public static class LDLDecompositionResult {
-        public DoubleMatrix L;
-        public DoubleMatrix D;
-
-        protected LDLDecompositionResult(DoubleMatrix l, DoubleMatrix d) {
-            L = l;
-            D = d;
-        }
-    }
-    //endregion
-
-    //region Декомпозиція прямокутних матриць (скелетна декомпозиція)
-
     /**
      * Виконується скелетний розклад матриці А.
      * Нехай ранг матриці А rank(A) = r;
@@ -164,6 +151,9 @@ public final class DoubleMatrixDecompositionOperator {
     public static SkeletonDecompositionResult skeletonDecomposition(DoubleMatrix a) {
         return skeletonDecomposition(a, false);
     }
+    //endregion
+
+    //region Декомпозиція прямокутних матриць (скелетна декомпозиція)
 
     /**
      * Виконується скелетний розклад матриці А.
@@ -200,7 +190,7 @@ public final class DoubleMatrixDecompositionOperator {
         }
         //Далі продовжуватися буде лише тоді, коли розмірності матриці A більше за її ранг
         //Обираємо усі лінійнонезалежні вектори
-        //Їх індекси як раз будуть першими у трапецивидній матриці, що утворена з A
+        //Їх індекси як раз будуть першими у трапецієвидній матриці, що утворена з A
         List<IDoubleVectorProvider> vectorList = new ArrayList<>();
         for (int i = 0; i < rank; i++) {
             vectorList.add(a.row(aIndexHolder.getRowIndex(i)));
@@ -212,6 +202,16 @@ public final class DoubleMatrixDecompositionOperator {
         DoubleMatrix c_p = c_tr.multy(DoubleMatrixInverseOperator.inverse(c.multy(c_tr)));
         DoubleMatrix b = a.multy(c_p);
         return new SkeletonDecompositionResult(b, c, withCPseudoInverse ? c_p : null);
+    }
+
+    public static class LDLDecompositionResult {
+        public DoubleMatrix L;
+        public DoubleMatrix D;
+
+        protected LDLDecompositionResult(DoubleMatrix l, DoubleMatrix d) {
+            L = l;
+            D = d;
+        }
     }
 
     public static class SkeletonDecompositionResult {

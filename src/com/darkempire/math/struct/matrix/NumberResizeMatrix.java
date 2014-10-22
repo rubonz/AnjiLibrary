@@ -3,6 +3,7 @@ package com.darkempire.math.struct.matrix;
 import com.darkempire.math.struct.Number;
 import com.darkempire.math.struct.function.interfaces.FMatrixIndexToNumber;
 import com.darkempire.math.struct.function.interfaces.FNumberMatrixAndIndexToNumber;
+import com.darkempire.math.struct.vector.INumberVectorProvider;
 
 import java.util.Arrays;
 
@@ -35,6 +36,18 @@ public class NumberResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
 
     //region Геттери
 
+    //region Створення матриці
+    public static <T extends Number<T>> NumberResizeMatrix<T> createInstance(int rowCount, int columnCount, T[] array) {
+        if (columnCount * rowCount != array.length)
+            throw new ArrayIndexOutOfBoundsException();
+        return new NumberResizeMatrix<T>(rowCount, columnCount, array);
+    }
+
+    public static <T extends Number<T>> NumberResizeMatrix<T> createInstance(int rowCount, int columnCount) {
+        T[] array = (T[]) new Number[columnCount * rowCount];
+        return createInstance(rowCount, columnCount, array);
+    }
+
     /**
      * Отримання елементу як примітивного типу з матриці
      * Зауважимо, що це матриця, що розтягується, отже всі невказані елементи нульові.
@@ -55,6 +68,9 @@ public class NumberResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
     protected T get(int index) {
         return arr[index];
     }
+    //endregion
+
+    //region Сеттери
 
     /**
      * @return кількість колонок
@@ -73,9 +89,10 @@ public class NumberResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
     public int getRowCount() {
         return rowCount;
     }
+
     //endregion
 
-    //region Сеттери
+    //region Системні функції
 
     /**
      * Запис елементу, заданого як примітивний тип, у матрицю
@@ -96,10 +113,7 @@ public class NumberResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
     protected void set(int index, T value) {
         arr[index] = value;
     }
-
     //endregion
-
-    //region Системні функції
 
     /**
      * Реалізує глибоке копіювання матриці фіксованної розмірності
@@ -127,7 +141,6 @@ public class NumberResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
         result = 31 * result + rowCount;
         return result;
     }
-    //endregion
 
     //region Заповнювачі рядків
     @Override
@@ -149,6 +162,7 @@ public class NumberResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
         }
         return this;
     }
+    //endregion
 
     @Override
     public NumberResizeMatrix<T> fillRow(int rowIndex, FNumberMatrixAndIndexToNumber<T> function) {
@@ -159,7 +173,16 @@ public class NumberResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
         }
         return this;
     }
-    //endregion
+
+    @Override
+    public NumberResizeMatrix<T> fillRow(int rowIndex, INumberVectorProvider<T> provider) {
+        int pos = rowIndex * columnCount;
+        for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+            arr[pos] = provider.get(columnIndex);
+            pos++;
+        }
+        return this;
+    }
 
     //region Заповнювачі стовпчиків
     @Override
@@ -181,6 +204,7 @@ public class NumberResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
         }
         return this;
     }
+    //endregion
 
     @Override
     public NumberResizeMatrix<T> fillColumn(int columnIndex, FNumberMatrixAndIndexToNumber<T> function) {
@@ -191,7 +215,16 @@ public class NumberResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
         }
         return this;
     }
-    //endregion
+
+    @Override
+    public NumberResizeMatrix<T> fillColumn(int columnIndex, INumberVectorProvider<T> provider) {
+        int pos = columnIndex;
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            arr[pos] = provider.get(rowIndex);
+            pos += columnCount;
+        }
+        return this;
+    }
 
     //region Арифметичні операції з присвоєнням
     @Override
@@ -249,6 +282,7 @@ public class NumberResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
         }
         return this;
     }
+    //endregion
 
     public NumberResizeMatrix<T> iprod(NumberResizeMatrix<T> doubleMatrix) {
         if (columnCount != doubleMatrix.columnCount || rowCount != doubleMatrix.rowCount) {
@@ -293,7 +327,6 @@ public class NumberResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
         }
         return this;
     }
-    //endregion
 
     //region Арифметичні операції
     @Override
@@ -331,7 +364,6 @@ public class NumberResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
         return new NumberResizeMatrix<T>(rowCount, columnCount, nArr);
     }
 
-
     @Override
     public NumberResizeMatrix<T> prod(T lambda) {
         T[] nArr = (T[]) new Number[arr.length];
@@ -340,7 +372,6 @@ public class NumberResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
         }
         return new NumberResizeMatrix<T>(rowCount, columnCount, nArr);
     }
-
 
     @Override
     public NumberResizeMatrix<T> transpose() {
@@ -352,6 +383,7 @@ public class NumberResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
         }
         return matrix;
     }
+    //endregion
 
     public NumberResizeMatrix<T> prod(NumberMatrix<T> doubleMatrix) {
         int newColumnCount = Math.max(columnCount, doubleMatrix.getColumnCount());
@@ -383,20 +415,6 @@ public class NumberResizeMatrix<T extends com.darkempire.math.struct.Number<T>> 
         return result;
     }
     //endregion
-
-    //region Створення матриці
-    public static <T extends Number<T>> NumberResizeMatrix<T> createInstance(int rowCount, int columnCount, T[] array) {
-        if (columnCount * rowCount != array.length)
-            throw new ArrayIndexOutOfBoundsException();
-        return new NumberResizeMatrix<T>(rowCount, columnCount, array);
-    }
-
-    public static <T extends Number<T>> NumberResizeMatrix<T> createInstance(int rowCount, int columnCount) {
-        T[] array = (T[]) new Number[columnCount * rowCount];
-        return createInstance(rowCount, columnCount, array);
-    }
-    //endregion
-
 
     @Override
     public NumberMatrix<T> deepcopy() {

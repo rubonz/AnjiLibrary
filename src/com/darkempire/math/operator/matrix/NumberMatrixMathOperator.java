@@ -2,14 +2,16 @@ package com.darkempire.math.operator.matrix;
 
 import com.darkempire.anji.annotation.AnjiUtil;
 import com.darkempire.math.exception.MatrixSizeException;
+import com.darkempire.math.struct.*;
+import com.darkempire.math.struct.matrix.DoubleMatrix;
 import com.darkempire.math.struct.matrix.NumberMatrix;
 
 /**
  * Created by siredvin on 08.09.14.
  */
 @AnjiUtil
-public final class LinearMatrixMathOperator {
-    private LinearMatrixMathOperator() {
+public final class NumberMatrixMathOperator {
+    private NumberMatrixMathOperator() {
 
     }
 
@@ -125,43 +127,22 @@ public final class LinearMatrixMathOperator {
         }
         return res;
     }*/
-    //endregion
 
-    //region Обчислення обернених матриць
-    public static <T extends com.darkempire.math.struct.Number<T>> NumberMatrix<T> calcInverseMatrix(NumberMatrix<T> matrix) {
-        int rowCount = matrix.getRowCount();
-        int columnCount = matrix.getColumnCount();
-        if (rowCount != columnCount) {
-            throw new MatrixSizeException(MatrixSizeException.MATRIX_IS_NOT_SQUARE);
-        }
-        NumberMatrix<T> temp = matrix.clone();
-        NumberMatrix<T> result = LinearMatrixGenerateOperator.generateDiagonalMatrix(rowCount, temp);
-        //Починаємо цикл
-        T zero = temp.get(0, 0).getZero();
-        for (int index = 0; index < columnCount; index++) {
-            T baseElement = temp.get(index, index);
-            if (!baseElement.equals(zero)) {//Гілка, якщо базовий елемент не нульовий
-                for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-                    if (rowIndex == index)
-                        continue;
-                    T nextElement = temp.get(rowIndex, index).divide(baseElement).inegate();
-                    if (!nextElement.equals(zero)) {
-                        addRow(temp, rowIndex, index, nextElement);
-                        addRow(result, rowIndex, index, nextElement);
-                        //Log.log(Log.debugIndex,"Після проходження циклу:\nЗвичайна матриця:\n",temp,"\nОбернена:\n",result);
-                    }
-                }
-            } else {//Якщо базовий елемент таки нульовий
-                return null;
+    /**
+     * Обчислює кількість ненульових елементів на головній діагоналі матриці.
+     * Корисна допоміжна функція. Використовується, наприклад, для обчислення рангу трапецевидної матриці
+     *
+     * @param matrix матриця A
+     * @return кількість ненульових елементів на головній діагоналі
+     */
+    public static <T extends com.darkempire.math.struct.Number<T>> int calcUnZeroDiagonalElementCount(NumberMatrix<T> matrix) {
+        int size = Math.min(matrix.getRowCount(), matrix.getColumnCount());
+        T zero = matrix.get(0, 0).getZero();
+        int result = 0;
+        for (int i = 0; i < size; i++) {
+            if (matrix.get(i, i).compareTo(zero) != 0) {
+                result++;
             }
-        }
-        //А тепер приводимо матрицю temp з діагонального до одиничного виду
-        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-            T baseElement = temp.get(rowIndex, rowIndex);
-            result.operateRow(rowIndex, d -> d.idivide(baseElement));
-            temp.operateRow(rowIndex, d -> d.idivide(baseElement));
-            //Важливо, щоб матриця temp була після матриця result, адже коли проходиться матриця temp
-            //значення baseElement також змінюється
         }
         return result;
     }

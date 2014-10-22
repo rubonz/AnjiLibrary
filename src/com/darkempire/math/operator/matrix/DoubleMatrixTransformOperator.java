@@ -134,12 +134,12 @@ public final class DoubleMatrixTransformOperator {
     }
     //endregion
 
-    //region Трапецевидні форми
+    //region Трапецієвидні форми
     public static DoubleMatrix makeUpperTrapeze(DoubleMatrix matrix) {
         return makeUpperTrapeze(matrix, false);
     }
 
-    public static DoubleMatrix makeUpperTrapeze(DoubleMatrix matrix, boolean rowSwitchAllow) {
+    public static DoubleMatrix makeUpperTrapeze(DoubleMatrix matrix, boolean switchAllow) {
         int rowCount = matrix.getRowCount();
         int columnCount = matrix.getColumnCount();
         int size = Math.min(rowCount, columnCount);
@@ -154,16 +154,20 @@ public final class DoubleMatrixTransformOperator {
                     }
                 }
             } else {//Якщо базовий елемент таки нульовий
-                if (rowSwitchAllow) {
-                    int noZeroIndex = -1;
+                if (switchAllow) {
+                    int noZeroRowIndex = -1;
+                    int noZeroColumnIndex = -1;
                     //Шукаємо, чи є ненульовий елемент у нижньому трикутнику матриці
                     for (int rowIndex = index + 1; rowIndex < rowCount; rowIndex++) {
-                        if (matrix.get(rowIndex, index) != 0) {
-                            noZeroIndex = rowIndex;
-                            break;
+                        for (int columnIndex = index + 1; columnIndex < columnCount; columnIndex++) {
+                            if (matrix.get(rowIndex, columnIndex) != 0) {
+                                noZeroRowIndex = rowIndex;
+                                noZeroColumnIndex = columnIndex;
+                                break;
+                            }
                         }
                     }
-                    if (noZeroIndex != -1) {//Якщо є такий ненульовий елемент, то потрібно щось робити
+                    if (noZeroRowIndex != -1) {//Якщо є такий ненульовий елемент, то потрібно щось робити
                     /*
                     Виправляємо це таким чином:
                     - Міняємо місцями поточний рядок та рядок з ненульовим елементом
@@ -171,7 +175,8 @@ public final class DoubleMatrixTransformOperator {
                     - Виконаємо ітерацію очищення
                     - Профіт!
                      */
-                        matrix.switchRows(noZeroIndex, index);
+                        matrix.switchRows(noZeroRowIndex, index);
+                        matrix.switchColumns(noZeroColumnIndex, index);
                         baseElement = matrix.get(index, index);
                         for (int rowIndex = index + 1; rowIndex < rowCount; rowIndex++) {
                             double nextElement = -matrix.get(rowIndex, index) / baseElement;
@@ -179,11 +184,11 @@ public final class DoubleMatrixTransformOperator {
                                 addRow(matrix, rowIndex, index, nextElement);
                             }
                         }
-                    } else { //Ненульового елементу немає, тоді матриця вже трапецивидної форми
+                    } else { //Ненульового елементу немає, тоді матриця вже трапецїєвидної форми
                         return matrix;
                     }
                 } else {
-                    return null; // Не можна міняти місцями рядки, тобто привести до трапецивидної форми за
+                    return null; // Не можна міняти місцями рядки, тобто привести до трапецієвидної форми за
                     //таких обмежень неможливо
                 }
             }
@@ -406,18 +411,6 @@ public final class DoubleMatrixTransformOperator {
             }
         }
         return temp;
-    }
-    //endregion
-
-    //region Заміна місцями стовпчик або рядок
-    @Deprecated
-    public static DoubleMatrix switchRow(DoubleMatrix matrix, int rowIndex1, int rowIndex2) {
-        return matrix.switchRows(rowIndex1, rowIndex2);
-    }
-
-    @Deprecated
-    public static DoubleMatrix switchColumn(DoubleMatrix matrix, int columnIndex1, int columnIndex2) {
-        return matrix.switchColumns(columnIndex1, columnIndex2);
     }
     //endregion
 }

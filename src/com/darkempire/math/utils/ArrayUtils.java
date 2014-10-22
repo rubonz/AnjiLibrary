@@ -131,15 +131,33 @@ public final class ArrayUtils {
         return result;
     }
 
+    /**
+     * Будує підмасив з початку (включно) до кінця (невключно)
+     *
+     * @param array      масив
+     * @param startIndex початок
+     * @param endIndex   кінець
+     * @return підмасив
+     */
     public static double[] subarray(double[] array, int startIndex, int endIndex) {
-        double[] result = new double[endIndex - startIndex + 1];
-        System.arraycopy(array, startIndex, result, 0, endIndex - startIndex + 1);
+        int delta = endIndex - startIndex;
+        double[] result = new double[delta];
+        System.arraycopy(array, startIndex, result, 0, delta);
         return result;
     }
 
+    /**
+     * Будує підмасив з початку (включно) до кінця (невключно)
+     *
+     * @param array      масив
+     * @param startIndex початок
+     * @param endIndex   кінець
+     * @return підмасив
+     */
     public static int[] subarray(int[] array, int startIndex, int endIndex) {
-        int[] result = new int[endIndex - startIndex + 1];
-        System.arraycopy(array, startIndex, result, 0, endIndex - startIndex + 1);
+        int delta = endIndex - startIndex;
+        int[] result = new int[delta];
+        System.arraycopy(array, startIndex, result, 0, delta);
         return result;
     }
 }

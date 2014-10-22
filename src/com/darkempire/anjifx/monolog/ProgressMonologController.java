@@ -1,5 +1,6 @@
 package com.darkempire.anjifx.monolog;
 
+import com.darkempire.anji.log.Log;
 import com.darkempire.internal.Cache;
 import com.darkempire.internal.anji.LocalHolder;
 import com.darkempire.internal.anjifx.ImageCache;
@@ -87,7 +88,9 @@ public class ProgressMonologController<V> {
             }
         });
         task.exceptionProperty().addListener((observable, oldValue, newValue) -> {
-            MonologGeneratorPane.showErrorDialog(newValue.getLocalizedMessage());
+            String message = newValue.toString();
+            Log.error(Log.coreIndex, newValue);
+            MonologGeneratorPane.showErrorDialog(message);
             monolog.close();
             value = null;
         });

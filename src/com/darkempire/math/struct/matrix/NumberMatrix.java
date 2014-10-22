@@ -2,8 +2,10 @@ package com.darkempire.math.struct.matrix;
 
 import com.darkempire.math.exception.MatrixSizeException;
 import com.darkempire.math.struct.*;
+import com.darkempire.math.struct.Number;
 import com.darkempire.math.struct.function.interfaces.*;
 import com.darkempire.math.struct.function.interfaces.FMatrixIndexToNumber;
+import com.darkempire.math.struct.vector.INumberVectorProvider;
 import com.darkempire.math.struct.vector.NumberMatrixVector;
 import com.darkempire.math.struct.vector.NumberVector;
 
@@ -363,6 +365,14 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
+    public NumberMatrix<T> fillRow(int rowIndex, INumberVectorProvider<T> provider) {
+        int columnCount = getColumnCount();
+        for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+            set(rowIndex, columnIndex, provider.get(columnIndex));
+        }
+        return this;
+    }
+
     public NumberMatrix<T> fillFirstRow(FMatrixIndexToNumber<T> function) {
         return fillRow(0, function);
     }
@@ -375,6 +385,10 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
         return fillRow(0, value);
     }
 
+    public NumberMatrix<T> fillFirstRow(INumberVectorProvider<T> provider) {
+        return fillRow(0, provider);
+    }
+
     public NumberMatrix<T> fillLastRow(FNumberMatrixAndIndexToNumber<T> function) {
         return fillRow(getRowCount() - 1, function);
     }
@@ -385,6 +399,10 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
 
     public NumberMatrix<T> fillLastRow(T value) {
         return fillRow(getRowCount() - 1, value);
+    }
+
+    public NumberMatrix<T> fillLastRow(INumberVectorProvider<T> provider) {
+        return fillRow(getRowCount() - 1, provider);
     }
     //endregion
 
@@ -424,6 +442,14 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
+    public NumberMatrix<T> fillColumn(int columnIndex, INumberVectorProvider<T> provider) {
+        int rowCount = getRowCount();
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            set(rowIndex, columnIndex, provider.get(rowIndex));
+        }
+        return this;
+    }
+
     public NumberMatrix<T> fillFirstColumn(FNumberMatrixAndIndexToNumber<T> function) {
         return fillColumn(0, function);
     }
@@ -436,6 +462,10 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
         return fillColumn(0, value);
     }
 
+    public NumberMatrix<T> fillFirstColumn(INumberVectorProvider<T> provider) {
+        return fillColumn(0, provider);
+    }
+
     public NumberMatrix<T> fillLastColumn(FNumberMatrixAndIndexToNumber<T> function) {
         return fillColumn(getColumnCount() - 1, function);
     }
@@ -446,6 +476,10 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
 
     public NumberMatrix<T> fillLastColumn(T value) {
         return fillColumn(getColumnCount() - 1, value);
+    }
+
+    public NumberMatrix<T> fillLastColumn(INumberVectorProvider<T> provider) {
+        return fillColumn(getColumnCount() - 1, provider);
     }
     //endregion
     //endregion

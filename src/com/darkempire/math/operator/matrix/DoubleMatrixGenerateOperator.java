@@ -1,15 +1,19 @@
 package com.darkempire.math.operator.matrix;
 
 import com.darkempire.anji.annotation.AnjiUtil;
+import com.darkempire.math.struct.*;
 import com.darkempire.math.struct.matrix.DoubleMatrix;
 import com.darkempire.math.struct.matrix.DoubleFixedMatrix;
 import com.darkempire.math.struct.matrix.DoubleResizeMatrix;
+import com.darkempire.math.struct.matrix.NumberMatrix;
 import com.darkempire.math.struct.vector.IDoubleVectorProvider;
 
 import java.util.List;
 
 /**
  * Created by siredvin on 08.09.14.
+ *
+ * @author siredvin
  */
 @AnjiUtil
 public final class DoubleMatrixGenerateOperator {
@@ -141,5 +145,31 @@ public final class DoubleMatrixGenerateOperator {
         return matrix;
     }
     //endregion
+    //endregion
+
+    //region Спеціальні матриці
+    public static <T extends com.darkempire.math.struct.Number<T>> DoubleFixedMatrix fromNumberToFixed(NumberMatrix<T> matrix) {
+        int rowCount = matrix.getRowCount();
+        int columnCount = matrix.getColumnCount();
+        DoubleFixedMatrix result = DoubleFixedMatrix.createInstance(rowCount, columnCount);
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+                result.set(rowIndex, columnIndex, matrix.get(rowIndex, columnIndex).doubleValue());
+            }
+        }
+        return result;
+    }
+
+    public static <T extends com.darkempire.math.struct.Number<T>> DoubleResizeMatrix fromNumberToResize(NumberMatrix<T> matrix) {
+        int rowCount = matrix.getRowCount();
+        int columnCount = matrix.getColumnCount();
+        DoubleResizeMatrix result = DoubleResizeMatrix.createInstance(rowCount, columnCount);
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+                result.set(rowIndex, columnIndex, matrix.get(rowIndex, columnIndex).doubleValue());
+            }
+        }
+        return result;
+    }
     //endregion
 }

@@ -12,8 +12,8 @@ import static java.lang.Math.min;
  * Created by siredvin on 18.12.13.
  */
 @AnjiUtil
-public final class LinearMatrixOperator {
-    private LinearMatrixOperator() {
+public final class NumberMatrixOperator {
+    private NumberMatrixOperator() {
     }
 
     public static <T extends Number<T>> NumberMatrix<T> addRow(NumberMatrix<T> matrix, int sourceRow, int additionalRow, T lambda) {

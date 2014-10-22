@@ -568,6 +568,10 @@ public abstract class DoubleMatrix implements IMatrix<DoubleMatrix, Double>, IDo
         return DoubleMatrixVector.column(columnIndex, this);
     }
 
+    public DoubleVector diagonal() {
+        return DoubleMatrixVector.diagonal(this);
+    }
+
     public Stream<DoubleVector> rows() {
         int rowCount = getRowCount();
         DoubleVector[] temp = new DoubleVector[rowCount];

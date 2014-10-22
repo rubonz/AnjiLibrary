@@ -3,6 +3,7 @@ package com.darkempire.math.struct.matrix;
 import com.darkempire.math.struct.Number;
 import com.darkempire.math.struct.function.interfaces.FNumberMatrixAndIndexToNumber;
 import com.darkempire.math.struct.function.interfaces.FMatrixIndexToNumber;
+import com.darkempire.math.struct.vector.INumberVectorProvider;
 
 import java.util.Arrays;
 
@@ -43,6 +44,17 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
 
     //region Геттери
 
+    //region Створення матриць
+    public static <T extends Number<T>> NumberFixedMatrix<T> createInstance(int rowCount, int columnCount, T[] array) {
+        if (columnCount * rowCount != array.length)
+            throw new ArrayIndexOutOfBoundsException();
+        return new NumberFixedMatrix<T>(rowCount, columnCount, array);
+    }
+
+    public static <T extends Number<T>> NumberFixedMatrix<T> createInstance(int rowCount, int columnCount) {
+        return new NumberFixedMatrix<T>(rowCount, columnCount, (T[]) new Number[rowCount * columnCount]);
+    }
+
     /**
      * Отримання елементу як примітивного типу з матриці
      *
@@ -60,6 +72,9 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
     protected T get(int index) {
         return arr[index];
     }
+    //endregion
+
+    //region Сеттери
 
     /**
      * @return кількість колонок
@@ -80,7 +95,7 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
     }
     //endregion
 
-    //region Сеттери
+    //region Системні методи
 
     /**
      * Запис елементу, заданого як примітивний тип, у матрицю
@@ -101,7 +116,7 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
     }
     //endregion
 
-    //region Системні методи
+    //region Заповнювачі
 
     /**
      * Реалізує глибоке копіювання матриці фіксованної розмірності
@@ -129,9 +144,6 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
         result = 31 * result + rowCount;
         return result;
     }
-    //endregion
-
-    //region Заповнювачі
 
     //region Заповнювачі рядків
     @Override
@@ -153,6 +165,7 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
         }
         return this;
     }
+    //endregion
 
     @Override
     public NumberFixedMatrix<T> fillRow(int rowIndex, FNumberMatrixAndIndexToNumber<T> function) {
@@ -163,7 +176,16 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
         }
         return this;
     }
-    //endregion
+
+    @Override
+    public NumberFixedMatrix<T> fillRow(int rowIndex, INumberVectorProvider<T> provider) {
+        int pos = rowIndex * columnCount;
+        for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+            arr[pos] = provider.get(columnIndex);
+            pos++;
+        }
+        return this;
+    }
 
     //region Заповнювачі колонок
     @Override
@@ -185,6 +207,8 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
         }
         return this;
     }
+    //endregion
+    //endregion
 
     @Override
     public NumberFixedMatrix<T> fillColumn(int columnIndex, FNumberMatrixAndIndexToNumber<T> function) {
@@ -195,8 +219,16 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
         }
         return this;
     }
-    //endregion
-    //endregion
+
+    @Override
+    public NumberFixedMatrix<T> fillColumn(int columnIndex, INumberVectorProvider<T> provider) {
+        int pos = columnIndex;
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            arr[pos] = provider.get(rowIndex);
+            pos += columnCount;
+        }
+        return this;
+    }
 
     //region Арифметичні операції з присвоєннями
     @Override
@@ -235,6 +267,7 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
         }
         return this;
     }
+    //endregion
 
     public NumberFixedMatrix<T> iprod(NumberFixedMatrix<T> doubleMatrix) {
         if (columnCount != doubleMatrix.columnCount || rowCount != doubleMatrix.rowCount) {
@@ -259,7 +292,6 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
         }
         return this;
     }
-    //endregion
 
     //region Арифметичні операції
     @Override
@@ -295,7 +327,6 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
         return new NumberFixedMatrix<>(rowCount, columnCount, arrN);
     }
 
-
     @Override
     public NumberFixedMatrix<T> prod(T lambda) {
         T[] arrN = Arrays.copyOf(arr, arr.length);
@@ -304,7 +335,6 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
         }
         return new NumberFixedMatrix<T>(rowCount, columnCount, arrN);
     }
-
 
     @Override
     public NumberFixedMatrix<T> transpose() {
@@ -316,6 +346,7 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
         }
         return matrix;
     }
+    //endregion
 
     @Override
     public NumberFixedMatrix<T> prod(NumberMatrix<T> doubleMatrix) {
@@ -328,7 +359,6 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
         }
         return new NumberFixedMatrix<T>(rowCount, columnCount, arrN);
     }
-
 
     @Override
     public NumberMatrix<T> multy(NumberMatrix<T> doubleMatrix) {
@@ -346,18 +376,6 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
             }
         }
         return result;
-    }
-    //endregion
-
-    //region Створення матриць
-    public static <T extends Number<T>> NumberFixedMatrix<T> createInstance(int rowCount, int columnCount, T[] array) {
-        if (columnCount * rowCount != array.length)
-            throw new ArrayIndexOutOfBoundsException();
-        return new NumberFixedMatrix<T>(rowCount, columnCount, array);
-    }
-
-    public static <T extends Number<T>> NumberFixedMatrix<T> createInstance(int rowCount, int columnCount) {
-        return new NumberFixedMatrix<T>(rowCount, columnCount, (T[]) new Number[rowCount * columnCount]);
     }
     //endregion
 

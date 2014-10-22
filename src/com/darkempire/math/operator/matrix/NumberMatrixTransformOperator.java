@@ -1,18 +1,19 @@
 package com.darkempire.math.operator.matrix;
 
 import com.darkempire.anji.annotation.AnjiUtil;
+import com.darkempire.anji.log.Log;
 import com.darkempire.math.exception.MatrixSizeException;
 import com.darkempire.math.struct.matrix.NumberMatrix;
 
-import static com.darkempire.math.operator.matrix.LinearMatrixMathOperator.addRow;
+import static com.darkempire.math.operator.matrix.NumberMatrixMathOperator.addRow;
 
 /**
  * Created by siredvin on 08.09.14.
  */
 @AnjiUtil
-public final class LinearMatrixTransformOperator {
-
-    private LinearMatrixTransformOperator() {
+public final class NumberMatrixTransformOperator {
+    //TODO: не забути додати у трикутні форми переставлення стовпчиків. І ще у DoubleMatrix також
+    private NumberMatrixTransformOperator() {
     }
 
     //region Трикутні форми
@@ -30,10 +31,10 @@ public final class LinearMatrixTransformOperator {
         T zero = matrix.get(0, 0).getZero();
         for (int index = 0; index < columnCount; index++) {
             T baseElement = matrix.get(index, index);
-            if (!baseElement.equals(zero)) {//Гілка, якщо базовий елемент не нульовий
+            if (baseElement.compareTo(zero) != 0) {//Гілка, якщо базовий елемент не нульовий
                 for (int rowIndex = index + 1; rowIndex < rowCount; rowIndex++) {
                     T nextElement = matrix.get(rowIndex, index).divide(baseElement).inegate();
-                    if (!nextElement.equals(zero)) {
+                    if (nextElement.compareTo(zero) != 0) {
                         addRow(matrix, rowIndex, index, nextElement);
                     }
                 }
@@ -42,7 +43,7 @@ public final class LinearMatrixTransformOperator {
                     int noZeroIndex = -1;
                     //Шукаємо, чи є ненульовий елемент у нижньому трикутнику матриці
                     for (int rowIndex = index + 1; rowIndex < rowCount; rowIndex++) {
-                        if (!matrix.get(rowIndex, index).equals(zero)) {
+                        if (matrix.get(rowIndex, index).compareTo(zero) != 0) {
                             noZeroIndex = rowIndex;
                             break;
                         }
@@ -57,7 +58,7 @@ public final class LinearMatrixTransformOperator {
                         matrix.switchRows(noZeroIndex, index);
                         for (int rowIndex = index + 1; rowIndex < rowCount; rowIndex++) {
                             T nextElement = matrix.get(rowIndex, index).divide(baseElement).inegate();
-                            if (!nextElement.equals(zero)) {
+                            if (nextElement.compareTo(zero) != 0) {
                                 addRow(matrix, rowIndex, index, nextElement);
                             }
                         }
@@ -86,10 +87,10 @@ public final class LinearMatrixTransformOperator {
         T zero = matrix.get(0, 0).getZero();
         for (int index = columnCount - 1; index > -1; index--) {
             T baseElement = matrix.get(index, index);
-            if (!baseElement.equals(zero)) {//Гілка, якщо базовий елемент не нульовий
+            if (baseElement.compareTo(zero) != 0) {//Гілка, якщо базовий елемент не нульовий
                 for (int rowIndex = 0; rowIndex < index; rowIndex++) {
                     T nextElement = matrix.get(rowIndex, index).divide(baseElement).inegate();
-                    if (!nextElement.equals(zero)) {
+                    if (nextElement.compareTo(zero) != 0) {
                         addRow(matrix, rowIndex, index, nextElement);
                     }
                 }
@@ -98,7 +99,7 @@ public final class LinearMatrixTransformOperator {
                     int noZeroIndex = -1;
                     //Шукаємо, чи є ненульовий елемент у нижньому трикутнику матриці
                     for (int rowIndex = 0; rowIndex < index; rowIndex++) {
-                        if (!matrix.get(rowIndex, index).equals(zero)) {
+                        if (matrix.get(rowIndex, index).compareTo(zero) != 0) {
                             noZeroIndex = rowIndex;
                             break;
                         }
@@ -113,7 +114,7 @@ public final class LinearMatrixTransformOperator {
                         matrix.switchRows(noZeroIndex, index);
                         for (int rowIndex = 0; rowIndex < index; rowIndex++) {
                             T nextElement = matrix.get(rowIndex, index).divide(baseElement).inegate();
-                            if (!nextElement.equals(zero)) {
+                            if (nextElement.compareTo(zero) != 0) {
                                 addRow(matrix, rowIndex, index, nextElement);
                             }
                         }
@@ -124,6 +125,74 @@ public final class LinearMatrixTransformOperator {
                     return null;
                 }
             }
+        }
+        return matrix;
+    }
+    //endregion
+
+    //region Трапецієвидні форми
+    public static <T extends com.darkempire.math.struct.Number<T>> NumberMatrix<T> makeUpperTrapeze(NumberMatrix<T> matrix) {
+        return makeUpperTrapeze(matrix, false);
+    }
+
+    public static <T extends com.darkempire.math.struct.Number<T>> NumberMatrix<T> makeUpperTrapeze(NumberMatrix<T> matrix, boolean switchAllow) {
+        int rowCount = matrix.getRowCount();
+        int columnCount = matrix.getColumnCount();
+        int size = Math.min(rowCount, columnCount);
+        T zero = matrix.get(0, 0).getZero();
+        //Починаємо цикл
+        for (int index = 0; index < size; index++) {
+            T baseElement = matrix.get(index, index);
+            if (baseElement.compareTo(zero) != 0) {//Гілка, якщо базовий елемент не нульовий
+                for (int rowIndex = index + 1; rowIndex < rowCount; rowIndex++) {
+                    T nextElement = matrix.get(rowIndex, index).divide(baseElement).inegate();
+                    if (nextElement.compareTo(zero) != 0) {
+                        NumberMatrixMathOperator.addRow(matrix, rowIndex, index, nextElement);
+                    }
+                }
+            } else {//Якщо базовий елемент таки нульовий
+                if (switchAllow) {
+                    int noZeroRowIndex = -1;
+                    int noZeroColumnIndex = -1;
+                    //Шукаємо, чи є ненульовий елемент у нижньому трикутнику матриці
+                    for (int rowIndex = index + 1; rowIndex < rowCount; rowIndex++) {
+                        for (int columnIndex = index + 1; columnIndex < columnCount; columnIndex++) {
+                            if (matrix.get(rowIndex, columnIndex).compareTo(zero) != 0) {
+                                noZeroRowIndex = rowIndex;
+                                noZeroColumnIndex = columnIndex;
+                                break;
+                            }
+                        }
+                    }
+                    if (noZeroRowIndex != -1) {//Якщо є такий ненульовий елемент, то потрібно щось робити
+                    /*
+                    Виправляємо це таким чином:
+                    - Міняємо місцями поточний рядок та рядок з ненульовим елементом
+                    - Замінюємо baseElement на потрібний!
+                    - Виконаємо ітерацію очищення
+                    - Профіт!
+                     */
+                        matrix.switchRows(noZeroRowIndex, index);
+                        matrix.switchColumns(noZeroColumnIndex, index);
+                        baseElement = matrix.get(index, index);
+                        for (int rowIndex = index + 1; rowIndex < rowCount; rowIndex++) {
+                            T nextElement = matrix.get(rowIndex, index).divide(baseElement).inegate();
+                            if (nextElement.compareTo(zero) != 0) {
+                                NumberMatrixMathOperator.addRow(matrix, rowIndex, index, nextElement);
+                            }
+                        }
+                    } else { //Ненульового елементу немає, тоді матриця вже трапецїєвидної форми
+                        return matrix;
+                    }
+                } else {
+                    return null; // Не можна міняти місцями рядки, тобто привести до трапецієвидної форми за
+                    //таких обмежень неможливо
+                }
+            }
+        }
+        for (int rowIndex = size; rowIndex < rowCount; rowIndex++) {
+            Log.log(Log.debugIndex, rowIndex);
+            matrix.fillRow(rowIndex, zero.deepcopy());
         }
         return matrix;
     }
@@ -144,12 +213,12 @@ public final class LinearMatrixTransformOperator {
         T zero = matrix.get(0, 0).getZero();
         for (int index = 0; index < columnCount; index++) {
             T baseElement = matrix.get(index, index);
-            if (!baseElement.equals(zero)) {//Гілка, якщо базовий елемент не нульовий
+            if (baseElement.compareTo(zero) != 0) {//Гілка, якщо базовий елемент не нульовий
                 for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
                     if (rowIndex == index)
                         continue;
                     T nextElement = matrix.get(rowIndex, index).divide(baseElement).inegate();
-                    if (!nextElement.equals(zero)) {
+                    if (nextElement.compareTo(zero) != 0) {
                         addRow(matrix, rowIndex, index, nextElement);
                     }
                 }
@@ -158,7 +227,7 @@ public final class LinearMatrixTransformOperator {
                     int noZeroIndex = -1;
                     //Шукаємо, чи є ненульовий елемент у нижньому трикутнику матриці
                     for (int rowIndex = index + 1; rowIndex < rowCount; rowIndex++) {
-                        if (!matrix.get(rowIndex, index).equals(zero)) {
+                        if (matrix.get(rowIndex, index).compareTo(zero) != 0) {
                             noZeroIndex = rowIndex;
                             break;
                         }
@@ -175,7 +244,7 @@ public final class LinearMatrixTransformOperator {
                             if (rowIndex == index)
                                 continue;
                             T nextElement = matrix.get(rowIndex, index).divide(baseElement).inegate();
-                            if (!nextElement.equals(zero)) {
+                            if (nextElement.compareTo(zero) != 0) {
                                 addRow(matrix, rowIndex, index, nextElement);
                             }
                         }
@@ -188,18 +257,6 @@ public final class LinearMatrixTransformOperator {
             }
         }
         return matrix;
-    }
-    //endregion
-
-    //region Заміна місцями стовпчик або рядок
-    @Deprecated
-    public static <T extends com.darkempire.math.struct.Number<T>> NumberMatrix<T> switchRow(NumberMatrix<T> matrix, int rowIndex1, int rowIndex2) {
-        return matrix.switchRows(rowIndex1, rowIndex2);
-    }
-
-    @Deprecated
-    public static <T extends com.darkempire.math.struct.Number<T>> NumberMatrix<T> switchColumn(NumberMatrix<T> matrix, int columnIndex1, int columnIndex2) {
-        return matrix.switchColumns(columnIndex1, columnIndex2);
     }
     //endregion
 }
