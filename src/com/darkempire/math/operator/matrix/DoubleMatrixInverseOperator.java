@@ -1,11 +1,14 @@
 package com.darkempire.math.operator.matrix;
 
 import com.darkempire.anji.annotation.AnjiExperimental;
+import com.darkempire.anji.annotation.AnjiRewrite;
 import com.darkempire.anji.annotation.AnjiUtil;
-import com.darkempire.anji.document.wolfram.util.WolframConvertUtils;
 import com.darkempire.anji.log.Log;
+import com.darkempire.math.MathMachine;
 import com.darkempire.math.exception.MatrixSizeException;
+import com.darkempire.math.struct.matrix.DoubleFixedMatrix;
 import com.darkempire.math.struct.matrix.DoubleMatrix;
+import com.darkempire.math.struct.vector.DoubleVector;
 
 import static com.darkempire.math.operator.matrix.DoubleMatrixMathOperator.addRow;
 
@@ -55,6 +58,8 @@ public final class DoubleMatrixInverseOperator {
     }
     //endregion
 
+    //region Обчислення псевдообернених матриць
+
     /**
      * Обчислення псевдооберненої матриці за допомогою скелетного розкладу матриці A
      * на матриці B та С і використання формули:
@@ -63,8 +68,8 @@ public final class DoubleMatrixInverseOperator {
      * @param matrix матриця A
      * @return A^+
      */
-    @AnjiExperimental
-    public static DoubleMatrix pseudoInverse(DoubleMatrix matrix) {
+    @AnjiRewrite(reason = "Взагалі неправильно працює")
+    public static DoubleMatrix pseudoInverseSkeleton(DoubleMatrix matrix) {
         DoubleMatrixDecompositionOperator.SkeletonDecompositionResult result = DoubleMatrixDecompositionOperator.skeletonDecomposition(matrix, true);
         int rowCount = matrix.getRowCount();
         int columnCount = matrix.getColumnCount();
@@ -87,14 +92,73 @@ public final class DoubleMatrixInverseOperator {
         DoubleMatrix b_t = b.transpose();
         DoubleMatrix b_i = inverse(b_t.multy(b));
         if (b_i == null) {
-//            Log.log(Log.debugIndex,"B=", WolframConvertUtils.convertDoubleMatrix(b));
-//            //Log.log(Log.debugIndex,"A=",WolframConvertUtils.convertDoubleMatrix(matrix));
-//            Log.log(Log.debugIndex,"C=",WolframConvertUtils.convertDoubleMatrix(result.C));
-//            Log.log(Log.debugIndex,"Ci=",WolframConvertUtils.convertDoubleMatrix(result.CPseudoInverse));
+           /* Log.log(Log.debugIndex,"B=", WolframConvertUtils.convertDoubleMatrix(b));
+            Log.log(Log.debugIndex,"A=",WolframConvertUtils.convertDoubleMatrix(matrix));
+            Log.log(Log.debugIndex,"C=",WolframConvertUtils.convertDoubleMatrix(result.C));
+            Log.log(Log.debugIndex,"Ci=",WolframConvertUtils.convertDoubleMatrix(result.CPseudoInverse));*/
         }
         DoubleMatrix b_p = b_i.multy(b_t);
         return result.CPseudoInverse.multy(b_p);
     }
+
+    /**
+     * Обчислення псевдооберненої матриці за методом Гревілля.
+     * Загалом, псевдообернена матриця обчислюється по стовпчикам
+     * A_{k} - матриця, утворена першими k стовбчиками матриці А
+     * a_k - k-тий стовпчик матриці
+     * Підготовка: A^{-1}_{1} = a_{1}^{-1}, якщо a_{1}!=0 інакше 0
+     * Алгоритм:
+     * 1. k=k+1
+     * 2. d_k = A^{-1}_{k-1}*a_k
+     * 3. c_k = a_k - A_{k-1}d_k
+     * 4. if c_k!=0 : b_k = c_k^{-1} = (c_k^T c_k)^{-1} c_k^T
+     * else b_k = (1+d_k^T d_k)^{-1} d_k^T A_{k-1}^{-1}
+     * 5. B_k = A_{k-1}^{-1} - d_k b_k
+     * 6. A_k^{-1} = (B_k|b_k)^T - тобто це просто доставлення рядка b_k до матриці B_k знизу
+     *
+     * @param matrix матриця A
+     * @return псевдообернена матриця А
+     */
+    public static DoubleMatrix pseudoInverseGrevilleMethod(DoubleMatrix matrix) {
+        int columnCount = matrix.getColumnCount();
+        DoubleVector a1 = matrix.column(0);
+        double value = a1.scalar(a1);
+        if (Double.compare(value, 0) != 0) {
+            a1 = a1.prod(1 / value);
+        }
+        DoubleMatrix pseudoInverse = DoubleMatrixGenerateOperator.fixedFromRows(a1);
+        //Поки все правильно
+        for (int k = 1; k < columnCount; k++) {
+            //Log.log(Log.debugIndex,pseudoInverse);
+            //Log.log(Log.debugIndex,k);
+            DoubleMatrix aks1 = matrix.sliceColumnsTo(k);
+            //Log.log(Log.debugIndex,aks1);
+            DoubleVector ak = matrix.column(k);
+            //Log.log(Log.debugIndex,"ak=",ak);
+            DoubleVector dk = pseudoInverse.multy(ak);
+            //Log.log(Log.debugIndex,"dk=",dk);
+            //Log.log(Log.debugIndex,ak.getClass());
+            DoubleVector ck = ak.subtract(aks1.multy(dk));
+            //Log.log(Log.debugIndex,"ck=",ck);
+            double ckck = ck.scalar(ck);
+            DoubleVector bk;
+            if (Math.abs(ckck) > MathMachine.MACHINE_PRACTICAL_EPS) {
+                bk = ck.prod(1 / ckck);
+            } else {
+                double dkdkp1 = dk.scalar(dk) + 1;
+                //Log.log(Log.debugIndex,dkdkp1);
+                //Log.log(Log.debugIndex,dk.mult(pseudoInverse));
+                bk = dk.mult(pseudoInverse).iprod(1 / dkdkp1);
+            }
+            //Log.log(Log.debugIndex,"bk=",bk);
+            //Log.log(Log.debugIndex,dk.mult(bk));
+            DoubleMatrix Bk = pseudoInverse.subtract(dk.mult(bk));
+            //Log.log(Log.debugIndex,Bk);
+            pseudoInverse = DoubleMatrixTransformOperator.appendRowF(Bk, bk);
+        }
+        return pseudoInverse;
+    }
+    //endregion
 
     /**
      * Будує обернену матрицю за заданим методом
@@ -117,10 +181,21 @@ public final class DoubleMatrixInverseOperator {
         return inverse(matrix, InverseMethodType.GAUSSIAN_ELIMINATION);
     }
 
-    public static enum InverseMethodType {
-        /**
-         * Обчислення оберненної методом Гауса
-         */
-        GAUSSIAN_ELIMINATION
+    public static DoubleMatrix pseudoInverse(DoubleMatrix matrix, PseudoInverseMethodType type) {
+        DoubleMatrix pseudoInverse = null;
+        switch (type) {
+            case SKELETON_DECOMPOSITION:
+                pseudoInverse = pseudoInverseSkeleton(matrix);
+                break;
+            case GREVILLE_METHOD:
+                pseudoInverse = pseudoInverseGrevilleMethod(matrix);
+                break;
+        }
+        return pseudoInverse;
     }
+
+    public static DoubleMatrix pseudoInverse(DoubleMatrix matrix) {
+        return pseudoInverse(matrix, PseudoInverseMethodType.GREVILLE_METHOD);
+    }
+
 }

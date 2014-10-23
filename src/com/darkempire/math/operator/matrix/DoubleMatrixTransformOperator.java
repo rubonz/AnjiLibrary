@@ -6,6 +6,7 @@ import com.darkempire.math.exception.MatrixSizeException;
 import com.darkempire.math.struct.matrix.DoubleFixedMatrix;
 import com.darkempire.math.struct.matrix.DoubleMatrix;
 import com.darkempire.math.struct.matrix.DoubleResizeMatrix;
+import com.darkempire.math.struct.vector.DoubleVector;
 
 import static com.darkempire.math.operator.matrix.DoubleMatrixMathOperator.addRow;
 
@@ -265,7 +266,7 @@ public final class DoubleMatrixTransformOperator {
     //endregion
 
     //region Додавання та видалення рядків
-    public static DoubleFixedMatrix appendRow(DoubleFixedMatrix m1, double[] row) {
+    public static DoubleFixedMatrix appendRowF(DoubleMatrix m1, double[] row) {
         if (row.length != m1.getColumnCount())
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
         int n = m1.getColumnCount();
@@ -280,8 +281,24 @@ public final class DoubleMatrixTransformOperator {
         return DoubleFixedMatrix.createInstance(m + 1, n, array);
     }
 
+    public static DoubleFixedMatrix appendRowF(DoubleMatrix m1, DoubleVector row) {
+        if (row.getSize() != m1.getColumnCount())
+            throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
+        int columnCount = m1.getColumnCount();
+        int rowCount = m1.getRowCount();
+        double[] array = new double[columnCount * (rowCount + 1)];
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+                array[columnIndex + rowIndex * columnCount] = m1.getEl(rowIndex, columnIndex);
+            }
+        }
+        for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+            array[columnIndex + rowCount * columnCount] = row.get(columnIndex);
+        }
+        return DoubleFixedMatrix.createInstance(rowCount + 1, columnCount, array);
+    }
 
-    public static DoubleFixedMatrix removeRow(DoubleFixedMatrix m1, int indexR) {
+    public static DoubleFixedMatrix removeRowF(DoubleMatrix m1, int indexR) {
         if (m1.getRowCount() < indexR - 1 || indexR < 0)
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
         int n = m1.getColumnCount();
@@ -301,7 +318,7 @@ public final class DoubleMatrixTransformOperator {
         return temp;
     }
 
-    public static DoubleResizeMatrix appendRow(DoubleResizeMatrix m1, double[] row) {
+    public static DoubleResizeMatrix appendRowR(DoubleMatrix m1, double[] row) {
         if (row.length != m1.getColumnCount())
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
         int n = m1.getColumnCount();
@@ -316,8 +333,25 @@ public final class DoubleMatrixTransformOperator {
         return DoubleResizeMatrix.createInstance(m + 1, n, array);
     }
 
+    public static DoubleResizeMatrix appendRowR(DoubleMatrix m1, DoubleVector row) {
+        if (row.getSize() != m1.getColumnCount())
+            throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
+        int columnCount = m1.getColumnCount();
+        int rowCount = m1.getRowCount();
+        double[] array = new double[columnCount * (rowCount + 1)];
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+                array[columnIndex + rowIndex * columnCount] = m1.getEl(rowIndex, columnIndex);
+            }
+        }
+        for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+            array[columnIndex + rowCount * columnCount] = row.get(columnIndex);
+        }
+        return DoubleResizeMatrix.createInstance(rowCount + 1, columnCount, array);
+    }
 
-    public static DoubleResizeMatrix removeRow(DoubleResizeMatrix m1, int indexR) {
+
+    public static DoubleResizeMatrix removeRowR(DoubleMatrix m1, int indexR) {
         if (m1.getRowCount() < indexR - 1 || indexR < 0)
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
         int n = m1.getColumnCount();
@@ -339,7 +373,7 @@ public final class DoubleMatrixTransformOperator {
     //endregion
 
     //region Видалення та додавання стовпчиків
-    public static DoubleFixedMatrix appendColumn(DoubleFixedMatrix m1, double[] column) {
+    public static DoubleFixedMatrix appendColumnF(DoubleMatrix m1, double[] column) {
         if (column.length != m1.getRowCount())
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
         int n = m1.getColumnCount();
@@ -356,7 +390,24 @@ public final class DoubleMatrixTransformOperator {
         return DoubleFixedMatrix.createInstance(m, n + 1, array);
     }
 
-    public static DoubleFixedMatrix removeColumn(DoubleFixedMatrix m1, int indexC) {
+    public static DoubleFixedMatrix appendColumnF(DoubleMatrix m1, DoubleVector column) {
+        if (column.getSize() != m1.getRowCount())
+            throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
+        int columnCount = m1.getColumnCount();
+        int rowCount = m1.getRowCount();
+        double[] array = new double[(columnCount + 1) * rowCount];
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+                array[columnIndex + rowIndex * (columnCount + 1)] = m1.getEl(rowIndex, columnIndex);
+            }
+        }
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            array[columnCount + rowIndex * (columnCount + 1)] = column.get(rowIndex);
+        }
+        return DoubleFixedMatrix.createInstance(rowCount, columnCount + 1, array);
+    }
+
+    public static DoubleFixedMatrix removeColumnF(DoubleMatrix m1, int indexC) {
         if (m1.getColumnCount() < indexC - 1 || indexC < 0)
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
         int n = m1.getColumnCount();
@@ -376,7 +427,7 @@ public final class DoubleMatrixTransformOperator {
         return temp;
     }
 
-    public static DoubleResizeMatrix appendColumn(DoubleResizeMatrix m1, double[] column) {
+    public static DoubleResizeMatrix appendColumnR(DoubleMatrix m1, double[] column) {
         if (column.length != m1.getRowCount())
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
         int n = m1.getColumnCount();
@@ -393,7 +444,24 @@ public final class DoubleMatrixTransformOperator {
         return DoubleResizeMatrix.createInstance(m, n + 1, array);
     }
 
-    public static DoubleResizeMatrix removeColumn(DoubleResizeMatrix m1, int indexC) {
+    public static DoubleResizeMatrix appendColumnR(DoubleMatrix m1, DoubleVector column) {
+        if (column.getSize() != m1.getRowCount())
+            throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
+        int columnCount = m1.getColumnCount();
+        int rowCount = m1.getRowCount();
+        double[] array = new double[(columnCount + 1) * rowCount];
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+                array[columnIndex + rowIndex * (columnCount + 1)] = m1.getEl(rowIndex, columnIndex);
+            }
+        }
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            array[columnCount + rowIndex * (columnCount + 1)] = column.get(rowIndex);
+        }
+        return DoubleResizeMatrix.createInstance(rowCount, columnCount + 1, array);
+    }
+
+    public static DoubleResizeMatrix removeColumnR(DoubleMatrix m1, int indexC) {
         if (m1.getColumnCount() < indexC - 1 || indexC < 0)
             throw new com.darkempire.math.exception.MatrixSizeException(com.darkempire.math.exception.MatrixSizeException.MATRIX_SIZE_MISMATCH);
         int n = m1.getColumnCount();

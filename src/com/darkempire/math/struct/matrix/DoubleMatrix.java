@@ -1,5 +1,7 @@
 package com.darkempire.math.struct.matrix;
 
+import com.darkempire.anji.document.tex.ITeXObject;
+import com.darkempire.anji.document.tex.TeXEventWriter;
 import com.darkempire.math.exception.MatrixSizeException;
 import com.darkempire.math.struct.LinearCalcable;
 import com.darkempire.math.struct.function.FDoubleDouble;
@@ -10,13 +12,15 @@ import com.darkempire.math.struct.vector.DoubleMatrixVector;
 import com.darkempire.math.struct.vector.DoubleVector;
 import com.darkempire.math.struct.vector.IDoubleVectorProvider;
 
+import java.text.NumberFormat;
+import java.util.StringJoiner;
 import java.util.stream.Stream;
 
 /**
  * Create in 9:13
  * Created by siredvin on 20.12.13.
  */
-public abstract class DoubleMatrix implements IMatrix<DoubleMatrix, Double>, IDoubleMatrixProvider, LinearCalcable<DoubleMatrix> {
+public abstract class DoubleMatrix implements IMatrix<DoubleMatrix, Double>, IDoubleMatrixProvider, LinearCalcable<DoubleMatrix>, ITeXObject {
     //region Геттери
     @Override
     public abstract double get(int rowIndex, int columnIndex);
@@ -83,6 +87,22 @@ public abstract class DoubleMatrix implements IMatrix<DoubleMatrix, Double>, IDo
         return DoubleMatrixSlice.createSlice(this, rowIndexs, columnsIndex);
     }
 
+    public DoubleMatrixSlice sliceColumns(int startIndex, int endIndex) {
+        int[] indexes = new int[endIndex - startIndex];
+        for (int i = startIndex; i < endIndex; i++) {
+            indexes[i] = i;
+        }
+        return sliceColumns(indexes);
+    }
+
+    public DoubleMatrixSlice sliceColumnsTo(int endIndex) {
+        return sliceColumns(0, endIndex);
+    }
+
+    public DoubleMatrix sliceColumnsFrom(int startIndex) {
+        return sliceColumns(startIndex, getColumnCount());
+    }
+
     public DoubleMatrixSlice sliceRows(int[] rowIndex) {
         int columnCount = getColumnCount();
         int[] columnIndexs = new int[columnCount];
@@ -90,6 +110,22 @@ public abstract class DoubleMatrix implements IMatrix<DoubleMatrix, Double>, IDo
             columnIndexs[i] = i;
         }
         return DoubleMatrixSlice.createSlice(this, rowIndex, columnIndexs);
+    }
+
+    public DoubleMatrixSlice sliceRows(int startIndex, int endIndex) {
+        int[] indexes = new int[endIndex - startIndex];
+        for (int i = startIndex; i < endIndex; i++) {
+            indexes[i] = i;
+        }
+        return sliceRows(indexes);
+    }
+
+    public DoubleMatrixSlice sliceRowsTo(int endIndex) {
+        return sliceRows(0, endIndex);
+    }
+
+    public DoubleMatrix sliceRowsFrom(int startIndex) {
+        return sliceRows(startIndex, getRowCount());
     }
 
     public DoubleMatrixSlice slicePeriodic(int rowPeriod, int columnPeriod) {
@@ -651,5 +687,27 @@ public abstract class DoubleMatrix implements IMatrix<DoubleMatrix, Double>, IDo
     public abstract DoubleMatrix multy(DoubleMatrix doubleMatrix);
 
     public abstract DoubleVector multy(DoubleVector doubleVector);
+    //endregion
+
+    //region Функції виведення
+
+    @Override
+    public void write(TeXEventWriter out) {
+        int rowCount = getRowCount();
+        int columnCount = getColumnCount();
+        NumberFormat format = out.getNumberFormat();
+        StringJoiner mainJoiner = new StringJoiner("\\\n");
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            StringJoiner joiner = new StringJoiner(" & ");
+            for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+                joiner.add(format.format(get(rowIndex, columnIndex)));
+            }
+            mainJoiner.add(joiner.toString());
+        }
+        out.openEnvironment("pmatrix");
+        out.text(mainJoiner.toString());
+        out.closeEnvironment();
+    }
+
     //endregion
 }

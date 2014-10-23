@@ -1,19 +1,13 @@
 package sample;
 
+import com.darkempire.anji.document.wolfram.util.WolframConvertUtils;
 import com.darkempire.anji.log.Log;
-import com.darkempire.math.operator.matrix.NumberMatrixMathOperator;
-import com.darkempire.math.struct.function.polynomial.ArrayDoublePolynomial;
-import com.darkempire.math.struct.matrix.NumberFixedMatrix;
-import com.darkempire.math.struct.matrix.NumberMatrix;
-import com.darkempire.math.struct.number.Fraction;
-import com.darkempire.math.utils.MathUtils;
+import com.darkempire.math.struct.matrix.DoubleFixedMatrix;
+import com.darkempire.math.struct.matrix.DoubleMatrix;
 
 import java.io.FileNotFoundException;
-import java.math.BigDecimal;
 
-import static com.darkempire.math.operator.matrix.DoubleMatrixTransformOperator.makeDiagonalForm;
-import static com.darkempire.math.operator.matrix.NumberMatrixTransformOperator.makeDiagonalForm;
-import static com.darkempire.math.struct.function.polynomial.util.PolynomialArithmeticUtil.expand;
+import static com.darkempire.math.operator.matrix.DoubleMatrixInverseOperator.*;
 
 /**
  * Create in 14:14
@@ -22,12 +16,15 @@ import static com.darkempire.math.struct.function.polynomial.util.PolynomialArit
 public class Main3 {
 
     public static void main(String[] args) throws FileNotFoundException {
-        ArrayDoublePolynomial source = new ArrayDoublePolynomial(1, 0, 1, 0, 1, 0, -68);
-        ArrayDoublePolynomial result = new ArrayDoublePolynomial(-4331, 13020, -16295, 10872, -4079, 816, -68);
-        Log.log(Log.debugIndex, expand(source, 1, -2));
-        Log.log(Log.debugIndex, result);
-        Log.log(Log.debugIndex, result.getSize(), expand(source, 1, -2).getSize());
-        Log.err(Log.debugIndex, expand(source, 1, -2).equals(result));
+        /*DoubleMatrix a = DoubleFixedMatrix.createInstance( 2 , 3 ,new double[]{ 0.8970050194306886, 0.9857680155104352, 0.7601300603098005, 0.9521287306168374, 0.6272604169687124, 0.35445771652890967 });
+        Log.log(Log.debugIndex, pseudoInverse(a));*/
+        DoubleMatrix a = DoubleFixedMatrix.createInstance(4, 3, new double[]{
+                1, -1, 0,
+                -1, 2, 1,
+                2, -3, -1,
+                0, -1, 1
+        });
+        Log.log(Log.debugIndex, pseudoInverse(a));
     }
 }
 

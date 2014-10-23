@@ -1,6 +1,7 @@
 package com.darkempire.math.operator.matrix;
 
 import com.darkempire.anji.annotation.AnjiExperimental;
+import com.darkempire.anji.annotation.AnjiRewrite;
 import com.darkempire.anji.annotation.AnjiUtil;
 import com.darkempire.math.exception.MatrixSizeException;
 import com.darkempire.math.struct.Number;
@@ -64,6 +65,7 @@ public final class NumberMatrixInverseOperator {
      * @return A^+
      */
     @AnjiExperimental
+    @AnjiRewrite(reason = "Взагалі неправильно працює")
     public static <T extends Number<T>> NumberMatrix<T> pseudoInverse(NumberMatrix<T> matrix) {
         NumberMatrixDecompositionOperator.SkeletonDecompositionResult<T> result = NumberMatrixDecompositionOperator.skeletonDecomposition(matrix, true);
         int rowCount = matrix.getRowCount();
@@ -115,12 +117,5 @@ public final class NumberMatrixInverseOperator {
 
     public static <T extends Number<T>> NumberMatrix<T> inverse(NumberMatrix<T> matrix) {
         return inverse(matrix, InverseMethodType.GAUSSIAN_ELIMINATION);
-    }
-
-    public static enum InverseMethodType {
-        /**
-         * Обчислення оберненної методом Гауса
-         */
-        GAUSSIAN_ELIMINATION
     }
 }

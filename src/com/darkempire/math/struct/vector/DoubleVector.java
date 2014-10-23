@@ -1,6 +1,9 @@
 package com.darkempire.math.struct.vector;
 
+import com.darkempire.anji.document.tex.ITeXObject;
+import com.darkempire.anji.document.tex.TeXEventWriter;
 import com.darkempire.anji.util.Util;
+import com.darkempire.math.MathMachine;
 import com.darkempire.math.exception.MatrixSizeException;
 import com.darkempire.math.struct.LinearCalcable;
 import com.darkempire.math.struct.function.interfaces.FDoubleVectorIndexDouble;
@@ -9,11 +12,14 @@ import com.darkempire.math.struct.matrix.DoubleFixedMatrix;
 import com.darkempire.math.struct.matrix.DoubleMatrix;
 import com.darkempire.math.utils.GeometryUtils;
 
+import java.text.NumberFormat;
+import java.util.StringJoiner;
+
 /**
  * Create in 10:42
  * Created by siredvin on 25.04.14.
  */
-public abstract class DoubleVector implements LinearCalcable<DoubleVector>, IDoubleVectorProvider {
+public abstract class DoubleVector implements LinearCalcable<DoubleVector>, IDoubleVectorProvider, ITeXObject {
     //region Cеттери
     public abstract void set(int index, double value);
     //endregion
@@ -97,8 +103,9 @@ public abstract class DoubleVector implements LinearCalcable<DoubleVector>, IDou
 
     /**
      * Заповнення підвектору від початку (включаючи) до кінця (виключаючи)
-     * @param start початок
-     * @param end кінець
+     *
+     * @param start    початок
+     * @param end      кінець
      * @param function функція
      * @return вектор
      */
@@ -111,8 +118,9 @@ public abstract class DoubleVector implements LinearCalcable<DoubleVector>, IDou
 
     /**
      * Заповнення підвектору від початку (включаючи) до кінця (виключаючи)
-     * @param start початок
-     * @param end кінець
+     *
+     * @param start    початок
+     * @param end      кінець
      * @param function функція
      * @return вектор
      */
@@ -163,6 +171,23 @@ public abstract class DoubleVector implements LinearCalcable<DoubleVector>, IDou
     public abstract double[] toRawArray();
     //endregion
 
+    //region Функції виведення
+
+    @Override
+    public void write(TeXEventWriter out) {
+        int size = getSize();
+        NumberFormat format = out.getNumberFormat();
+        out.openEnvironment("pmatrix");
+        StringJoiner joiner = new StringJoiner("\\\\");
+        for (int i = 0; i < size; i++) {
+            joiner.add(format.format(get(i)));
+        }
+        out.text(joiner.toString());
+        out.closeEnvironment();
+    }
+
+    //endregion
+
     public DoubleVector irotate(int i, int j, double angle) {
         return GeometryUtils.rotateVector(this, i, j, angle);
     }
@@ -177,15 +202,33 @@ public abstract class DoubleVector implements LinearCalcable<DoubleVector>, IDou
     }
 
     //endregion
+
     public DoubleMatrix mult(DoubleVector vector) {
-        int size = getSize();
-        if (vector.getSize() != size)
-            throw new MatrixSizeException(MatrixSizeException.MATRIX_SIZE_MULTY_MISMATCH);
-        DoubleFixedMatrix result = DoubleFixedMatrix.createInstance(size, size);
-        for (int rowIndex = 0; rowIndex < size; rowIndex++) {
-            for (int columnIndex = 0; columnIndex < size; columnIndex++) {
+        int rowCount = getSize();
+        int columnCount = vector.getSize();
+        DoubleFixedMatrix result = DoubleFixedMatrix.createInstance(rowCount, columnCount);
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
                 result.set(rowIndex, columnIndex, get(rowIndex) * vector.get(columnIndex));
             }
+        }
+        return result;
+    }
+
+    public DoubleVector mult(DoubleMatrix matrix) {
+        int rowCount = matrix.getRowCount();
+        int columnCount = matrix.getColumnCount();
+        int size = getSize();
+        if (size != rowCount) {
+            throw new MatrixSizeException(MatrixSizeException.MATRIX_SIZE_MULTY_MISMATCH);
+        }
+        DoubleVector result = new DoubleFixedVector(columnCount);
+        for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+            double temp = 0;
+            for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+                temp += get(rowIndex) * matrix.get(rowIndex, columnIndex);
+            }
+            result.set(columnIndex, temp);
         }
         return result;
     }

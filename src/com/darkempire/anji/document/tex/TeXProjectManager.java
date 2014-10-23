@@ -18,6 +18,9 @@ public class TeXProjectManager {
     private File mainFile;
     private TeXDocumentManager mainFileManager;
 
+    static {
+        Log.setAllow(texBuild, false);
+    }
 
     public TeXProjectManager(File projectDirectory) {
         this(projectDirectory, "main.tex");

@@ -10,9 +10,6 @@ import java.text.NumberFormat;
  */
 @AnjiUtil
 public final class MathMachine {
-    private MathMachine() {
-    }
-
     public static final double MACHINE_EPS = 1E-16;
     public static final double MACHINE_HALF_EPS = 1E-8;
     public static final long MACHINE_REVERSE_EPS = 10000000000000000l;
@@ -21,5 +18,10 @@ public final class MathMachine {
 
     static {
         numberFormat.setMaximumFractionDigits(3);
+    }
+
+    public static double MACHINE_PRACTICAL_EPS = 1E-14;
+
+    private MathMachine() {
     }
 }

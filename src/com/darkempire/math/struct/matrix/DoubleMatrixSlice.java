@@ -1,5 +1,6 @@
 package com.darkempire.math.struct.matrix;
 
+import com.darkempire.anji.log.Log;
 import com.darkempire.math.struct.vector.DoubleFixedVector;
 import com.darkempire.math.struct.vector.DoubleVector;
 
@@ -18,6 +19,15 @@ public abstract class DoubleMatrixSlice extends DoubleMatrix {
     }
     //endregion
 
+    //region Створення зрізів
+    public static DoubleMatrixSlice createSlice(DoubleMatrix matrix, int startRow, int startColumn, int endRow, int endColumn) {
+        return new RectangleDoubleMatrixSlice(matrix, startRow, startColumn, endRow, endColumn);
+    }
+
+    public static DoubleMatrixSlice createSlice(DoubleMatrix matrix, int[] rowIndexs, int[] columnIndexs) {
+        return new IndexDoubleMatrixSlice(matrix, rowIndexs, columnIndexs);
+    }
+
     //region Геттери
     @Override
     public abstract double get(int rowIndex, int columnIndex);
@@ -28,6 +38,7 @@ public abstract class DoubleMatrixSlice extends DoubleMatrix {
         int rowIndex = index / getRowCount();
         return get(rowIndex, columnIndex);
     }
+    //endregion
 
     @Override
     public abstract int getRowCount();
@@ -35,6 +46,8 @@ public abstract class DoubleMatrixSlice extends DoubleMatrix {
     @Override
     public abstract int getColumnCount();
     //endregion
+
+    //region Системні методи
 
     //region Сеттери
     @Override
@@ -47,8 +60,6 @@ public abstract class DoubleMatrixSlice extends DoubleMatrix {
         set(rowIndex, columnIndex, value);
     }
     //endregion
-
-    //region Системні методи
 
     @Override
     public DoubleMatrix clone() {
@@ -67,7 +78,6 @@ public abstract class DoubleMatrixSlice extends DoubleMatrix {
     public DoubleMatrix deepcopy() {
         return clone();
     }
-    //endregion
 
     //region Арифметичні операції з присвоєнням
     @Override
@@ -93,6 +103,7 @@ public abstract class DoubleMatrixSlice extends DoubleMatrix {
         }
         return this;
     }
+    //endregion
 
     @Override
     public DoubleMatrix isubtract(DoubleMatrix matrix) {
@@ -117,7 +128,6 @@ public abstract class DoubleMatrixSlice extends DoubleMatrix {
         }
         return this;
     }
-    //endregion
 
     //region Арифметичні операції
     @Override
@@ -156,7 +166,6 @@ public abstract class DoubleMatrixSlice extends DoubleMatrix {
         return DoubleResizeMatrix.createInstance(getRowCount(), getColumnCount(), nArr);
     }
 
-
     @Override
     public DoubleVector multy(DoubleVector doubleVector) {
         int rowCount = getRowCount();
@@ -167,8 +176,10 @@ public abstract class DoubleMatrixSlice extends DoubleMatrix {
         for (int vectIndex = 0; vectIndex < rowCount; vectIndex++) {
             double summ = 0;
             for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+                //Log.log(Log.debugIndex,get(vectIndex,columnIndex),doubleVector.get(columnIndex));
                 summ += get(vectIndex, columnIndex) * doubleVector.get(columnIndex);
             }
+            //Log.log(Log.debugIndex,"summ[",vectIndex,"]=",summ);
             result.set(vectIndex, summ);
         }
         return result;
@@ -199,6 +210,7 @@ public abstract class DoubleMatrixSlice extends DoubleMatrix {
         }
         return matrix;
     }
+    //endregion
 
     @Override
     public DoubleMatrix prod(DoubleMatrix doubleMatrix) {
@@ -235,7 +247,6 @@ public abstract class DoubleMatrixSlice extends DoubleMatrix {
         }
         return result;
     }
-    //endregion
 
     //Зріз, де потрібні колонки та стовпчики вказані напряму
     private static class IndexDoubleMatrixSlice extends DoubleMatrixSlice {
@@ -395,15 +406,6 @@ public abstract class DoubleMatrixSlice extends DoubleMatrix {
         }
         //endregion
 
-    }
-
-    //region Створення зрізів
-    public static DoubleMatrixSlice createSlice(DoubleMatrix matrix, int startRow, int startColumn, int endRow, int endColumn) {
-        return new RectangleDoubleMatrixSlice(matrix, startRow, startColumn, endRow, endColumn);
-    }
-
-    public static DoubleMatrixSlice createSlice(DoubleMatrix matrix, int[] rowIndexs, int[] columnIndexs) {
-        return new IndexDoubleMatrixSlice(matrix, rowIndexs, columnIndexs);
     }
     //endregion
 }

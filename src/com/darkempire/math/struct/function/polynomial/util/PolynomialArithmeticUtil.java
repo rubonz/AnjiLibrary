@@ -1,5 +1,6 @@
 package com.darkempire.math.struct.function.polynomial.util;
 
+import com.darkempire.anji.annotation.AnjiRewrite;
 import com.darkempire.anji.annotation.AnjiUtil;
 import com.darkempire.anji.log.Log;
 import com.darkempire.math.struct.function.polynomial.ArrayDoublePolynomial;
@@ -59,6 +60,7 @@ public final class PolynomialArithmeticUtil {
      * @return polynomial^pow
      * @throws java.lang.UnsupportedOperationException бо поки працює лише для поліномів виду ax-b
      */
+    @AnjiRewrite(reason = "Для всіх степеней")
     public static ArrayDoublePolynomial pow(DoublePolynomial polynomial, int pow) {
         ArrayDoublePolynomial p = polynomial.toRawPolynomial();
         int size = p.getSize();

@@ -1,5 +1,6 @@
 package com.darkempire.math.struct.vector;
 
+import com.darkempire.anji.log.Log;
 import com.darkempire.math.struct.matrix.DoubleMatrix;
 
 /**

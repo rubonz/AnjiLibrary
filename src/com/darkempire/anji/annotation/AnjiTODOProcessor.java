@@ -1,5 +1,6 @@
 package com.darkempire.anji.annotation;
 
+import com.darkempire.anji.log.Log;
 import com.darkempire.internal.anji.AnjiInternal;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -28,19 +29,16 @@ import java.util.regex.Pattern;
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes({"*"})
 public class AnjiTODOProcessor extends AbstractProcessor {
-    private static boolean isRunned = false;
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        if (isRunned)
-            return true;
         try {
+            Log.log(Log.debugIndex, "Test1");
             URL url = AnjiTODOProcessor.class.getResource("/com/darkempire/res/alertDialog.fxml");
             Pattern pattern = Pattern.compile("file.+!");
             String path = url.toExternalForm();
             Matcher matcher = pattern.matcher(path);
-            if (!matcher.find())
-                return false;
+            matcher.find();
             File f = new File(matcher.group().replace("/out/artifacts/AnjiLibrary/AnjiLibrary.jar!", "").replace("file:", "").replace("%20", " ") + "/todo.md");
             PrintWriter pw = new PrintWriter(new FileOutputStream(f));
             pw.println("Автоматично згенерований TODO файл");
@@ -76,8 +74,16 @@ public class AnjiTODOProcessor extends AbstractProcessor {
                 pw.println();
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.OTHER, "Кількість AnjiRewrite елементів - " + rewrire.size());
                 for (Element e : rewrire) {
+                    AnjiRewrite ar = e.getAnnotation(AnjiRewrite.class);
+                    String reason = ar.reason();
                     pw.print("* ");
-                    pw.println(parseElement(e));
+                    if (reason.length() > 0) {
+                        pw.print(parseElement(e));
+                        pw.print(" : ");
+                        pw.println(reason);
+                    } else {
+                        pw.println(parseElement(e));
+                    }
                 }
             }
             Set<? extends Element> experimental = roundEnv.getElementsAnnotatedWith(AnjiExperimental.class);
@@ -110,7 +116,6 @@ public class AnjiTODOProcessor extends AbstractProcessor {
         } catch (FileNotFoundException e) {
             processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getLocalizedMessage());
         }
-        isRunned = true;
         return true;
     }
 
