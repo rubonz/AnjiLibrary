@@ -61,6 +61,18 @@ public abstract class DoubleFunction implements FDoubleDouble, Modifable<DoubleF
     @AnjiExperimental
     public abstract DoubleFunction iprod(double lambda);
 
+    /**
+     * Замінює аргумент цієї функції на функцію f(x).
+     * Тобто, утворює h(x) = g(f(x)), де g(x) - це ця функція
+     *
+     * @param f f(x)
+     * @return h(x)
+     */
+    @AnjiExperimental
+    public DoubleFunction composition(DoubleFunction f) {
+        return new CompositionFunction(this, f);
+    }
+
     @Override
     public abstract String toString();
 }

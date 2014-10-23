@@ -6,6 +6,7 @@ import com.darkempire.math.struct.LinearModifable;
 import com.darkempire.math.struct.Modifable;
 import com.darkempire.math.struct.function.FDoubleDouble;
 import com.darkempire.math.struct.function.FDoublesDouble;
+import com.darkempire.math.struct.function.doublefunction.DoubleFunction;
 import com.darkempire.math.struct.function.doublefunction.DoubleFunctions;
 
 /**
@@ -62,6 +63,17 @@ public abstract class DoublesFunction implements FDoublesDouble, Modifable<Doubl
 
     @AnjiExperimental
     public abstract DoublesFunction iprod(double lambda);
+
+    /**
+     * h(x_1,...) = g(f(x_1,...))
+     *
+     * @param g g(x)
+     * @return h(x_1, ...)
+     */
+    @AnjiExperimental
+    public DoublesFunction composition(DoubleFunction g) {
+        return new CompositionFunction(g, this);
+    }
 
     @Override
     public abstract String toString();
