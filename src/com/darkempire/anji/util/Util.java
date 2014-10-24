@@ -3,6 +3,7 @@ package com.darkempire.anji.util;
 import com.darkempire.anji.annotation.AnjiUtil;
 
 import java.util.Collection;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -14,7 +15,6 @@ import java.util.stream.Collectors;
  */
 @AnjiUtil
 public final class Util {
-    //private static final NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
     private Util() {
     }
 
@@ -42,4 +42,11 @@ public final class Util {
     /*public static Double parseLocalDouble(String s){
         return numberFormat.parse(s).doubleValue();
     }   */
+
+    @SafeVarargs
+    public static <T> void forEach(Consumer<T> action, T... params) {
+        for (T t : params) {
+            action.accept(t);
+        }
+    }
 }
