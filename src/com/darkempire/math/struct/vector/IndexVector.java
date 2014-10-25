@@ -69,8 +69,9 @@ public abstract class IndexVector implements LinearCalcable<IndexVector>, IIndex
 
     /**
      * Заповнення підвектору від початку (включаючи) до кінця (виключаючи)
-     * @param start початок
-     * @param end кінець
+     *
+     * @param start    початок
+     * @param end      кінець
      * @param function функція
      * @return вектор
      */
@@ -83,8 +84,9 @@ public abstract class IndexVector implements LinearCalcable<IndexVector>, IIndex
 
     /**
      * Заповнення підвектору від початку (включаючи) до кінця (виключаючи)
-     * @param start початок
-     * @param end кінець
+     *
+     * @param start    початок
+     * @param end      кінець
      * @param function функція
      * @return вектор
      */
@@ -131,5 +133,7 @@ public abstract class IndexVector implements LinearCalcable<IndexVector>, IIndex
 
     @Override
     public abstract IndexVector clone();
+
+    public abstract int[] toRawArray();
     //endregion
 }

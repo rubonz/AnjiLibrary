@@ -2,6 +2,7 @@ package sample.anjifx;
 
 import com.darkempire.anji.log.Log;
 import com.darkempire.anjifx.beans.property.AnjiBoundedLongProperty;
+import com.darkempire.anjifx.beans.property.AnjiEnumProperty;
 import com.darkempire.anjifx.beans.property.AnjiIntegerProperty;
 import com.darkempire.anjifx.beans.property.AnjiLongProperty;
 import com.darkempire.anjifx.dialog.DialogUtil;
@@ -9,6 +10,7 @@ import com.darkempire.anjifx.monolog.MonologGeneratorPane;
 import com.darkempire.anjifx.scene.LongSpinBox;
 import com.darkempire.anjifx.scene.chart.AnjiLineChart;
 import com.darkempire.internal.anji.LocalHolder;
+import com.darkempire.math.struct.function.polynomial.IteratedPolynomialBuilder;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
@@ -28,22 +30,15 @@ import java.io.File;
  */
 public class LongFieldTest extends Application {
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        VBox vBox = new VBox();
-        NumberAxis xAxis = new NumberAxis();
-        NumberAxis yAxis = new NumberAxis();
-        xAxis.setForceZeroInRange(false);
-        yAxis.setForceZeroInRange(false);
-        AnjiLineChart chart = new AnjiLineChart(xAxis, yAxis);
-        vBox.getChildren().addAll(chart);
-        chart.getData().addAll(new XYChart.Series<>("test1", FXCollections.observableArrayList(new XYChart.Data(1, 10), new XYChart.Data<>(2, 100))),
-                new XYChart.Series<>("test2", FXCollections.observableArrayList(new XYChart.Data(1, 2), new XYChart.Data<>(2, 3))));
-        primaryStage.setScene(new Scene(vBox));
-        primaryStage.show();
-    }
-
     public static void main(String[] args) {
         LongFieldTest.launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        AnjiEnumProperty<IteratedPolynomialBuilder.PolynomialType> enumProperty = new AnjiEnumProperty<>("Test", IteratedPolynomialBuilder.PolynomialType.CHEBYSHEV_SHIFTED_FIRST_KIND);
+        DialogUtil.createDialog(enumProperty).show();
+        primaryStage.show();
+        primaryStage.hide();
     }
 }

@@ -109,6 +109,8 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
     }
 
     public void hideSeries(int index) {
+        if (index < 0)
+            return;//Заглушка для різних презентацій
         Series s = getData().get(index);
         AnjiColorProperty value = colorValues.get(s);
         if (value != null && value.getValue().getOpacity() > 0) {
@@ -124,6 +126,8 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
     }
 
     public void showSeries(int index) {
+        if (index < 0)//Заглушка для різних презентацій
+            return;
         Series s = getData().get(index);
         AnjiColorProperty value = colorValues.get(s);
         if (value != null && value.getValue().getOpacity() < 1) {

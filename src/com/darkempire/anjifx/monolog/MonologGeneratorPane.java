@@ -31,7 +31,7 @@ public final class MonologGeneratorPane {
         Stage stage = new Stage();
         stage.setScene(test);
         stage.setTitle(title);
-        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initModality(Modality.APPLICATION_MODAL);
         controller.setStage(stage);
         controller.cancelButtonDefault();
         stage.showAndWait();
@@ -73,7 +73,7 @@ public final class MonologGeneratorPane {
         Stage stage = new Stage();
         stage.setScene(test);
         stage.setTitle(title);
-        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initModality(Modality.APPLICATION_MODAL);
         controller.setStage(stage);
         controller.okButtonDefault();
         stage.showAndWait();
@@ -94,7 +94,7 @@ public final class MonologGeneratorPane {
         Stage stage = new Stage();
         stage.setScene(test);
         stage.setTitle(title);
-        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initModality(Modality.APPLICATION_MODAL);
         controller.setStage(stage);
         controller.okButtonDefault();
         stage.showAndWait();

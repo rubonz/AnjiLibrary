@@ -127,6 +127,11 @@ public class IndexResizeVector extends IndexVector {
     }
 
     @Override
+    public int[] toRawArray() {
+        return values;
+    }
+
+    @Override
     public IndexVector deepcopy() {
         return clone();
     }

@@ -1,5 +1,7 @@
 package com.darkempire.math.struct.function.polynomial;
 
+import com.darkempire.internal.anji.LocalHolder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,50 +11,35 @@ import java.util.List;
  * @author siredvin
  */
 public abstract class IteratedPolynomialBuilder {
-    public static enum PolynomialType {
-        /**
-         * Многочлен Чебишева першого роду
-         */
-        CHEBYSHEV_FIRST_KIND,
-        /**
-         * Многочлен Чебишева другого роду
-         */
-        CHEBYSHEV_SECOND_KIND,
-        /**
-         * Многочлен Ерміта у ймовірнісному означенні
-         */
-        HERMITE_PROBABILISTS,
-        /**
-         * Многочлен Ерміта у фізичному означенні
-         */
-        HERMITE_PHYSICISTS,
-        /**
-         * Многочлен Лаггера
-         */
-        LAGUERRE,
-        /**
-         * Многочлен Лежандра
-         */
-        LEGENDRE,
-        /**
-         * Зміщений поліном Чебишева першого роду
-         */
-        CHEBYSHEV_SHIFTED_FIRST_KIND,
-        /**
-         * Зміщенний поліном Чебишева другого роду
-         */
-        CHEBYSHEV_SHIFTED_SECOND_KIND,
-        /**
-         * Зміщенний поліном Лежандра
-         */
-        LEGENDRE_SHIFTED
-    }
-
     //region Загальна імплементація
     protected List<ArrayDoublePolynomial> polynomials;
 
     protected IteratedPolynomialBuilder() {
         polynomials = new ArrayList<>();
+    }
+
+    public static IteratedPolynomialBuilder createBuilder(PolynomialType type) {
+        switch (type) {
+            case CHEBYSHEV_FIRST_KIND:
+                return new ChebyshevFirstKindPolynomialBuilder();
+            case CHEBYSHEV_SECOND_KIND:
+                return new ChebyshevSecondKindPolynomialBuilder();
+            case HERMITE_PROBABILISTS:
+                return new HermiteProbabilistsPolynomialBuilder();
+            case HERMITE_PHYSICISTS:
+                return new HermitePhysicistsPolynomialBuilder();
+            case LAGUERRE:
+                return new LaguerrePolynomialBuilder();
+            case LEGENDRE:
+                return new LegendrePolynomialBuilder();
+            case CHEBYSHEV_SHIFTED_FIRST_KIND:
+                return new ChebyshevShiftedFirstKindPolynomialBuilder();
+            case CHEBYSHEV_SHIFTED_SECOND_KIND:
+                return new ChebyshevShiftedSecondKindPolynomialBuilder();
+            case LEGENDRE_SHIFTED:
+                return new LegendreShiftedPolynomialBuilder();
+        }
+        return null;
     }
 
     /**
@@ -114,6 +101,50 @@ public abstract class IteratedPolynomialBuilder {
 
     //region Поліноми Ерміта
 
+    public static enum PolynomialType {
+        /**
+         * Многочлен Чебишева першого роду
+         */
+        CHEBYSHEV_FIRST_KIND,
+        /**
+         * Многочлен Чебишева другого роду
+         */
+        CHEBYSHEV_SECOND_KIND,
+        /**
+         * Многочлен Ерміта у ймовірнісному означенні
+         */
+        HERMITE_PROBABILISTS,
+        /**
+         * Многочлен Ерміта у фізичному означенні
+         */
+        HERMITE_PHYSICISTS,
+        /**
+         * Многочлен Лаггера
+         */
+        LAGUERRE,
+        /**
+         * Многочлен Лежандра
+         */
+        LEGENDRE,
+        /**
+         * Зміщений поліном Чебишева першого роду
+         */
+        CHEBYSHEV_SHIFTED_FIRST_KIND,
+        /**
+         * Зміщенний поліном Чебишева другого роду
+         */
+        CHEBYSHEV_SHIFTED_SECOND_KIND,
+        /**
+         * Зміщенний поліном Лежандра
+         */
+        LEGENDRE_SHIFTED;
+
+        @Override
+        public String toString() {
+            return LocalHolder.anji_resourceBundle.getString("math.struct.functions.polynomial.polynomialtype." + super.toString().toLowerCase());
+        }
+    }
+
     /**
      * Клас, який відповідає поліномам Ерміта у їх ймовірнісній формі. Послідовність така:
      * H_0(x) = 1
@@ -135,6 +166,9 @@ public abstract class IteratedPolynomialBuilder {
             return new ArrayDoublePolynomial(0, 1).imultiply(lk).isubtract(lk_1.prod(k));
         }
     }
+    //endregion
+
+    //region Поліноми Чебишева
 
     /**
      * Клас, який відповідає поліномам Ерміта у їх фізичній формі. Послідовність така:
@@ -157,9 +191,6 @@ public abstract class IteratedPolynomialBuilder {
             return new ArrayDoublePolynomial(0, 2).imultiply(lk).isubtract(lk_1.prod(k * 2));
         }
     }
-    //endregion
-
-    //region Поліноми Чебишева
 
     /**
      * Клас, який відповідає многочленам Чебишева першого роду.
@@ -229,6 +260,9 @@ public abstract class IteratedPolynomialBuilder {
             return new ArrayDoublePolynomial(0, 2).imultiply(lk).isubtract(lk_1);
         }
     }
+    //endregion
+
+    //region Поліноми Лаггера
 
     /**
      * Клас, який відповідає зміщеним многочленам Чебишева першого роду.
@@ -254,7 +288,7 @@ public abstract class IteratedPolynomialBuilder {
     }
     //endregion
 
-    //region Поліноми Лаггера
+    //region Поліноми Лежандра
 
     /**
      * Клас, який відповідає многочленам Лаггера.
@@ -278,9 +312,6 @@ public abstract class IteratedPolynomialBuilder {
             return lk.multiply(new ArrayDoublePolynomial(2 * k + 1, -1)).isubtract(lk_1.prod(k)).iprod(1.0 / (k + 1));
         }
     }
-    //endregion
-
-    //region Поліноми Лежандра
 
     /**
      * Клас, який відповідає многочленам Лежандра.
@@ -304,6 +335,7 @@ public abstract class IteratedPolynomialBuilder {
             return new ArrayDoublePolynomial(0, (2.0 * k + 1) / (k + 1)).imultiply(lk).isubtract(lk_1.prod(k / (k + 1.0)));
         }
     }
+    //endregion
 
     /**
      * Клас, який відповідає зміщеним многочленам Лежандра.
@@ -327,30 +359,5 @@ public abstract class IteratedPolynomialBuilder {
             double coef1 = (2.0 * k + 1) / (k + 1);
             return new ArrayDoublePolynomial(-coef1, 2 * coef1).imultiply(lk).isubtract(lk_1.prod(k / (k + 1.0)));
         }
-    }
-    //endregion
-
-    public static IteratedPolynomialBuilder createBuilder(PolynomialType type) {
-        switch (type) {
-            case CHEBYSHEV_FIRST_KIND:
-                return new ChebyshevFirstKindPolynomialBuilder();
-            case CHEBYSHEV_SECOND_KIND:
-                return new ChebyshevSecondKindPolynomialBuilder();
-            case HERMITE_PROBABILISTS:
-                return new HermiteProbabilistsPolynomialBuilder();
-            case HERMITE_PHYSICISTS:
-                return new HermitePhysicistsPolynomialBuilder();
-            case LAGUERRE:
-                return new LaguerrePolynomialBuilder();
-            case LEGENDRE:
-                return new LegendrePolynomialBuilder();
-            case CHEBYSHEV_SHIFTED_FIRST_KIND:
-                return new ChebyshevShiftedFirstKindPolynomialBuilder();
-            case CHEBYSHEV_SHIFTED_SECOND_KIND:
-                return new ChebyshevShiftedSecondKindPolynomialBuilder();
-            case LEGENDRE_SHIFTED:
-                return new LegendreShiftedPolynomialBuilder();
-        }
-        return null;
     }
 }

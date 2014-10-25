@@ -1,5 +1,6 @@
 package com.darkempire.anjifx.dialog.property;
 
+import com.darkempire.anji.log.Log;
 import com.darkempire.anji.util.AnjiDateUtil;
 import com.darkempire.anjifx.beans.editor.Point2DFieldEditor;
 import com.darkempire.anjifx.beans.editor.Vector2DFieldEditor;
@@ -9,6 +10,7 @@ import com.darkempire.anjifx.beans.wrapper.AnjiWrapper;
 import com.darkempire.anjifx.scene.*;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -140,7 +142,9 @@ public class PropertyEditController extends GridPane implements Initializable {
                 break;
             case ENUM_TYPE:
                 AnjiEnumProperty enumProperty = (AnjiEnumProperty) c;
-                ComboBox enumComboBoxEditor = new ComboBox(FXCollections.observableArrayList(enumProperty));
+                ObservableList list = FXCollections.observableArrayList(enumProperty.values());
+                ComboBox enumComboBoxEditor = new ComboBox(list);
+                enumComboBoxEditor.getSelectionModel().select(list.indexOf(enumProperty.getValue()));
                 field = enumComboBoxEditor;
                 decoratorSet.add(AnjiWrapper.wrap(enumProperty));
                 enumProperty.bind(enumComboBoxEditor.valueProperty());

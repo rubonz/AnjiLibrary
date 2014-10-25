@@ -99,6 +99,30 @@ public final class DoubleVectorMathOperator {
         return min;
     }
 
+    public static double maxAbs(DoubleVector vector) {
+        double max = vector.get(0);
+        int size = vector.getSize();
+        for (int i = 1; i < size; i++) {
+            double temp = vector.get(i);
+            if (Math.abs(temp) > Math.abs(max)) {
+                max = temp;
+            }
+        }
+        return max;
+    }
+
+    public static double minAbs(DoubleVector vector) {
+        double min = vector.get(0);
+        int size = vector.getSize();
+        for (int i = 1; i < size; i++) {
+            double temp = vector.get(i);
+            if (Math.abs(temp) < Math.abs(min)) {
+                min = temp;
+            }
+        }
+        return min;
+    }
+
     /**
      * Нормалізує вектор (тобто всі його координати будуть лежати від 0 до 1)
      *
