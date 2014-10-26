@@ -100,11 +100,11 @@ public final class DoubleVectorMathOperator {
     }
 
     public static double maxAbs(DoubleVector vector) {
-        double max = vector.get(0);
+        double max = Math.abs(vector.get(0));
         int size = vector.getSize();
         for (int i = 1; i < size; i++) {
-            double temp = vector.get(i);
-            if (Math.abs(temp) > Math.abs(max)) {
+            double temp = Math.abs(vector.get(i));
+            if (temp > max) {
                 max = temp;
             }
         }
@@ -112,11 +112,11 @@ public final class DoubleVectorMathOperator {
     }
 
     public static double minAbs(DoubleVector vector) {
-        double min = vector.get(0);
+        double min = Math.abs(vector.get(0));
         int size = vector.getSize();
         for (int i = 1; i < size; i++) {
-            double temp = vector.get(i);
-            if (Math.abs(temp) < Math.abs(min)) {
+            double temp = Math.abs(vector.get(i));
+            if (temp < min) {
                 min = temp;
             }
         }
