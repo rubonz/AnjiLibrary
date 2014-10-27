@@ -3,12 +3,10 @@ package com.darkempire.math.struct.function.polynomial;
 import com.darkempire.anji.annotation.AnjiStandartize;
 import com.darkempire.anji.annotation.AnjiUnknow;
 import com.darkempire.anji.document.tex.TeXEventWriter;
-import com.darkempire.anji.log.Log;
 import com.darkempire.math.MathMachine;
-import com.darkempire.math.struct.*;
-import com.darkempire.math.struct.function.doublefunction.DoubleFunction;
+import com.darkempire.math.struct.Assignable;
+import com.darkempire.math.struct.LinearAssignable;
 import com.darkempire.math.struct.vector.IDoubleVectorProvider;
-import com.darkempire.math.utils.ArrayUtils;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -116,26 +114,16 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
         for (int i = 1; i < coefs.length; i++) {
             double temp = coefs[i];
             if (temp != 0) {
-                if (temp > 0) {
-                    if (builder.length() != 0) {
-                        builder.append('+');
-                    }
-                    builder.append(MathMachine.numberFormat.format(temp));
-                    if (i == 1) {
-                        builder.append("*x");
-                    } else {
-                        builder.append("*x^");
-                        builder.append(i);
-                    }
-                } else {
-                    builder.append(MathMachine.numberFormat.format(temp));
-                    if (i == 1) {
-                        builder.append("*x");
-                    } else {
-                        builder.append("*x^");
-                        builder.append(i);
-                    }
+                if (temp > 0 && builder.length() != 0) {
+                    builder.append('+');
                 }
+                    builder.append(MathMachine.numberFormat.format(temp));
+                    if (i == 1) {
+                        builder.append("*x");
+                    } else {
+                        builder.append("*x^");
+                        builder.append(i);
+                    }
             }
         }
         return builder.toString();
@@ -143,7 +131,31 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
 
     @Override
     public void write(TeXEventWriter out) {
-        //TODO:реалізувати
+        StringBuilder builder = new StringBuilder();
+        if (coefs.length == 1) {
+            out.append(builder.append(coefs[0]).toString());
+            return;
+        }
+        if (coefs[0] != 0) {
+            builder.append(MathMachine.numberFormat.format(coefs[0]));
+        }
+        for (int i = 1; i < coefs.length; i++) {
+            double temp = coefs[i];
+            if (temp != 0) {
+                if (temp > 0 && builder.length() != 0) {
+                    builder.append('+');
+                }
+                builder.append(MathMachine.numberFormat.format(temp));
+                if (i == 1) {
+                    builder.append("*x");
+                } else {
+                    builder.append("*x^{");
+                    builder.append(i);
+                    builder.append("}");
+                }
+            }
+        }
+        out.append(builder.toString());
     }
 
     @Override
