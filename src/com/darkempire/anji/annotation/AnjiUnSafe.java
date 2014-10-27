@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * Виникає тоді, коли щось, що ним помічене працює досить непрозоро та складно.
  *
  * @author siredvin
- * @since Anji 0.1
+ * @since Anji v0.1
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.CONSTRUCTOR, ElementType.TYPE, ElementType.METHOD, ElementType.ANNOTATION_TYPE})

@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * Це класи, які містять лише public static методи
  *
  * @author siredvin
- * @since Anji 0.1
+ * @since Anji v0.1
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD})

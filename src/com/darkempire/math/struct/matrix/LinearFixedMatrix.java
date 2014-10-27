@@ -2,8 +2,8 @@ package com.darkempire.math.struct.matrix;
 
 import com.darkempire.math.struct.LinearCalcable;
 import com.darkempire.math.struct.Number;
-import com.darkempire.math.struct.function.interfaces.FMatrixIndexToLinear;
-import com.darkempire.math.struct.function.interfaces.FLinearMatrixAndIndexToLinear;
+import com.darkempire.math.struct.function.interfaces.FMatrixAndIndexToSome;
+import com.darkempire.math.struct.function.interfaces.FMatrixIndexToSome;
 
 import java.util.Arrays;
 
@@ -42,6 +42,17 @@ public class LinearFixedMatrix<T extends LinearCalcable<T>> extends LinearMatrix
 
     //region Геттери
 
+    //region Створення матриць
+    public static <T extends LinearCalcable<T>> LinearFixedMatrix<T> createInstance(int rowCount, int columnCount, T[] array) {
+        if (columnCount * rowCount != array.length)
+            throw new ArrayIndexOutOfBoundsException();
+        return new LinearFixedMatrix<T>(rowCount, columnCount, array);
+    }
+
+    public static <T extends LinearCalcable<T>> LinearFixedMatrix<T> createInstance(int rowCount, int columnCount) {
+        return new LinearFixedMatrix<T>(rowCount, columnCount, (T[]) new Number[rowCount * columnCount]);
+    }
+
     /**
      * Отримання елементу як примітивного типу з матриці
      *
@@ -59,6 +70,9 @@ public class LinearFixedMatrix<T extends LinearCalcable<T>> extends LinearMatrix
     protected T get(int index) {
         return arr[index];
     }
+    //endregion
+
+    //region Сеттери
 
     /**
      * @return кількість колонок
@@ -79,7 +93,7 @@ public class LinearFixedMatrix<T extends LinearCalcable<T>> extends LinearMatrix
     }
     //endregion
 
-    //region Сеттери
+    //region Системні методи
 
     /**
      * Запис елементу, заданого як примітивний тип, у матрицю
@@ -100,7 +114,7 @@ public class LinearFixedMatrix<T extends LinearCalcable<T>> extends LinearMatrix
     }
     //endregion
 
-    //region Системні методи
+    //region Заповнювачі
 
     /**
      * Реалізує глибоке копіювання матриці фіксованної розмірності
@@ -128,9 +142,6 @@ public class LinearFixedMatrix<T extends LinearCalcable<T>> extends LinearMatrix
         result = 31 * result + rowCount;
         return result;
     }
-    //endregion
-
-    //region Заповнювачі
 
     //region Заповнювачі рядків
     @Override
@@ -142,9 +153,10 @@ public class LinearFixedMatrix<T extends LinearCalcable<T>> extends LinearMatrix
         }
         return this;
     }
+    //endregion
 
     @Override
-    public LinearFixedMatrix<T> fillRow(int rowIndex, FMatrixIndexToLinear<T> function) {
+    public LinearFixedMatrix<T> fillRow(int rowIndex, FMatrixIndexToSome<T> function) {
         int pos = rowIndex * columnCount;
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             arr[pos] = function.calc(rowIndex, columnIndex);
@@ -154,7 +166,7 @@ public class LinearFixedMatrix<T extends LinearCalcable<T>> extends LinearMatrix
     }
 
     @Override
-    public LinearFixedMatrix<T> fillRow(int rowIndex, FLinearMatrixAndIndexToLinear<T> function) {
+    public LinearFixedMatrix<T> fillRow(int rowIndex, FMatrixAndIndexToSome<T> function) {
         int pos = rowIndex * columnCount;
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             arr[pos] = function.calc(this, rowIndex, columnIndex);
@@ -162,7 +174,6 @@ public class LinearFixedMatrix<T extends LinearCalcable<T>> extends LinearMatrix
         }
         return this;
     }
-    //endregion
 
     //region Заповнювачі колонок
     @Override
@@ -174,9 +185,11 @@ public class LinearFixedMatrix<T extends LinearCalcable<T>> extends LinearMatrix
         }
         return this;
     }
+    //endregion
+    //endregion
 
     @Override
-    public LinearFixedMatrix<T> fillColumn(int columnIndex, FMatrixIndexToLinear<T> function) {
+    public LinearFixedMatrix<T> fillColumn(int columnIndex, FMatrixIndexToSome<T> function) {
         int pos = columnIndex;
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             arr[pos] = function.calc(rowIndex, columnIndex);
@@ -186,7 +199,7 @@ public class LinearFixedMatrix<T extends LinearCalcable<T>> extends LinearMatrix
     }
 
     @Override
-    public LinearFixedMatrix<T> fillColumn(int columnIndex, FLinearMatrixAndIndexToLinear<T> function) {
+    public LinearFixedMatrix<T> fillColumn(int columnIndex, FMatrixAndIndexToSome<T> function) {
         int pos = columnIndex;
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             arr[pos] = function.calc(this, rowIndex, columnIndex);
@@ -194,8 +207,6 @@ public class LinearFixedMatrix<T extends LinearCalcable<T>> extends LinearMatrix
         }
         return this;
     }
-    //endregion
-    //endregion
 
     //region Арифметичні операції з присвоєннями
     @Override
@@ -216,6 +227,7 @@ public class LinearFixedMatrix<T extends LinearCalcable<T>> extends LinearMatrix
         }
         return this;
     }
+    //endregion
 
     @Override
     public LinearFixedMatrix<T> isubtract(LinearMatrix<T> doubleMatrix) {
@@ -227,7 +239,6 @@ public class LinearFixedMatrix<T extends LinearCalcable<T>> extends LinearMatrix
         }
         return this;
     }
-
 
     @Override
     public LinearFixedMatrix<T> itranspose() {
@@ -242,7 +253,6 @@ public class LinearFixedMatrix<T extends LinearCalcable<T>> extends LinearMatrix
         }
         return this;
     }
-    //endregion
 
     //region Арифметичні операції
     @Override
@@ -268,6 +278,7 @@ public class LinearFixedMatrix<T extends LinearCalcable<T>> extends LinearMatrix
         }
         return new LinearFixedMatrix<>(rowCount, columnCount, arrN);
     }
+    //endregion
 
     @Override
     public LinearFixedMatrix<T> negate() {
@@ -286,18 +297,6 @@ public class LinearFixedMatrix<T extends LinearCalcable<T>> extends LinearMatrix
             }
         }
         return matrix;
-    }
-    //endregion
-
-    //region Створення матриць
-    public static <T extends LinearCalcable<T>> LinearFixedMatrix<T> createInstance(int rowCount, int columnCount, T[] array) {
-        if (columnCount * rowCount != array.length)
-            throw new ArrayIndexOutOfBoundsException();
-        return new LinearFixedMatrix<T>(rowCount, columnCount, array);
-    }
-
-    public static <T extends LinearCalcable<T>> LinearFixedMatrix<T> createInstance(int rowCount, int columnCount) {
-        return new LinearFixedMatrix<T>(rowCount, columnCount, (T[]) new Number[rowCount * columnCount]);
     }
     //endregion
 

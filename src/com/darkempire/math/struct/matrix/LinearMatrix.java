@@ -2,15 +2,21 @@ package com.darkempire.math.struct.matrix;
 
 import com.darkempire.math.exception.MatrixSizeException;
 import com.darkempire.math.struct.LinearCalcable;
-import com.darkempire.math.struct.function.interfaces.*;
-import com.darkempire.math.struct.vector.NumberVector;
+import com.darkempire.math.struct.function.interfaces.FMatrixAndIndexToSome;
+import com.darkempire.math.struct.function.interfaces.FMatrixIndexToSome;
+import com.darkempire.math.struct.function.interfaces.FMatrixSomeAndIndexToSome;
+import com.darkempire.math.struct.function.interfaces.FSomeToSome;
+import com.darkempire.math.struct.vector.LinearMatrixVector;
+import com.darkempire.math.struct.vector.LinearVector;
 
 import java.util.stream.Stream;
 
 /**
  * Created by siredvin on 29.09.14.
+ *
+ * @author siredvin
  */
-public abstract class LinearMatrix<T extends LinearCalcable<T>> implements LinearCalcable<LinearMatrix<T>>, ILinearMatrixProvider<T>, IMatrix<LinearMatrix<T>, T> {
+public abstract class LinearMatrix<T extends LinearCalcable<T>> implements LinearCalcable<LinearMatrix<T>>, IMatrixProvider<T>, IMatrix<LinearMatrix<T>, T> {
 
     //region Геттери
     @Override
@@ -61,7 +67,7 @@ public abstract class LinearMatrix<T extends LinearCalcable<T>> implements Linea
     //endregion
 
     //region Зрізи
-    /*
+
     public LinearMatrixSlice slice(int startRow, int startColumn, int endRow, int endColumn) {
         return LinearMatrixSlice.createSlice(this, startRow, startColumn, endRow, endColumn);
     }
@@ -102,8 +108,7 @@ public abstract class LinearMatrix<T extends LinearCalcable<T>> implements Linea
             columnIndexs[i] = i * columnPeriod;
         }
         return LinearMatrixSlice.createSlice(this, rowIndexs, columnIndexs);
-    }TODO:реалізувати
-    */
+    }
     //endregion
 
     //region Арифметичні операції з присвоєнням
@@ -123,6 +128,8 @@ public abstract class LinearMatrix<T extends LinearCalcable<T>> implements Linea
         return this;
     }
     //endregion
+
+    public abstract LinearMatrix<T> transpose();
 
     //region Перевірка матриці на властивості
     @Override
@@ -243,9 +250,9 @@ public abstract class LinearMatrix<T extends LinearCalcable<T>> implements Linea
      *
      * @param function функція, яка залежить від положення елементу
      * @return цей об’єкт
-     * @see com.darkempire.math.struct.function.interfaces.FMatrixIndexToLinear
+     * @see com.darkempire.math.struct.function.interfaces.FMatrixIndexToSome
      */
-    public LinearMatrix<T> fill(FMatrixIndexToLinear<T> function) {
+    public LinearMatrix<T> fill(FMatrixIndexToSome<T> function) {
         int columnCount = getColumnCount();
         int rowCount = getRowCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
@@ -261,9 +268,9 @@ public abstract class LinearMatrix<T extends LinearCalcable<T>> implements Linea
      *
      * @param function функція, яка залежить від положення елементу і самої матриці
      * @return цей об’єкт
-     * @see com.darkempire.math.struct.function.interfaces.FLinearMatrixAndIndexToLinear
+     * @see com.darkempire.math.struct.function.interfaces.FMatrixAndIndexToSome
      */
-    public LinearMatrix<T> fill(FLinearMatrixAndIndexToLinear<T> function) {
+    public LinearMatrix<T> fill(FMatrixAndIndexToSome<T> function) {
         int columnCount = getColumnCount();
         int rowCount = getRowCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
@@ -304,7 +311,7 @@ public abstract class LinearMatrix<T extends LinearCalcable<T>> implements Linea
         return this;
     }
 
-    public LinearMatrix<T> fillRectangle(int startRow, int startColumn, int endRow, int endColumn, FMatrixIndexToLinear<T> function) {
+    public LinearMatrix<T> fillRectangle(int startRow, int startColumn, int endRow, int endColumn, FMatrixIndexToSome<T> function) {
         endColumn++;
         endRow++;
         for (int columnIndex = startColumn; columnIndex < endColumn; columnIndex++) {
@@ -315,7 +322,7 @@ public abstract class LinearMatrix<T extends LinearCalcable<T>> implements Linea
         return this;
     }
 
-    public LinearMatrix<T> fillRectangle(int startRow, int startColumn, int endRow, int endColumn, FLinearMatrixAndIndexToLinear<T> function) {
+    public LinearMatrix<T> fillRectangle(int startRow, int startColumn, int endRow, int endColumn, FMatrixAndIndexToSome<T> function) {
         endColumn++;
         endRow++;
         for (int columnIndex = startColumn; columnIndex < endColumn; columnIndex++) {
@@ -346,7 +353,7 @@ public abstract class LinearMatrix<T extends LinearCalcable<T>> implements Linea
         return this;
     }
 
-    public LinearMatrix<T> fillRow(int rowIndex, FMatrixIndexToLinear<T> function) {
+    public LinearMatrix<T> fillRow(int rowIndex, FMatrixIndexToSome<T> function) {
         int columnCount = getColumnCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             set(rowIndex, columnIndex, function.calc(rowIndex, columnIndex));
@@ -354,7 +361,7 @@ public abstract class LinearMatrix<T extends LinearCalcable<T>> implements Linea
         return this;
     }
 
-    public LinearMatrix<T> fillRow(int rowIndex, FLinearMatrixAndIndexToLinear<T> function) {
+    public LinearMatrix<T> fillRow(int rowIndex, FMatrixAndIndexToSome<T> function) {
         int columnCount = getColumnCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             set(rowIndex, columnIndex, function.calc(this, rowIndex, columnIndex));
@@ -362,11 +369,11 @@ public abstract class LinearMatrix<T extends LinearCalcable<T>> implements Linea
         return this;
     }
 
-    public LinearMatrix<T> fillFirstRow(FMatrixIndexToLinear<T> function) {
+    public LinearMatrix<T> fillFirstRow(FMatrixIndexToSome<T> function) {
         return fillRow(0, function);
     }
 
-    public LinearMatrix<T> fillFirstRow(FLinearMatrixAndIndexToLinear<T> function) {
+    public LinearMatrix<T> fillFirstRow(FMatrixAndIndexToSome<T> function) {
         return fillRow(0, function);
     }
 
@@ -374,11 +381,11 @@ public abstract class LinearMatrix<T extends LinearCalcable<T>> implements Linea
         return fillRow(0, value);
     }
 
-    public LinearMatrix<T> fillLastRow(FLinearMatrixAndIndexToLinear<T> function) {
+    public LinearMatrix<T> fillLastRow(FMatrixAndIndexToSome<T> function) {
         return fillRow(getRowCount() - 1, function);
     }
 
-    public LinearMatrix<T> fillLastRow(FMatrixIndexToLinear<T> function) {
+    public LinearMatrix<T> fillLastRow(FMatrixIndexToSome<T> function) {
         return fillRow(getRowCount() - 1, function);
     }
 
@@ -406,7 +413,7 @@ public abstract class LinearMatrix<T extends LinearCalcable<T>> implements Linea
         return this;
     }
 
-    public LinearMatrix<T> fillColumn(int columnIndex, FMatrixIndexToLinear<T> function) {
+    public LinearMatrix<T> fillColumn(int columnIndex, FMatrixIndexToSome<T> function) {
         int rowCount = getRowCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             set(rowIndex, columnIndex, function.calc(rowIndex, columnIndex));
@@ -414,7 +421,7 @@ public abstract class LinearMatrix<T extends LinearCalcable<T>> implements Linea
         return this;
     }
 
-    public LinearMatrix<T> fillColumn(int columnIndex, FLinearMatrixAndIndexToLinear<T> function) {
+    public LinearMatrix<T> fillColumn(int columnIndex, FMatrixAndIndexToSome<T> function) {
         int rowCount = getRowCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             set(rowIndex, columnIndex, function.calc(this, rowIndex, columnIndex));
@@ -422,11 +429,11 @@ public abstract class LinearMatrix<T extends LinearCalcable<T>> implements Linea
         return this;
     }
 
-    public LinearMatrix<T> fillFirstColumn(FLinearMatrixAndIndexToLinear<T> function) {
+    public LinearMatrix<T> fillFirstColumn(FMatrixAndIndexToSome<T> function) {
         return fillColumn(0, function);
     }
 
-    public LinearMatrix<T> fillFirstColumn(FMatrixIndexToLinear<T> function) {
+    public LinearMatrix<T> fillFirstColumn(FMatrixIndexToSome<T> function) {
         return fillColumn(0, function);
     }
 
@@ -434,11 +441,11 @@ public abstract class LinearMatrix<T extends LinearCalcable<T>> implements Linea
         return fillColumn(0, value);
     }
 
-    public LinearMatrix<T> fillLastColumn(FLinearMatrixAndIndexToLinear<T> function) {
+    public LinearMatrix<T> fillLastColumn(FMatrixAndIndexToSome<T> function) {
         return fillColumn(getColumnCount() - 1, function);
     }
 
-    public LinearMatrix<T> fillLastColumn(FMatrixIndexToLinear<T> function) {
+    public LinearMatrix<T> fillLastColumn(FMatrixIndexToSome<T> function) {
         return fillColumn(getColumnCount() - 1, function);
     }
 
@@ -450,18 +457,18 @@ public abstract class LinearMatrix<T extends LinearCalcable<T>> implements Linea
 
     //region Операції над матрицями
     //region Операції над всією матрицею
-    public LinearMatrix<T> operate(FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
+    public LinearMatrix<T> operate(FMatrixSomeAndIndexToSome<T> function) {
         int rowCount = getRowCount();
         int columnCount = getColumnCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
-                set(rowIndex, columnIndex, function.operate(get(rowIndex, columnIndex), rowIndex, columnIndex));
+                set(rowIndex, columnIndex, function.calc(get(rowIndex, columnIndex), rowIndex, columnIndex));
             }
         }
         return this;
     }
 
-    public LinearMatrix<T> operate(FLinearToLinear<T> function) {
+    public LinearMatrix<T> operate(FSomeToSome<T> function) {
         int rowCount = getRowCount();
         int columnCount = getColumnCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
@@ -474,18 +481,18 @@ public abstract class LinearMatrix<T extends LinearCalcable<T>> implements Linea
     //endregion
 
     //region Операція над прямокутною ділянкою
-    public LinearMatrix<T> operateRectange(int startRow, int startColumn, int endRow, int endColumn, FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
+    public LinearMatrix<T> operateRectange(int startRow, int startColumn, int endRow, int endColumn, FMatrixSomeAndIndexToSome<T> function) {
         endRow++;
         endColumn++;
         for (int rowIndex = startRow; rowIndex < endRow; rowIndex++) {
             for (int columnIndex = startColumn; columnIndex < endColumn; columnIndex++) {
-                set(rowIndex, columnIndex, function.operate(get(rowIndex, columnIndex), rowIndex, columnIndex));
+                set(rowIndex, columnIndex, function.calc(get(rowIndex, columnIndex), rowIndex, columnIndex));
             }
         }
         return this;
     }
 
-    public LinearMatrix<T> operateRectangle(int startRow, int startColumn, int endRow, int endColumn, FLinearToLinear<T> function) {
+    public LinearMatrix<T> operateRectangle(int startRow, int startColumn, int endRow, int endColumn, FSomeToSome<T> function) {
         endRow++;
         endColumn++;
         for (int rowIndex = startRow; rowIndex < endRow; rowIndex++) {
@@ -499,15 +506,15 @@ public abstract class LinearMatrix<T extends LinearCalcable<T>> implements Linea
 
 
     //region Операції над стобпчиками
-    public LinearMatrix<T> operateColumn(int columnIndex, FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
+    public LinearMatrix<T> operateColumn(int columnIndex, FMatrixSomeAndIndexToSome<T> function) {
         int rowCount = getRowCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-            set(rowIndex, columnIndex, function.operate(get(rowIndex, columnIndex), rowIndex, columnIndex));
+            set(rowIndex, columnIndex, function.calc(get(rowIndex, columnIndex), rowIndex, columnIndex));
         }
         return this;
     }
 
-    public LinearMatrix<T> operateColumn(int columnIndex, FLinearToLinear<T> function) {
+    public LinearMatrix<T> operateColumn(int columnIndex, FSomeToSome<T> function) {
         int rowCount = getRowCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             set(rowIndex, columnIndex, function.calc(get(rowIndex, columnIndex)));
@@ -515,34 +522,34 @@ public abstract class LinearMatrix<T extends LinearCalcable<T>> implements Linea
         return this;
     }
 
-    public LinearMatrix<T> operateFirstColumn(FLinearToLinear<T> function) {
+    public LinearMatrix<T> operateFirstColumn(FSomeToSome<T> function) {
         return operateColumn(0, function);
     }
 
-    public LinearMatrix<T> operateFirstColumn(FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
+    public LinearMatrix<T> operateFirstColumn(FMatrixSomeAndIndexToSome<T> function) {
         return operateColumn(0, function);
     }
 
-    public LinearMatrix<T> operateLastColumn(FLinearToLinear<T> function) {
+    public LinearMatrix<T> operateLastColumn(FSomeToSome<T> function) {
         return operateColumn(getColumnCount() - 1, function);
     }
 
-    public LinearMatrix<T> operateLastColumn(FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
+    public LinearMatrix<T> operateLastColumn(FMatrixSomeAndIndexToSome<T> function) {
         return operateColumn(getColumnCount() - 1, function);
     }
     //endregion
 
 
     //region Операції над рядками
-    public LinearMatrix<T> operateRow(int rowIndex, FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
+    public LinearMatrix<T> operateRow(int rowIndex, FMatrixSomeAndIndexToSome<T> function) {
         int columnCount = getColumnCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
-            set(rowIndex, columnIndex, function.operate(get(rowIndex, columnIndex), rowIndex, columnIndex));
+            set(rowIndex, columnIndex, function.calc(get(rowIndex, columnIndex), rowIndex, columnIndex));
         }
         return this;
     }
 
-    public LinearMatrix<T> operateRow(int rowIndex, FLinearToLinear<T> function) {
+    public LinearMatrix<T> operateRow(int rowIndex, FSomeToSome<T> function) {
         int columnCount = getColumnCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             set(rowIndex, columnIndex, function.calc(get(rowIndex, columnIndex)));
@@ -550,51 +557,50 @@ public abstract class LinearMatrix<T extends LinearCalcable<T>> implements Linea
         return this;
     }
 
-    public LinearMatrix<T> operateFirstRow(FLinearToLinear<T> function) {
+    public LinearMatrix<T> operateFirstRow(FSomeToSome<T> function) {
         return operateRow(0, function);
     }
 
-    public LinearMatrix<T> operateFirstRow(FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
+    public LinearMatrix<T> operateFirstRow(FMatrixSomeAndIndexToSome<T> function) {
         return operateRow(0, function);
     }
 
-    public LinearMatrix<T> operateLastRow(FLinearToLinear<T> function) {
+    public LinearMatrix<T> operateLastRow(FSomeToSome<T> function) {
         return operateRow(getRowCount() - 1, function);
     }
 
-    public LinearMatrix<T> operateLastRow(FLinearMatrixElementAndMatrixIndexToLinear<T> function) {
+    public LinearMatrix<T> operateLastRow(FMatrixSomeAndIndexToSome<T> function) {
         return operateRow(getRowCount() - 1, function);
     }
     //endregion
     //endregion
 
     //region Дріблення матриць на вектори
-    /*
-    public NumberVector<T> row(int rowIndex) {
+
+    public LinearVector<T> row(int rowIndex) {
         return LinearMatrixVector.row(rowIndex, this);
     }
 
-    public NumberVector<T> column(int columnIndex) {
+    public LinearVector<T> column(int columnIndex) {
         return LinearMatrixVector.column(columnIndex, this);
     }
 
-    public Stream<NumberVector> rows() {
+    public Stream<LinearVector> rows() {
         int rowCount = getRowCount();
-        NumberVector[] temp = new NumberVector[rowCount];
+        LinearVector[] temp = new LinearVector[rowCount];
         for (int i = 0; i < rowCount; i++) {
             temp[i] = row(i);
         }
         return Stream.of(temp);
     }
 
-    public Stream<NumberVector> columns() {
+    public Stream<LinearVector> columns() {
         int columnCount = getColumnCount();
-        NumberVector[] temp = new NumberVector[columnCount];
+        LinearVector[] temp = new LinearVector[columnCount];
         for (int i = 0; i < columnCount; i++) {
             temp[i] = column(i);
         }
         return Stream.of(temp);
-    }TODO:реалізувати дроблення
-    */
+    }
     //endregion
 }

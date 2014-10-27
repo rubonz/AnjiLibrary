@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * Анотація, якої визначається клас, що містить лише константи
  *
  * @author siredvin
- * @since Anji 0.1
+ * @since Anji v0.1
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD})

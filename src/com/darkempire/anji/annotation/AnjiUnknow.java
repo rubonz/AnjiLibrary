@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * Швидше за все, вони покинуті і вже не будуть підтримуватися
  *
  * @author siredvin
- * @since Anji 0.1
+ * @since Anji v0.1
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.CONSTRUCTOR, ElementType.TYPE, ElementType.METHOD, ElementType.ANNOTATION_TYPE})

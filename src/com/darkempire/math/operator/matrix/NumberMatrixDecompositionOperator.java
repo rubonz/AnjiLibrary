@@ -1,16 +1,10 @@
 package com.darkempire.math.operator.matrix;
 
 import com.darkempire.anji.annotation.AnjiUtil;
-import com.darkempire.math.exception.MatrixSizeException;
-import com.darkempire.math.exception.MatrixTypeException;
-import com.darkempire.math.struct.*;
 import com.darkempire.math.struct.Number;
-import com.darkempire.math.struct.matrix.DoubleFixedMatrix;
-import com.darkempire.math.struct.matrix.DoubleMatrix;
-import com.darkempire.math.struct.matrix.NumberMatrixIndexHolder;
 import com.darkempire.math.struct.matrix.NumberMatrix;
-import com.darkempire.math.struct.vector.IDoubleVectorProvider;
-import com.darkempire.math.struct.vector.INumberVectorProvider;
+import com.darkempire.math.struct.matrix.NumberMatrixIndexHolder;
+import com.darkempire.math.struct.vector.IVectorProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +79,7 @@ public final class NumberMatrixDecompositionOperator {
         //Далі продовжуватися буде лише тоді, коли розмірності матриці A більше за її ранг
         //Обираємо усі лінійнонезалежні вектори
         //Їх індекси як раз будуть першими у трапецієвидній матриці, що утворена з A
-        List<INumberVectorProvider<T>> vectorList = new ArrayList<>();
+        List<IVectorProvider<T>> vectorList = new ArrayList<>();
         for (int i = 0; i < rank; i++) {
             vectorList.add(a.row(aIndexHolder.getRowIndex(i)));
         }

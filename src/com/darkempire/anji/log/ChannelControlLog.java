@@ -3,14 +3,14 @@ package com.darkempire.anji.log;
 import com.darkempire.internal.anji.LocalHolder;
 
 import java.io.PrintStream;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by siredvin on 24.09.14.
+ *
+ * @author siredvin
  */
 public class ChannelControlLog extends AdvancedLog {
     protected int defaultLogIndex;

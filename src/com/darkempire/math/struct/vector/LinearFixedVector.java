@@ -1,6 +1,7 @@
 package com.darkempire.math.struct.vector;
 
 import com.darkempire.math.exception.SizeMissmatchException;
+import com.darkempire.math.struct.LinearCalcable;
 
 import java.util.Arrays;
 
@@ -8,11 +9,11 @@ import java.util.Arrays;
  * Create in 10:53
  * Created by siredvin on 25.04.14.
  */
-public class NumberFixedVector<T extends com.darkempire.math.struct.Number<T>> extends NumberVector<T> {
+public class LinearFixedVector<T extends LinearCalcable<T>> extends LinearVector<T> {
     private T[] values;
 
     //region Конструктор
-    public NumberFixedVector(T[] values) {
+    public LinearFixedVector(T[] values) {
         this.values = values;
     }
     //endregion
@@ -26,13 +27,13 @@ public class NumberFixedVector<T extends com.darkempire.math.struct.Number<T>> e
 
     //region Отримання підвекторів
     @Override
-    public NumberVector<T> subvector(int length) {
-        return new NumberFixedVector<>(Arrays.copyOf(values, length));
+    public LinearVector<T> subvector(int length) {
+        return new LinearFixedVector<T>(Arrays.copyOf(values, length));
     }
 
     @Override
-    public NumberVector<T> subvector(int startIndex, int length) {
-        return new NumberFixedVector<>(Arrays.copyOfRange(values, startIndex, length + startIndex));
+    public LinearVector<T> subvector(int startIndex, int length) {
+        return new LinearFixedVector<T>(Arrays.copyOfRange(values, startIndex, length + startIndex));
     }
     //endregion
 
@@ -49,28 +50,17 @@ public class NumberFixedVector<T extends com.darkempire.math.struct.Number<T>> e
     //endregion
 
     @Override
-    public T scalar(NumberVector<T> vector) {
-        if (vector.getSize() != values.length)
-            throw new SizeMissmatchException();
-        T result = values[0].multiply(vector.get(0));
-        for (int i = 1; i < values.length; i++) {
-            result.iadd(values[i].multiply(vector.get(i)));
-        }
-        return result;
-    }
-
-    @Override
-    public NumberVector<T> clone() {
+    public LinearVector<T> clone() {
         T[] value = values.clone();
         for (int i = 0; i < value.length; i++) {
             value[i] = value[i].deepcopy();
         }
-        return new NumberFixedVector<>(values.clone());
+        return new LinearFixedVector<>(values.clone());
     }
 
     //region Арифметичні операції з присвоєнням
     @Override
-    public NumberVector<T> inegate() {
+    public LinearVector<T> inegate() {
         for (T value : values) {
             value.inegate();
         }
@@ -78,7 +68,7 @@ public class NumberFixedVector<T extends com.darkempire.math.struct.Number<T>> e
     }
 
     @Override
-    public NumberVector<T> iadd(NumberVector<T> vector) {
+    public LinearVector<T> iadd(LinearVector<T> vector) {
         if (vector.getSize() != values.length)
             throw new SizeMissmatchException();
         for (int i = 0; i < values.length; i++) {
@@ -88,7 +78,7 @@ public class NumberFixedVector<T extends com.darkempire.math.struct.Number<T>> e
     }
 
     @Override
-    public NumberVector<T> isubtract(NumberVector<T> vector) {
+    public LinearVector<T> isubtract(LinearVector<T> vector) {
         if (vector.getSize() != values.length)
             throw new SizeMissmatchException();
         for (int i = 0; i < values.length; i++) {
@@ -100,39 +90,39 @@ public class NumberFixedVector<T extends com.darkempire.math.struct.Number<T>> e
 
     //region Арифметичні операції
     @Override
-    public NumberVector<T> add(NumberVector<T> vector) {
+    public LinearVector<T> add(LinearVector<T> vector) {
         if (vector.getSize() != values.length)
             throw new SizeMissmatchException();
         T[] p = Arrays.copyOf(values, values.length);
         for (int i = 0; i < values.length; i++) {
             p[i].iadd(vector.get(i));
         }
-        return new NumberFixedVector<>(p);
+        return new LinearFixedVector<>(p);
     }
 
     @Override
-    public NumberVector<T> subtract(NumberVector<T> vector) {
+    public LinearVector<T> subtract(LinearVector<T> vector) {
         if (vector.getSize() != values.length)
             throw new SizeMissmatchException();
         T[] p = Arrays.copyOf(values, values.length);
         for (int i = 0; i < values.length; i++) {
             p[i].isubtract(vector.get(i));
         }
-        return new NumberFixedVector<>(p);
+        return new LinearFixedVector<>(p);
     }
 
     @Override
-    public NumberVector<T> negate() {
+    public LinearVector<T> negate() {
         T[] p = Arrays.copyOf(values, values.length);
         for (int i = 0; i < values.length; i++) {
             p[i].inegate();
         }
-        return new NumberFixedVector<T>(p);
+        return new LinearFixedVector<>(p);
     }
     //endregion
 
     @Override
-    public NumberVector<T> deepcopy() {
+    public LinearVector<T> deepcopy() {
         return clone();
     }
 }

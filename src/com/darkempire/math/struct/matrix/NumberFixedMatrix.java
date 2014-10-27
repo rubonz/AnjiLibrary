@@ -1,13 +1,11 @@
 package com.darkempire.math.struct.matrix;
 
 import com.darkempire.math.struct.Number;
-import com.darkempire.math.struct.function.interfaces.FNumberMatrixAndIndexToNumber;
-import com.darkempire.math.struct.function.interfaces.FMatrixIndexToNumber;
-import com.darkempire.math.struct.vector.INumberVectorProvider;
+import com.darkempire.math.struct.function.interfaces.FMatrixAndIndexToSome;
+import com.darkempire.math.struct.function.interfaces.FMatrixIndexToSome;
+import com.darkempire.math.struct.vector.IVectorProvider;
 
 import java.util.Arrays;
-
-import static java.lang.Math.abs;
 
 /**
  * Реалізація двовимірної матриці на основні одновимірного масиву.
@@ -157,7 +155,7 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
     }
 
     @Override
-    public NumberFixedMatrix<T> fillRow(int rowIndex, FMatrixIndexToNumber<T> function) {
+    public NumberFixedMatrix<T> fillRow(int rowIndex, FMatrixIndexToSome<T> function) {
         int pos = rowIndex * columnCount;
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             arr[pos] = function.calc(rowIndex, columnIndex);
@@ -168,7 +166,7 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
     //endregion
 
     @Override
-    public NumberFixedMatrix<T> fillRow(int rowIndex, FNumberMatrixAndIndexToNumber<T> function) {
+    public NumberFixedMatrix<T> fillRow(int rowIndex, FMatrixAndIndexToSome<T> function) {
         int pos = rowIndex * columnCount;
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             arr[pos] = function.calc(this, rowIndex, columnIndex);
@@ -178,7 +176,7 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
     }
 
     @Override
-    public NumberFixedMatrix<T> fillRow(int rowIndex, INumberVectorProvider<T> provider) {
+    public NumberFixedMatrix<T> fillRow(int rowIndex, IVectorProvider<T> provider) {
         int pos = rowIndex * columnCount;
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             arr[pos] = provider.get(columnIndex);
@@ -199,7 +197,7 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
     }
 
     @Override
-    public NumberFixedMatrix<T> fillColumn(int columnIndex, FMatrixIndexToNumber<T> function) {
+    public NumberFixedMatrix<T> fillColumn(int columnIndex, FMatrixIndexToSome<T> function) {
         int pos = columnIndex;
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             arr[pos] = function.calc(rowIndex, columnIndex);
@@ -211,7 +209,7 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
     //endregion
 
     @Override
-    public NumberFixedMatrix<T> fillColumn(int columnIndex, FNumberMatrixAndIndexToNumber<T> function) {
+    public NumberFixedMatrix<T> fillColumn(int columnIndex, FMatrixAndIndexToSome<T> function) {
         int pos = columnIndex;
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             arr[pos] = function.calc(this, rowIndex, columnIndex);
@@ -221,7 +219,7 @@ public class NumberFixedMatrix<T extends com.darkempire.math.struct.Number<T>> e
     }
 
     @Override
-    public NumberFixedMatrix<T> fillColumn(int columnIndex, INumberVectorProvider<T> provider) {
+    public NumberFixedMatrix<T> fillColumn(int columnIndex, IVectorProvider<T> provider) {
         int pos = columnIndex;
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             arr[pos] = provider.get(rowIndex);

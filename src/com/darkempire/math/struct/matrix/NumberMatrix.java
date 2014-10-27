@@ -1,11 +1,12 @@
 package com.darkempire.math.struct.matrix;
 
 import com.darkempire.math.exception.MatrixSizeException;
-import com.darkempire.math.struct.*;
-import com.darkempire.math.struct.Number;
-import com.darkempire.math.struct.function.interfaces.*;
-import com.darkempire.math.struct.function.interfaces.FMatrixIndexToNumber;
-import com.darkempire.math.struct.vector.INumberVectorProvider;
+import com.darkempire.math.struct.LinearCalcable;
+import com.darkempire.math.struct.function.interfaces.FMatrixAndIndexToSome;
+import com.darkempire.math.struct.function.interfaces.FMatrixIndexToSome;
+import com.darkempire.math.struct.function.interfaces.FMatrixSomeAndIndexToSome;
+import com.darkempire.math.struct.function.interfaces.FSomeToSome;
+import com.darkempire.math.struct.vector.IVectorProvider;
 import com.darkempire.math.struct.vector.NumberMatrixVector;
 import com.darkempire.math.struct.vector.NumberVector;
 
@@ -15,7 +16,7 @@ import java.util.stream.Stream;
  * Create in 9:13
  * Created by siredvin on 20.12.13.
  */
-public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T>> implements IMatrix<NumberMatrix<T>, T>, INumberMatrixProvider<T>, LinearCalcable<NumberMatrix<T>> {
+public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T>> implements IMatrix<NumberMatrix<T>, T>, IMatrixProvider<T>, LinearCalcable<NumberMatrix<T>> {
     //region Геттери
     @Override
     public abstract T get(int rowIndex, int columnIndex);
@@ -245,9 +246,9 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
      *
      * @param function функція, яка залежить від положення елементу
      * @return цей об’єкт
-     * @see com.darkempire.math.struct.function.interfaces.FMatrixIndexToNumber
+     * @see com.darkempire.math.struct.function.interfaces.FMatrixIndexToSome
      */
-    public NumberMatrix<T> fill(FMatrixIndexToNumber<T> function) {
+    public NumberMatrix<T> fill(FMatrixIndexToSome<T> function) {
         int columnCount = getColumnCount();
         int rowCount = getRowCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
@@ -263,9 +264,9 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
      *
      * @param function функція, яка залежить від положення елементу і самої матриці
      * @return цей об’єкт
-     * @see com.darkempire.math.struct.function.interfaces.FNumberMatrixAndIndexToNumber
+     * @see com.darkempire.math.struct.function.interfaces.FMatrixAndIndexToSome
      */
-    public NumberMatrix<T> fill(FNumberMatrixAndIndexToNumber<T> function) {
+    public NumberMatrix<T> fill(FMatrixAndIndexToSome<T> function) {
         int columnCount = getColumnCount();
         int rowCount = getRowCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
@@ -306,7 +307,7 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public NumberMatrix<T> fillRectangle(int startRow, int startColumn, int endRow, int endColumn, FMatrixIndexToNumber<T> function) {
+    public NumberMatrix<T> fillRectangle(int startRow, int startColumn, int endRow, int endColumn, FMatrixIndexToSome<T> function) {
         endColumn++;
         endRow++;
         for (int columnIndex = startColumn; columnIndex < endColumn; columnIndex++) {
@@ -317,7 +318,7 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public NumberMatrix<T> fillRectangle(int startRow, int startColumn, int endRow, int endColumn, FNumberMatrixAndIndexToNumber<T> function) {
+    public NumberMatrix<T> fillRectangle(int startRow, int startColumn, int endRow, int endColumn, FMatrixAndIndexToSome<T> function) {
         endColumn++;
         endRow++;
         for (int columnIndex = startColumn; columnIndex < endColumn; columnIndex++) {
@@ -349,7 +350,7 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public NumberMatrix<T> fillRow(int rowIndex, FMatrixIndexToNumber<T> function) {
+    public NumberMatrix<T> fillRow(int rowIndex, FMatrixIndexToSome<T> function) {
         int columnCount = getColumnCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             set(rowIndex, columnIndex, function.calc(rowIndex, columnIndex));
@@ -357,7 +358,7 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public NumberMatrix<T> fillRow(int rowIndex, FNumberMatrixAndIndexToNumber<T> function) {
+    public NumberMatrix<T> fillRow(int rowIndex, FMatrixAndIndexToSome<T> function) {
         int columnCount = getColumnCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             set(rowIndex, columnIndex, function.calc(this, rowIndex, columnIndex));
@@ -365,7 +366,7 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public NumberMatrix<T> fillRow(int rowIndex, INumberVectorProvider<T> provider) {
+    public NumberMatrix<T> fillRow(int rowIndex, IVectorProvider<T> provider) {
         int columnCount = getColumnCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             set(rowIndex, columnIndex, provider.get(columnIndex));
@@ -373,11 +374,11 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public NumberMatrix<T> fillFirstRow(FMatrixIndexToNumber<T> function) {
+    public NumberMatrix<T> fillFirstRow(FMatrixIndexToSome<T> function) {
         return fillRow(0, function);
     }
 
-    public NumberMatrix<T> fillFirstRow(FNumberMatrixAndIndexToNumber<T> function) {
+    public NumberMatrix<T> fillFirstRow(FMatrixAndIndexToSome<T> function) {
         return fillRow(0, function);
     }
 
@@ -385,15 +386,15 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
         return fillRow(0, value);
     }
 
-    public NumberMatrix<T> fillFirstRow(INumberVectorProvider<T> provider) {
+    public NumberMatrix<T> fillFirstRow(IVectorProvider<T> provider) {
         return fillRow(0, provider);
     }
 
-    public NumberMatrix<T> fillLastRow(FNumberMatrixAndIndexToNumber<T> function) {
+    public NumberMatrix<T> fillLastRow(FMatrixAndIndexToSome<T> function) {
         return fillRow(getRowCount() - 1, function);
     }
 
-    public NumberMatrix<T> fillLastRow(FMatrixIndexToNumber<T> function) {
+    public NumberMatrix<T> fillLastRow(FMatrixIndexToSome<T> function) {
         return fillRow(getRowCount() - 1, function);
     }
 
@@ -401,7 +402,7 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
         return fillRow(getRowCount() - 1, value);
     }
 
-    public NumberMatrix<T> fillLastRow(INumberVectorProvider<T> provider) {
+    public NumberMatrix<T> fillLastRow(IVectorProvider<T> provider) {
         return fillRow(getRowCount() - 1, provider);
     }
     //endregion
@@ -426,7 +427,7 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public NumberMatrix<T> fillColumn(int columnIndex, FMatrixIndexToNumber<T> function) {
+    public NumberMatrix<T> fillColumn(int columnIndex, FMatrixIndexToSome<T> function) {
         int rowCount = getRowCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             set(rowIndex, columnIndex, function.calc(rowIndex, columnIndex));
@@ -434,7 +435,7 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public NumberMatrix<T> fillColumn(int columnIndex, FNumberMatrixAndIndexToNumber<T> function) {
+    public NumberMatrix<T> fillColumn(int columnIndex, FMatrixAndIndexToSome<T> function) {
         int rowCount = getRowCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             set(rowIndex, columnIndex, function.calc(this, rowIndex, columnIndex));
@@ -442,7 +443,7 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public NumberMatrix<T> fillColumn(int columnIndex, INumberVectorProvider<T> provider) {
+    public NumberMatrix<T> fillColumn(int columnIndex, IVectorProvider<T> provider) {
         int rowCount = getRowCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             set(rowIndex, columnIndex, provider.get(rowIndex));
@@ -450,11 +451,11 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public NumberMatrix<T> fillFirstColumn(FNumberMatrixAndIndexToNumber<T> function) {
+    public NumberMatrix<T> fillFirstColumn(FMatrixAndIndexToSome<T> function) {
         return fillColumn(0, function);
     }
 
-    public NumberMatrix<T> fillFirstColumn(FMatrixIndexToNumber<T> function) {
+    public NumberMatrix<T> fillFirstColumn(FMatrixIndexToSome<T> function) {
         return fillColumn(0, function);
     }
 
@@ -462,15 +463,15 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
         return fillColumn(0, value);
     }
 
-    public NumberMatrix<T> fillFirstColumn(INumberVectorProvider<T> provider) {
+    public NumberMatrix<T> fillFirstColumn(IVectorProvider<T> provider) {
         return fillColumn(0, provider);
     }
 
-    public NumberMatrix<T> fillLastColumn(FNumberMatrixAndIndexToNumber<T> function) {
+    public NumberMatrix<T> fillLastColumn(FMatrixAndIndexToSome<T> function) {
         return fillColumn(getColumnCount() - 1, function);
     }
 
-    public NumberMatrix<T> fillLastColumn(FMatrixIndexToNumber<T> function) {
+    public NumberMatrix<T> fillLastColumn(FMatrixIndexToSome<T> function) {
         return fillColumn(getColumnCount() - 1, function);
     }
 
@@ -478,7 +479,7 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
         return fillColumn(getColumnCount() - 1, value);
     }
 
-    public NumberMatrix<T> fillLastColumn(INumberVectorProvider<T> provider) {
+    public NumberMatrix<T> fillLastColumn(IVectorProvider<T> provider) {
         return fillColumn(getColumnCount() - 1, provider);
     }
     //endregion
@@ -486,18 +487,18 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
 
     //region Операції над матрицями
     //region Операції над всією матрицею
-    public NumberMatrix<T> operate(FNumberMatrixElementAndMatrixIndexToNumber<T> function) {
+    public NumberMatrix<T> operate(FMatrixSomeAndIndexToSome<T> function) {
         int rowCount = getRowCount();
         int columnCount = getColumnCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
-                set(rowIndex, columnIndex, function.operate(get(rowIndex, columnIndex), rowIndex, columnIndex));
+                set(rowIndex, columnIndex, function.calc(get(rowIndex, columnIndex), rowIndex, columnIndex));
             }
         }
         return this;
     }
 
-    public NumberMatrix<T> operate(FNumberToNumber<T> function) {
+    public NumberMatrix<T> operate(FSomeToSome<T> function) {
         int rowCount = getRowCount();
         int columnCount = getColumnCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
@@ -510,18 +511,18 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
     //endregion
 
     //region Операція над прямокутною ділянкою
-    public NumberMatrix<T> operateRectange(int startRow, int startColumn, int endRow, int endColumn, FNumberMatrixElementAndMatrixIndexToNumber<T> function) {
+    public NumberMatrix<T> operateRectange(int startRow, int startColumn, int endRow, int endColumn, FMatrixSomeAndIndexToSome<T> function) {
         endRow++;
         endColumn++;
         for (int rowIndex = startRow; rowIndex < endRow; rowIndex++) {
             for (int columnIndex = startColumn; columnIndex < endColumn; columnIndex++) {
-                set(rowIndex, columnIndex, function.operate(get(rowIndex, columnIndex), rowIndex, columnIndex));
+                set(rowIndex, columnIndex, function.calc(get(rowIndex, columnIndex), rowIndex, columnIndex));
             }
         }
         return this;
     }
 
-    public NumberMatrix<T> operateRectangle(int startRow, int startColumn, int endRow, int endColumn, FNumberToNumber<T> function) {
+    public NumberMatrix<T> operateRectangle(int startRow, int startColumn, int endRow, int endColumn, FSomeToSome<T> function) {
         endRow++;
         endColumn++;
         for (int rowIndex = startRow; rowIndex < endRow; rowIndex++) {
@@ -535,15 +536,15 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
 
 
     //region Операції над стобпчиками
-    public NumberMatrix<T> operateColumn(int columnIndex, FNumberMatrixElementAndMatrixIndexToNumber<T> function) {
+    public NumberMatrix<T> operateColumn(int columnIndex, FMatrixSomeAndIndexToSome<T> function) {
         int rowCount = getRowCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-            set(rowIndex, columnIndex, function.operate(get(rowIndex, columnIndex), rowIndex, columnIndex));
+            set(rowIndex, columnIndex, function.calc(get(rowIndex, columnIndex), rowIndex, columnIndex));
         }
         return this;
     }
 
-    public NumberMatrix<T> operateColumn(int columnIndex, FNumberToNumber<T> function) {
+    public NumberMatrix<T> operateColumn(int columnIndex, FSomeToSome<T> function) {
         int rowCount = getRowCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             set(rowIndex, columnIndex, function.calc(get(rowIndex, columnIndex)));
@@ -551,34 +552,34 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public NumberMatrix<T> operateFirstColumn(FNumberToNumber<T> function) {
+    public NumberMatrix<T> operateFirstColumn(FSomeToSome<T> function) {
         return operateColumn(0, function);
     }
 
-    public NumberMatrix<T> operateFirstColumn(FNumberMatrixElementAndMatrixIndexToNumber<T> function) {
+    public NumberMatrix<T> operateFirstColumn(FMatrixSomeAndIndexToSome<T> function) {
         return operateColumn(0, function);
     }
 
-    public NumberMatrix<T> operateLastColumn(FNumberToNumber<T> function) {
+    public NumberMatrix<T> operateLastColumn(FSomeToSome<T> function) {
         return operateColumn(getColumnCount() - 1, function);
     }
 
-    public NumberMatrix<T> operateLastColumn(FNumberMatrixElementAndMatrixIndexToNumber<T> function) {
+    public NumberMatrix<T> operateLastColumn(FMatrixSomeAndIndexToSome<T> function) {
         return operateColumn(getColumnCount() - 1, function);
     }
     //endregion
 
 
     //region Операції над рядками
-    public NumberMatrix<T> operateRow(int rowIndex, FNumberMatrixElementAndMatrixIndexToNumber<T> function) {
+    public NumberMatrix<T> operateRow(int rowIndex, FMatrixSomeAndIndexToSome<T> function) {
         int columnCount = getColumnCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
-            set(rowIndex, columnIndex, function.operate(get(rowIndex, columnIndex), rowIndex, columnIndex));
+            set(rowIndex, columnIndex, function.calc(get(rowIndex, columnIndex), rowIndex, columnIndex));
         }
         return this;
     }
 
-    public NumberMatrix<T> operateRow(int rowIndex, FNumberToNumber<T> function) {
+    public NumberMatrix<T> operateRow(int rowIndex, FSomeToSome<T> function) {
         int columnCount = getColumnCount();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
             set(rowIndex, columnIndex, function.calc(get(rowIndex, columnIndex)));
@@ -586,19 +587,19 @@ public abstract class NumberMatrix<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public NumberMatrix<T> operateFirstRow(FNumberToNumber<T> function) {
+    public NumberMatrix<T> operateFirstRow(FSomeToSome<T> function) {
         return operateRow(0, function);
     }
 
-    public NumberMatrix<T> operateFirstRow(FNumberMatrixElementAndMatrixIndexToNumber<T> function) {
+    public NumberMatrix<T> operateFirstRow(FMatrixSomeAndIndexToSome<T> function) {
         return operateRow(0, function);
     }
 
-    public NumberMatrix<T> operateLastRow(FNumberToNumber<T> function) {
+    public NumberMatrix<T> operateLastRow(FSomeToSome<T> function) {
         return operateRow(getRowCount() - 1, function);
     }
 
-    public NumberMatrix<T> operateLastRow(FNumberMatrixElementAndMatrixIndexToNumber<T> function) {
+    public NumberMatrix<T> operateLastRow(FMatrixSomeAndIndexToSome<T> function) {
         return operateRow(getRowCount() - 1, function);
     }
     //endregion

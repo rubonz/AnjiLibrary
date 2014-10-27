@@ -3,21 +3,21 @@ package com.darkempire.math.struct.vector;
 import com.darkempire.anji.util.Util;
 import com.darkempire.math.struct.LinearCalcable;
 import com.darkempire.math.struct.function.interfaces.FIndexToSome;
-import com.darkempire.math.struct.function.interfaces.FVectorIndexToSome;
+import com.darkempire.math.struct.function.interfaces.FVectorAndIndexToSome;
 
 /**
  * Create in 10:42
  * Created by siredvin on 25.04.14.
  */
-public abstract class NumberVector<T extends com.darkempire.math.struct.Number<T>> implements LinearCalcable<NumberVector<T>>, IVectorProvider<T> {
+public abstract class LinearVector<T extends LinearCalcable<T>> implements LinearCalcable<LinearVector<T>>, IVectorProvider<T> {
     //region Сеттери
     public abstract void set(int index, T value);
     //endregion
 
     //region Отримання підвекторів
-    public abstract NumberVector<T> subvector(int length);
+    public abstract LinearVector<T> subvector(int length);
 
-    public abstract NumberVector<T> subvector(int startIndex, int length);
+    public abstract LinearVector<T> subvector(int startIndex, int length);
     //endregion
 
     //region Геттери
@@ -28,24 +28,22 @@ public abstract class NumberVector<T extends com.darkempire.math.struct.Number<T
     public abstract int getSize();
     //endregion
 
-    public abstract T scalar(NumberVector<T> vector);
-
     //region Зрізи
-    public NumberVector<T> sliceFrom(int startIndex) {
-        return new NumberSliceVector<>(startIndex, getSize() - 1, this);
+    public LinearVector<T> sliceFrom(int startIndex) {
+        return new LinearSliceVector<>(startIndex, getSize() - 1, this);
     }
 
-    public NumberVector<T> sliceTo(int endIndex) {
-        return new NumberSliceVector<>(endIndex, this);
+    public LinearVector<T> sliceTo(int endIndex) {
+        return new LinearSliceVector<>(endIndex, this);
     }
 
-    public NumberVector<T> slice(int startIndex, int endIndex) {
-        return new NumberSliceVector<>(startIndex, endIndex, this);
+    public LinearVector<T> slice(int startIndex, int endIndex) {
+        return new LinearSliceVector<>(startIndex, endIndex, this);
     }
     //endregion
 
     //region Заповнення
-    public NumberVector fill(T value) {
+    public LinearVector fill(T value) {
         int size = getSize();
         for (int i = 0; i < size; i++) {
             set(i, value.deepcopy());
@@ -54,7 +52,7 @@ public abstract class NumberVector<T extends com.darkempire.math.struct.Number<T
     }
 
 
-    public NumberVector<T> fill(FIndexToSome<T> function) {
+    public LinearVector<T> fill(FIndexToSome<T> function) {
         int size = getSize();
         for (int i = 0; i < size; i++) {
             set(i, function.calc(i));
@@ -62,7 +60,7 @@ public abstract class NumberVector<T extends com.darkempire.math.struct.Number<T
         return this;
     }
 
-    public NumberVector<T> fill(FVectorIndexToSome<T> function) {
+    public LinearVector<T> fill(FVectorAndIndexToSome<T> function) {
         int size = getSize();
         for (int i = 0; i < size; i++) {
             set(i, function.calc(this, i));
@@ -81,7 +79,7 @@ public abstract class NumberVector<T extends com.darkempire.math.struct.Number<T
      * @param value значення
      * @return вектор
      */
-    public NumberVector<T> fillSubvector(int start, int end, T value) {
+    public LinearVector<T> fillSubvector(int start, int end, T value) {
         for (int i = start; i < end; i++) {
             set(i, value.deepcopy());
         }
@@ -96,7 +94,7 @@ public abstract class NumberVector<T extends com.darkempire.math.struct.Number<T
      * @param function функція
      * @return вектор
      */
-    public NumberVector<T> fillSubvector(int start, int end, FIndexToSome<T> function) {
+    public LinearVector<T> fillSubvector(int start, int end, FIndexToSome<T> function) {
         for (int i = start; i < end; i++) {
             set(i, function.calc(i));
         }
@@ -111,7 +109,7 @@ public abstract class NumberVector<T extends com.darkempire.math.struct.Number<T
      * @param function функція
      * @return вектор
      */
-    public NumberVector<T> fillSubvector(int start, int end, FVectorIndexToSome<T> function) {
+    public LinearVector<T> fillSubvector(int start, int end, FVectorAndIndexToSome<T> function) {
         for (int i = start; i < end; i++) {
             set(i, function.calc(this, i));
         }
@@ -124,8 +122,8 @@ public abstract class NumberVector<T extends com.darkempire.math.struct.Number<T
     public boolean equals(Object o) {
         if (o == this)
             return true;
-        if (o instanceof NumberVector) {
-            NumberVector vector = (NumberVector) o;
+        if (o instanceof LinearVector) {
+            LinearVector vector = (LinearVector) o;
             if (getSize() != vector.getSize())
                 return false;
             int size = getSize();
@@ -153,6 +151,6 @@ public abstract class NumberVector<T extends com.darkempire.math.struct.Number<T
     }
 
     @Override
-    public abstract NumberVector clone();
+    public abstract LinearVector clone();
     //endregion
 }

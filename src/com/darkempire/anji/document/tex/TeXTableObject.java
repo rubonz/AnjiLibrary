@@ -1,11 +1,10 @@
 package com.darkempire.anji.document.tex;
 
-import com.darkempire.anji.log.Log;
 import com.darkempire.math.MathMachine;
 import com.darkempire.math.struct.matrix.*;
-import com.darkempire.math.struct.vector.IndexFixedVector;
 import com.darkempire.math.struct.vector.IDoubleVectorProvider;
 import com.darkempire.math.struct.vector.IVectorProvider;
+import com.darkempire.math.struct.vector.IndexFixedVector;
 import com.darkempire.math.struct.vector.IndexVector;
 
 import java.text.NumberFormat;
@@ -53,13 +52,13 @@ public class TeXTableObject implements ITeXObject {
     }
     //endregion
 
+    public void setNumberFormat(NumberFormat numberFormat) {
+        this.numberFormat = numberFormat;
+    }
+
     //region Сеттери
     public void setColumnPrefix(int index, char prefix) {
         tableVector[index] = prefix;
-    }
-
-    public void setNumberFormat(NumberFormat numberFormat) {
-        this.numberFormat = numberFormat;
     }
     //endregion
 
@@ -284,7 +283,7 @@ public class TeXTableObject implements ITeXObject {
         columnEnd++;
         for (int rowIndex = rowStart; rowIndex < rowEnd; rowIndex++) {
             for (int columnIndex = columnStart; columnIndex < columnEnd; columnIndex++) {
-                tableMatrix.setEl(rowIndex, columnIndex, provider.getEl(rowIndex - rowStart, columnIndex - columnStart).toString());
+                tableMatrix.setEl(rowIndex, columnIndex, provider.get(rowIndex - rowStart, columnIndex - columnStart).toString());
             }
         }
         return this;
@@ -295,7 +294,7 @@ public class TeXTableObject implements ITeXObject {
         int columnCount = tableMatrix.getColumnCount();
         for (int rowIndex = rowStart; rowIndex < rowCount; rowIndex++) {
             for (int columnIndex = columnStart; columnIndex < columnCount; columnIndex++) {
-                tableMatrix.setEl(rowIndex, columnIndex, provider.getEl(rowIndex - rowStart, columnIndex - columnStart).toString());
+                tableMatrix.setEl(rowIndex, columnIndex, provider.get(rowIndex - rowStart, columnIndex - columnStart).toString());
             }
         }
         return this;
@@ -306,7 +305,7 @@ public class TeXTableObject implements ITeXObject {
         int columnCount = tableMatrix.getColumnCount();
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
             for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
-                tableMatrix.setEl(rowIndex, columnIndex, provider.getEl(rowIndex, columnIndex).toString());
+                tableMatrix.setEl(rowIndex, columnIndex, provider.get(rowIndex, columnIndex).toString());
             }
         }
         return this;

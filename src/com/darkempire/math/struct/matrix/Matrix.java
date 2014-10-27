@@ -2,7 +2,8 @@ package com.darkempire.math.struct.matrix;
 
 import com.darkempire.math.struct.function.interfaces.FMatrixAndIndexToSome;
 import com.darkempire.math.struct.function.interfaces.FMatrixIndexToSome;
-import com.darkempire.math.struct.vector.*;
+import com.darkempire.math.struct.vector.MatrixVector;
+import com.darkempire.math.struct.vector.Vector;
 
 import java.util.stream.Stream;
 
@@ -25,6 +26,13 @@ public class Matrix<T> implements IMatrix<Matrix<T>, T>, IMatrixProvider<T> {
 
     //region Геттери
 
+    //region Створення матриці
+    public static <K> Matrix<K> createInstance(int rowCount, int columnCount, K[] array) {
+        if (columnCount * rowCount != array.length)
+            throw new ArrayIndexOutOfBoundsException();
+        return new Matrix<>(rowCount, columnCount, array);
+    }
+
     /**
      * @param columnIndex номер стовбця
      * @param rowIndex    номер рядку
@@ -41,12 +49,17 @@ public class Matrix<T> implements IMatrix<Matrix<T>, T>, IMatrixProvider<T> {
     }
 
     @Override
-    public int getRowCount() {
-        return rowCount;
+    public T get(int rowIndex, int columnIndex) {
+        return array[columnIndex + rowIndex * columnCount];
     }
     //endregion
 
     //region Сеттери
+
+    @Override
+    public int getRowCount() {
+        return rowCount;
+    }
 
     /**
      * @param columnIndex номер стовбця
@@ -59,6 +72,10 @@ public class Matrix<T> implements IMatrix<Matrix<T>, T>, IMatrixProvider<T> {
     }
     //endregion
 
+    public void set(int rowIndex, int columnIndex, T value) {
+        array[columnIndex + rowIndex * columnCount] = value;
+    }
+
     //region Переміщення рядків або стовпчиків місцями
     @Override
     public Matrix<T> switchRows(int rowIndex1, int rowIndex2) {
@@ -69,6 +86,7 @@ public class Matrix<T> implements IMatrix<Matrix<T>, T>, IMatrixProvider<T> {
         }
         return this;
     }
+    //endregion
 
     @Override
     public Matrix<T> switchColumns(int columnIndex1, int columnIndex2) {
@@ -79,7 +97,6 @@ public class Matrix<T> implements IMatrix<Matrix<T>, T>, IMatrixProvider<T> {
         }
         return this;
     }
-    //endregion
 
     //region Системні функції
     @Override
@@ -101,6 +118,7 @@ public class Matrix<T> implements IMatrix<Matrix<T>, T>, IMatrixProvider<T> {
         }
         return sb.toString();
     }
+    //endregion
 
     @Override
     public boolean equals(Object o) {
@@ -122,14 +140,6 @@ public class Matrix<T> implements IMatrix<Matrix<T>, T>, IMatrixProvider<T> {
             }
         }
         return false;
-    }
-    //endregion
-
-    //region Створення матриці
-    public static <K> Matrix<K> createInstance(int rowCount, int columnCount, K[] array) {
-        if (columnCount * rowCount != array.length)
-            throw new ArrayIndexOutOfBoundsException();
-        return new Matrix<>(rowCount, columnCount, array);
     }
     //endregion
 

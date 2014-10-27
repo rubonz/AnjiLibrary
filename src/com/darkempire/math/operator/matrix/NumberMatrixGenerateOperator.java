@@ -3,9 +3,11 @@ package com.darkempire.math.operator.matrix;
 import com.darkempire.anji.annotation.AnjiUtil;
 import com.darkempire.math.struct.Number;
 import com.darkempire.math.struct.function.FDoubleNumber;
-import com.darkempire.math.struct.matrix.*;
-import com.darkempire.math.struct.vector.IDoubleVectorProvider;
-import com.darkempire.math.struct.vector.INumberVectorProvider;
+import com.darkempire.math.struct.matrix.DoubleMatrix;
+import com.darkempire.math.struct.matrix.NumberFixedMatrix;
+import com.darkempire.math.struct.matrix.NumberMatrix;
+import com.darkempire.math.struct.matrix.NumberResizeMatrix;
+import com.darkempire.math.struct.vector.IVectorProvider;
 
 import java.util.List;
 
@@ -85,7 +87,7 @@ public final class NumberMatrixGenerateOperator {
 
     //region Вектори як рядки
     @SafeVarargs
-    public static <T extends Number<T>> NumberFixedMatrix<T> fixedFromRows(INumberVectorProvider<T>... rows) {
+    public static <T extends Number<T>> NumberFixedMatrix<T> fixedFromRows(IVectorProvider<T>... rows) {
         NumberFixedMatrix<T> matrix = NumberFixedMatrix.createInstance(rows.length, rows[0].getSize());
         for (int rowIndex = 0; rowIndex < rows.length; rowIndex++) {
             matrix.fillRow(rowIndex, rows[rowIndex]);
@@ -93,7 +95,7 @@ public final class NumberMatrixGenerateOperator {
         return matrix;
     }
 
-    public static <T extends Number<T>> NumberFixedMatrix<T> fixedFromRows(List<INumberVectorProvider<T>> rows) {
+    public static <T extends Number<T>> NumberFixedMatrix<T> fixedFromRows(List<IVectorProvider<T>> rows) {
         int size = rows.size();
         NumberFixedMatrix<T> matrix = NumberFixedMatrix.createInstance(size, rows.get(0).getSize());
         for (int rowIndex = 0; rowIndex < size; rowIndex++) {
@@ -103,7 +105,7 @@ public final class NumberMatrixGenerateOperator {
     }
 
     @SafeVarargs
-    public static <T extends Number<T>> NumberResizeMatrix<T> resizeFromRows(INumberVectorProvider<T>... rows) {
+    public static <T extends Number<T>> NumberResizeMatrix<T> resizeFromRows(IVectorProvider<T>... rows) {
         NumberResizeMatrix<T> matrix = NumberResizeMatrix.createInstance(rows.length, rows[0].getSize());
         for (int rowIndex = 0; rowIndex < rows.length; rowIndex++) {
             matrix.fillRow(rowIndex, rows[rowIndex]);
@@ -111,7 +113,7 @@ public final class NumberMatrixGenerateOperator {
         return matrix;
     }
 
-    public static <T extends Number<T>> NumberResizeMatrix<T> resizeFromRows(List<INumberVectorProvider<T>> rows) {
+    public static <T extends Number<T>> NumberResizeMatrix<T> resizeFromRows(List<IVectorProvider<T>> rows) {
         int size = rows.size();
         NumberResizeMatrix<T> matrix = NumberResizeMatrix.createInstance(size, rows.get(0).getSize());
         for (int rowIndex = 0; rowIndex < size; rowIndex++) {
@@ -123,7 +125,7 @@ public final class NumberMatrixGenerateOperator {
 
     //region Вектори як стовпчики
     @SafeVarargs
-    public static <T extends Number<T>> NumberFixedMatrix<T> fixedFromColumns(INumberVectorProvider<T>... columns) {
+    public static <T extends Number<T>> NumberFixedMatrix<T> fixedFromColumns(IVectorProvider<T>... columns) {
         NumberFixedMatrix<T> matrix = NumberFixedMatrix.createInstance(columns.length, columns[0].getSize());
         for (int columnIndex = 0; columnIndex < columns.length; columnIndex++) {
             matrix.fillColumn(columnIndex, columns[columnIndex]);
@@ -131,7 +133,7 @@ public final class NumberMatrixGenerateOperator {
         return matrix;
     }
 
-    public static <T extends Number<T>> NumberFixedMatrix<T> fixedFromColumns(List<INumberVectorProvider<T>> columns) {
+    public static <T extends Number<T>> NumberFixedMatrix<T> fixedFromColumns(List<IVectorProvider<T>> columns) {
         int size = columns.size();
         NumberFixedMatrix<T> matrix = NumberFixedMatrix.createInstance(size, columns.get(0).getSize());
         for (int columnIndex = 0; columnIndex < size; columnIndex++) {
@@ -141,7 +143,7 @@ public final class NumberMatrixGenerateOperator {
     }
 
     @SafeVarargs
-    public static <T extends Number<T>> NumberResizeMatrix<T> resizeFromColumns(INumberVectorProvider<T>... columns) {
+    public static <T extends Number<T>> NumberResizeMatrix<T> resizeFromColumns(IVectorProvider<T>... columns) {
         NumberResizeMatrix<T> matrix = NumberResizeMatrix.createInstance(columns.length, columns[0].getSize());
         for (int columnIndex = 0; columnIndex < columns.length; columnIndex++) {
             matrix.fillColumn(columnIndex, columns[columnIndex]);
@@ -149,7 +151,7 @@ public final class NumberMatrixGenerateOperator {
         return matrix;
     }
 
-    public static <T extends Number<T>> NumberResizeMatrix<T> resizeFromColumns(List<INumberVectorProvider<T>> columns) {
+    public static <T extends Number<T>> NumberResizeMatrix<T> resizeFromColumns(List<IVectorProvider<T>> columns) {
         int size = columns.size();
         NumberResizeMatrix<T> matrix = NumberResizeMatrix.createInstance(size, columns.get(0).getSize());
         for (int columnIndex = 0; columnIndex < size; columnIndex++) {
