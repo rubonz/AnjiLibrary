@@ -165,12 +165,17 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
         requestChartLayout();
         int size = colorValues.size();
         for (int i = 0; i < size; i++) {
-            Set<Node> nodeSet = lookupAll(".chart-series-line.series" + i);
             Color c = colorValues.get(getData().get(i)).getValue();
-            if (c != null && nodeSet != null) {
-                for (Node node : nodeSet) {
-                    node.setStyle(String.format("-fx-stroke: %s;", AnjiFXStringConverter.colorToRGBString(c)));
-                }
+            if (c == null) {
+                continue;
+            }
+            String colorString = AnjiFXStringConverter.colorToRGBString(c);
+            for (Node node : lookupAll(".chart-series-line.series" + i)) {
+                node.setStyle(String.format("-fx-stroke: %s;", colorString));
+            }
+            Set<Node> symbolsSet = lookupAll(".chart-line-symbol.series" + i);
+            for (Node node : symbolsSet) {
+                node.setStyle(String.format("-fx-background-color:%s,white;", colorString));
             }
         }
         int i = 0;
