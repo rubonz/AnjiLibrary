@@ -1,6 +1,5 @@
 package com.darkempire.anjifx.scene.chart;
 
-import com.darkempire.anji.log.Log;
 import com.darkempire.anji.util.ICreator;
 import com.darkempire.anji.util.INameable;
 import com.darkempire.anjifx.beans.property.AnjiChooseStringProperty;
@@ -16,6 +15,7 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.SelectionModel;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.WritableImage;
@@ -178,10 +178,12 @@ public class AnjiLineChartTabPane<R extends INameable> extends TabPane {
 
     public void snapshotAll(String prefix) {
         String name = prefix + java.time.LocalDateTime.now().toString();
+        SelectionModel selectionModel = this.getSelectionModel();
         try {
             int size = chartList.size();
             for (int i = 0; i < size; i++) {
                 LineChart chart = chartList.get(i);
+                selectionModel.select(i);
                 String tabName = getTabs().get(i).getText();
                 File f = new File(imgDir, name + tabName + ".png");
                 WritableImage image = chart.snapshot(new SnapshotParameters(), null);
@@ -197,22 +199,14 @@ public class AnjiLineChartTabPane<R extends INameable> extends TabPane {
         if (stage == null)
             return;
         LineChart chart = chartList.get(getSelectionModel().getSelectedIndex());
-        Log.log(Log.debugIndex, 1);
         WritableImage image = chart.snapshot(new SnapshotParameters(), null);
-        Log.log(Log.debugIndex, 2);
         FileChooser chooser = new FileChooser();
-        Log.log(Log.debugIndex, 3);
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(LocalHolder.anji_resourceBundle.getString("anjifx.scene.charts.tabchart.pngimage"), "*.png"));
-        Log.log(Log.debugIndex, 4);
         File f = chooser.showSaveDialog(stage);
-        Log.log(Log.debugIndex, 5);
         if (f != null) {
             try {
-                Log.log(Log.debugIndex, 6);
                 ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", f);
-                Log.log(Log.debugIndex, 7);
             } catch (IOException e) {
-                Log.err(Log.debugIndex, e);
             }
         }
     }

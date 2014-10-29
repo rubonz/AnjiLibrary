@@ -5,6 +5,7 @@ import com.darkempire.anjifx.beans.property.AnjiColorProperty;
 import com.darkempire.anjifx.dialog.DialogUtil;
 import com.darkempire.anjifx.util.AnjiFXColorUtil;
 import com.darkempire.anjifx.util.AnjiFXStringConverter;
+import com.darkempire.anjifx.util.IColorGenerator;
 import com.darkempire.internal.anji.LocalHolder;
 import javafx.beans.InvalidationListener;
 import javafx.beans.NamedArg;
@@ -19,7 +20,9 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,16 +36,41 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
     private Map<Series, AnjiColorProperty> colorValues;
     private Map<Series, LabelListener> listenerMap;
     private InvalidationListener updateColor = observable -> updateStyle();
+    private IColorGenerator generator;
 
+    //region Конструктори
     public AnjiLineChart(@NamedArg("xAxis") Axis<X> xAxis, @NamedArg("yAxis") Axis<Y> yAxis) {
         super(xAxis, yAxis);
+        generator = IColorGenerator.getColorGenerator();
+        init();
+    }
+
+    public AnjiLineChart(Axis<X> xAxis, Axis<Y> yAxis, ObservableList<Series<X, Y>> serieses) {
+        super(xAxis, yAxis, serieses);
+        generator = IColorGenerator.getColorGenerator();
+        init();
+    }
+
+    public AnjiLineChart(Axis<X> xAxis, Axis<Y> yAxis, IColorGenerator generator) {
+        super(xAxis, yAxis);
+        this.generator = generator;
+        init();
+    }
+
+    public AnjiLineChart(Axis<X> xAxis, Axis<Y> yAxis, ObservableList<Series<X, Y>> serieses, IColorGenerator generator) {
+        super(xAxis, yAxis, serieses);
+        this.generator = generator;
+        init();
+    }
+
+    private void init() {
         colorValues = new HashMap<>();
         listenerMap = new HashMap<>();
         this.setCreateSymbols(false);
         getData().addListener((ListChangeListener<Series<X, Y>>) c -> {
             while (c.next()) {
                 for (Series s : c.getAddedSubList()) {
-                    Color color = AnjiFXColorUtil.randomColor();
+                    Color color = generator.getNextColor();
                     AnjiColorProperty tempValue = new AnjiColorProperty(s, LocalHolder.anji_resourceBundle.getString("anjifx.scene.colorforchart") + s.getName(), color);
                     tempValue.addListener(updateColor);
                     colorValues.put(s, tempValue);
@@ -56,11 +84,10 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
             updateStyle();
         });
     }
+    //endregion
 
-    public AnjiLineChart(Axis<X> xAxis, Axis<Y> yAxis, ObservableList<Series<X, Y>> serieses) {
-        super(xAxis, yAxis, serieses);
-    }
 
+    //region Керування кольорами
     public AnjiColorProperty lineStrokeColor(int index) {
         return colorValues.get(getData().get(index));
     }
@@ -73,35 +100,17 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
         colorValues.get(getData().get(lineIndex)).setValue(AnjiFXColorUtil.randomColor());
     }
 
-    private void updateStyle() {
-        requestChartLayout();
-        int size = colorValues.size();
-        for (int i = 0; i < size; i++) {
-            Set<Node> nodeSet = lookupAll(".chart-series-line.series" + i);
-            Color c = colorValues.get(getData().get(i)).getValue();
-            if (c != null && nodeSet != null) {
-                for (Node node : nodeSet) {
-                    node.setStyle(String.format("-fx-stroke: %s;", AnjiFXStringConverter.colorToRGBString(c)));
-                }
-            }
-        }
-        int i = 0;
-        Node legend = getLegend();//Може бути null тоді, коли getData().size==0
-        if (legend != null) {
-            for (Node node : legend.lookupAll(".label")) {
-                Label label = (Label) node;
-                Color temp = colorValues.get(getData().get(i)).getValue();
-                if (temp.getOpacity() == 1) {
-                    label.getGraphic().setStyle(String.format("-fx-background-color:%s;", AnjiFXStringConverter.colorToRGBString(temp)));
-                } else {
-                    temp = Color.color(temp.getRed(), temp.getGreen(), temp.getBlue(), 1);
-                    label.getGraphic().setStyle(String.format("-fx-background-color:%s,white;", AnjiFXStringConverter.colorToRGBString(temp)));
-                }
-                i++;
-            }
-        }
+    public void setBackgroundColor(Color c) {
+        String backgroundColor = String.format("-fx-background-color: %s", AnjiFXStringConverter.colorToRGBString(c));
+        setStyle(backgroundColor);
+        lookup(".chart-plot-background").setStyle(backgroundColor);
+        getLegend().setStyle(backgroundColor);
     }
 
+    //endregion
+
+
+    //region Керування серіями
     public void hideSeries(int... indexes) {
         for (int i : indexes) {
             hideSeries(i);
@@ -149,7 +158,37 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
             value.setOpticaly(1);
         }
     }
+    //endregion
 
+    //region Секрети реалізації
+    private void updateStyle() {
+        requestChartLayout();
+        int size = colorValues.size();
+        for (int i = 0; i < size; i++) {
+            Set<Node> nodeSet = lookupAll(".chart-series-line.series" + i);
+            Color c = colorValues.get(getData().get(i)).getValue();
+            if (c != null && nodeSet != null) {
+                for (Node node : nodeSet) {
+                    node.setStyle(String.format("-fx-stroke: %s;", AnjiFXStringConverter.colorToRGBString(c)));
+                }
+            }
+        }
+        int i = 0;
+        Node legend = getLegend();//Може бути null тоді, коли getData().size==0
+        if (legend != null) {
+            for (Node node : legend.lookupAll(".label")) {
+                Label label = (Label) node;
+                Color temp = colorValues.get(getData().get(i)).getValue();
+                if (temp.getOpacity() == 1) {
+                    label.getGraphic().setStyle(String.format("-fx-background-color:%s;", AnjiFXStringConverter.colorToRGBString(temp)));
+                } else {
+                    temp = Color.color(temp.getRed(), temp.getGreen(), temp.getBlue(), 1);
+                    label.getGraphic().setStyle(String.format("-fx-background-color:%s,white;", AnjiFXStringConverter.colorToRGBString(temp)));
+                }
+                i++;
+            }
+        }
+    }
 
     private void updateLabel() {
         int i = 0;
@@ -205,4 +244,5 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
             }
         }
     }
+    //endregion
 }
