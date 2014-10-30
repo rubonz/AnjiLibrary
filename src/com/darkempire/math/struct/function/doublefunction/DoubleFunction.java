@@ -5,6 +5,7 @@ import com.darkempire.math.struct.IDeepcopy;
 import com.darkempire.math.struct.LinearModifable;
 import com.darkempire.math.struct.Modifable;
 import com.darkempire.math.struct.function.FDoubleDouble;
+import com.darkempire.math.struct.function.polynomial.ArrayDoublePolynomial;
 
 /**
  * Created by siredvin on 20.10.14.
@@ -38,12 +39,12 @@ public abstract class DoubleFunction implements FDoubleDouble, Modifable<DoubleF
 
     @Override
     public DoubleFunction subtract(DoubleFunction doubleFunction) {
-        return null;//TODO:обробити
+        return new SimpleSumFunction(1, -1, this, doubleFunction);
     }
 
     @Override
     public DoubleFunction negate() {
-        return null;//TODO:обробити
+        return new ArrayDoublePolynomial(0, -1).composition(this);
     }
 
     public DoubleFunction derivative() {

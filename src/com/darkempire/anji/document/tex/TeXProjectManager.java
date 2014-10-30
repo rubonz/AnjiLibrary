@@ -12,6 +12,7 @@ import java.util.Scanner;
  */
 public class TeXProjectManager {
     public static final int texBuild = Log.addString("TeX-Build");
+    private static final String[] pdfLatexRun = {"pdflatex", "-synctex=1", "-interaction=nonstopmode", "main.tex"};
     private File projectDirectory;
     private List<File> additionalFiles;
     private List<TeXDocumentManager> additionalFileManagers;
@@ -103,24 +104,24 @@ public class TeXProjectManager {
         return mainFileManager;
     }
 
-    //TODO:повернення якоїсь помилки у випадку, якщо не збілдилося
     //TODO:ну хочь якось зкросплатформити
-    public void build() throws IOException {
-        Process p = Runtime.getRuntime().exec(new String[]{"pdflatex", "main.tex"}, null, projectDirectory);
+    public void build() throws IOException, TeXCompileException {
+        Process p = Runtime.getRuntime().exec(pdfLatexRun, null, projectDirectory);
         Scanner in = new Scanner(p.getInputStream());
         while (in.hasNextLine()) {
-            Log.log(texBuild, in.nextLine());
+            String log = in.nextLine();
+            if (log.startsWith("!")) {
+                Log.err(texBuild, log);
+                throw new TeXCompileException(log);
+            } else {
+                Log.log(texBuild, in.nextLine());
+            }
         }
     }
 
-    public void buildAndShow() throws IOException {
-        Runtime r = Runtime.getRuntime();
-        Process p = r.exec(new String[]{"pdflatex", "main.tex"}, null, projectDirectory);
-        Scanner in = new Scanner(p.getInputStream());
-        while (in.hasNextLine()) {
-            Log.log(texBuild, in.nextLine());
-        }
-        r.exec(new String[]{"okular", "--noraise", "--unique", "main.pdf"}, null, projectDirectory);
+    public void buildAndShow() throws IOException, TeXCompileException {
+        build();
+        Runtime.getRuntime().exec(new String[]{"okular", "--noraise", "--unique", "main.pdf"}, null, projectDirectory);
     }
 
     public void close() {

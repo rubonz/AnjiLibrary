@@ -50,15 +50,21 @@ function initCommandRamHolder() {
         this.PC++;
         return result;
     };
-    commandRamHolder.setPC = function(newPC){
+    commandRamHolder.setPC = function (newPC) {
         this.PC = newPC;
     };
-    commandRamHolder.getPC = function(){
+    commandRamHolder.getPC = function () {
         return this.PC;
     };
-    commandRamHolder.addLabel = function(label){
-        this.labels[label] = this.PC+1;
+    commandRamHolder.addLabel = function (label) {
+        this.labels[label] = this.PC + 1;
     };
+    commandRamHolder.getLabel = function (label) {
+        return this.label[label];
+    };
+    commandRamHolder.getCurrentPC = function () {
+        return this.PC - 1;
+    }
     return commandRamHolder;
 }
 
@@ -156,7 +162,7 @@ cMiddle = {
 
 function convertTSImm(splitedCode) {
     return DexToFillBin(getRegisterCode(splitedCode[2]), 5) + DexToFillBin(getRegisterCode(splitedCode[1]), 5)
-        + DexToFillBin(parseInt(splitedCode[3]), 16 );
+        + DexToFillBin(parseInt(splitedCode[3]), 16);
 }
 
 function convertDST(splitedCode) {
@@ -214,6 +220,15 @@ function initCommandParser() {
     var commandParser = {};
     commandParser.commandHolder = initCommandRamHolder();
     commandParser.createCommand = function (code) {
+        if (code.contains(':')) {
+            var labelWithCode = code.split(':');
+            code = labelWithCode[1];
+            var label = labelWithCode[0];
+            this.commandHolder.addLabel(label);
+            if (code.length < 2) {
+                return
+            }
+        }
         var splitedCode = code.split(commandRegExp);
         splitedCode = splitedCode.filter(function (element) {
             var b = true;
@@ -260,6 +275,7 @@ function initCommandParser() {
             case 'blez':
             case 'bltz':
             case 'bltzal':
+                //TODO:відловлювання label
                 return cStart[code] + convertSOff(splitedCode);
                 break;
             //ST Group
@@ -277,6 +293,7 @@ function initCommandParser() {
             //Target Group
             case 'j':
             case 'jal':
+                //TODO:відловлювання label
                 return cStart[code] + convertTarget(splitedCode);
                 break;
             //TOffS Group
@@ -329,8 +346,8 @@ function initDemoCPU() {
     demoCPU.ram = initRamHolder();
     demoCPU.commandParser = initCommandParser();
     demoCPU.register = initRegisterHolder();
-    demoCPU.alu = initALU(demoCPU.register,demoCPU.ram,demoCPU.commandParser.commandHolder);
-    demoCPU.nextCommand = function(){
+    demoCPU.alu = initALU(demoCPU.register, demoCPU.ram, demoCPU.commandParser.commandHolder);
+    demoCPU.nextCommand = function () {
         this.alu.calculate(this.commandParser.commandHolder.getCurrent());
     };
     demoCPU.command = function (command) {
@@ -368,18 +385,18 @@ function initALU(registerHolder, ramHolder, commandRamHolder) {
         if (b.startsWith("000000")) {
             var end = b.substring(b.length - 6, b.length);
             console.log(end);
-            if (!end.startsWith("0")){
-                zeroStartArray[end](b,registerHolder);
+            if (!end.startsWith("0")) {
+                zeroStartArray[end](b, registerHolder);
             } else {
-                if (end[1]!='0'){
+                if (end[1] != '0') {
                     console.log(end);
-                    accArray[end](b,registerHolder,alu);
+                    accArray[end](b, registerHolder, alu);
                 } else {
 
                 }
             }
         } else {
-            hardArray[b.substring(0,6)](b,registerHolder,ramHolder,commandRamHolder);
+            hardArray[b.substring(0, 6)](b, registerHolder, ramHolder, commandRamHolder);
         }
     };
     return alu;
@@ -388,99 +405,99 @@ function initALU(registerHolder, ramHolder, commandRamHolder) {
 function initZeroStartArray() {
     var arr = [];
     //add
-    arr["100000"] = function (b,registerHolder) {
+    arr["100000"] = function (b, registerHolder) {
         var values = getDST(b);
-        registerHolder.set(values[0],registerHolder.get(values[1]) +registerHolder.get(values[2]));
+        registerHolder.set(values[0], registerHolder.get(values[1]) + registerHolder.get(values[2]));
     };
     //addu
-    arr["100001"] = function (b,registerHolder) {
+    arr["100001"] = function (b, registerHolder) {
         var values = getDST(b);
-        registerHolder.set(values[0],registerHolder.get(values[1]) +registerHolder.get(values[2]));
+        registerHolder.set(values[0], registerHolder.get(values[1]) + registerHolder.get(values[2]));
     };
     //and
-    arr["100100"] = function (b,registerHolder) {
+    arr["100100"] = function (b, registerHolder) {
         var values = getDST(b);
-        registerHolder.set(values[0],registerHolder.get(values[1]) &registerHolder.get(values[2]));
+        registerHolder.set(values[0], registerHolder.get(values[1]) & registerHolder.get(values[2]));
     };
     //slt
-    arr["101010"] = function (b,registerHolder) {
+    arr["101010"] = function (b, registerHolder) {
         var values = getDST(b);
-        registerHolder.set(values[0],registerHolder.get(values[1]) <registerHolder.get(values[2]?1:0));
+        registerHolder.set(values[0], registerHolder.get(values[1]) < registerHolder.get(values[2] ? 1 : 0));
     };
     //sltu
-    arr["101011"] = function (b,registerHolder) {
+    arr["101011"] = function (b, registerHolder) {
         var values = getDST(b);
-        registerHolder.set(values[0],registerHolder.get(values[1]) <registerHolder.get(values[2]?1:0));
+        registerHolder.set(values[0], registerHolder.get(values[1]) < registerHolder.get(values[2] ? 1 : 0));
     };
     //sub
-    arr["100010"] = function (b,registerHolder) {
+    arr["100010"] = function (b, registerHolder) {
         var values = getDST(b);
-        registerHolder.set(values[0],registerHolder.get(values[1]) - registerHolder.get(values[2]));
+        registerHolder.set(values[0], registerHolder.get(values[1]) - registerHolder.get(values[2]));
     };
     //subu
-    arr["100011"] = function (b,registerHolder) {
+    arr["100011"] = function (b, registerHolder) {
         var values = getDST(b);
-        registerHolder.set(values[0],registerHolder.get(values[1]) - registerHolder.get(values[2]));
+        registerHolder.set(values[0], registerHolder.get(values[1]) - registerHolder.get(values[2]));
     };
     //xor
-    arr["100110"] = function (b,registerHolder) {
+    arr["100110"] = function (b, registerHolder) {
         var values = getDST(b);
-        registerHolder.set(values[0],registerHolder.get(values[1]) ^registerHolder.get(values[2]));
+        registerHolder.set(values[0], registerHolder.get(values[1]) ^ registerHolder.get(values[2]));
     };
     //or
-    arr["100101"] = function (b,registerHolder) {
+    arr["100101"] = function (b, registerHolder) {
         var values = getDST(b);
-        registerHolder.set(values[0],registerHolder.get(values[1]) |registerHolder.get(values[2]));
+        registerHolder.set(values[0], registerHolder.get(values[1]) | registerHolder.get(values[2]));
     };
     return arr;
 }
 
-function initAccArray(){
+function initAccArray() {
     var arr = [];
     //div
-    arr['011010'] = function(b,registerHolder,alu){
+    arr['011010'] = function (b, registerHolder, alu) {
         var values = getST(b);
         var s = registerHolder.get(values[0]);
         var t = registerHolder.get(values[1]);
         alu.hi = s % t;
-        alu.lo = integerDivision(s,t);
+        alu.lo = integerDivision(s, t);
     };
     //divu
-    arr['011011'] = function(b,registerHolder,alu){
+    arr['011011'] = function (b, registerHolder, alu) {
         var values = getST(b);
         var s = registerHolder.get(values[0]);
         var t = registerHolder.get(values[1]);
         alu.hi = s % t;
-        alu.lo = integerDivision(s,t);
+        alu.lo = integerDivision(s, t);
     };
     //mfhi
-    arr['010000'] = function(b,registerHolder,alu){
+    arr['010000'] = function (b, registerHolder, alu) {
         var d = getD(b);
-        registerHolder.set(d,alu.hi);
+        registerHolder.set(d, alu.hi);
     };
     //mflo
-    arr['010010'] = function(b,registerHolder,alu){
+    arr['010010'] = function (b, registerHolder, alu) {
         var d = getD(b);
-        registerHolder.set(d,alu.lo);
+        registerHolder.set(d, alu.lo);
     };
     //mult
-    arr['011000'] = function(b,registerHolder,alu){
+    arr['011000'] = function (b, registerHolder, alu) {
         var values = getST(b);
         var s = registerHolder.get(values[0]);
         var t = registerHolder.get(values[1]);
-        var mult = DexToFillBin(s*t,32);
-        var mult1 = mult.substring(0,16);
+        var mult = DexToFillBin(s * t, 32);
+        var mult1 = mult.substring(0, 16);
         var mult2 = mult.substring(16);
         alu.lo = BinToDex(mult2);
         alu.hi = BinToDex(mult1);
     };
     //multu
-    arr['011010'] = function(b,registerHolder,alu){
+    arr['011010'] = function (b, registerHolder, alu) {
         var values = getST(b);
         var s = registerHolder.get(values[0]);
         var t = registerHolder.get(values[1]);
-        var mult = DexToFillBin(s*t,32);
-        var mult1 = mult.substring(0,16);
+        var mult = DexToFillBin(s * t, 32);
+        var mult1 = mult.substring(0, 16);
         var mult2 = mult.substring(16);
         alu.lo = BinToDex(mult2);
         alu.hi = BinToDex(mult1);
@@ -489,16 +506,16 @@ function initAccArray(){
     return arr;
 }
 
-function initHardArray(){
+function initHardArray() {
     var arr = [];
     //addi
     arr['001000'] = function (b, registerHolder, ramHolder, commandRamHolder) {
-        var values =getSTImm(b);
+        var values = getSTImm(b);
         registerHolder.set(values[1], registerHolder.get(values[0]) + values[2]);
     };
     //addiu
     arr['001001'] = function (b, registerHolder, ramHolder, commandRamHolder) {
-        var values =getSTImm(b);
+        var values = getSTImm(b);
         registerHolder.set(values[1], registerHolder.get(values[0]) + values[2]);
     };
     //andi
@@ -514,12 +531,12 @@ function initHardArray(){
     //slti
     arr['001010'] = function (b, registerHolder, ramHolder, commandRamHolder) {
         var values = getSTImm(b);
-        registerHolder.set(values[1], registerHolder.get(values[0]) < values[2]?1:0);
+        registerHolder.set(values[1], registerHolder.get(values[0]) < values[2] ? 1 : 0);
     };
     //sltiu
     arr['001011'] = function (b, registerHolder, ramHolder, commandRamHolder) {
         var values = getSTImm(b);
-        registerHolder.set(values[1], registerHolder.get(values[0]) < values[2]?1:0);
+        registerHolder.set(values[1], registerHolder.get(values[0]) < values[2] ? 1 : 0);
     };
     //xori
     arr['001110'] = function (b, registerHolder, ramHolder, commandRamHolder) {
@@ -534,8 +551,8 @@ function initHardArray(){
  * @param {String} b
  * @returns {*[]} D,S,T
  */
-function getDST(b){
-    return [BinToDex(b.substring(16,21)),BinToDex(b.substring(6,11)),BinToDex(b.substring(11,16))];
+function getDST(b) {
+    return [BinToDex(b.substring(16, 21)), BinToDex(b.substring(6, 11)), BinToDex(b.substring(11, 16))];
 }
 
 /**
@@ -543,8 +560,8 @@ function getDST(b){
  * @param {String} b
  * @returns {Number} D
  */
-function getD(b){
-    return BinToDex(b.substring(16,21));
+function getD(b) {
+    return BinToDex(b.substring(16, 21));
 }
 
 /**
@@ -552,16 +569,16 @@ function getD(b){
  * @param {String} b
  * @returns {*[]} S,T
  */
-function getST(b){
-    return [BinToDex(b.substring(6,11)),BinToDex(b.substring(11,16))];
+function getST(b) {
+    return [BinToDex(b.substring(6, 11)), BinToDex(b.substring(11, 16))];
 }
 /**
  *
  * @param {String} b
  * @returns {*[]} S,T,Imm
  */
-function getSTImm(b){
-    return [BinToDex(b.substring(6,11)),BinToDex(b.substring(11,16)),BinToDex(b.substring(16))];
+function getSTImm(b) {
+    return [BinToDex(b.substring(6, 11)), BinToDex(b.substring(11, 16)), BinToDex(b.substring(16))];
 }
 
 //endregion

@@ -117,13 +117,13 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
                 if (temp > 0 && builder.length() != 0) {
                     builder.append('+');
                 }
-                    builder.append(MathMachine.numberFormat.format(temp));
-                    if (i == 1) {
-                        builder.append("*x");
-                    } else {
-                        builder.append("*x^");
-                        builder.append(i);
-                    }
+                builder.append(MathMachine.numberFormat.format(temp));
+                if (i == 1) {
+                    builder.append("*x");
+                } else {
+                    builder.append("*x^");
+                    builder.append(i);
+                }
             }
         }
         return builder.toString();
@@ -347,6 +347,17 @@ public class ArrayDoublePolynomial extends DoublePolynomial implements IDoubleVe
         System.arraycopy(coefs, 0, newCoef, 0, size);
         coefs = newCoef;
         return this;
+    }
+    //endregion
+
+    @Override
+    public ArrayDoublePolynomial derivative() {
+        return null;//TODO:обробити
+    }
+
+    @Override
+    public ArrayDoublePolynomial integrate() {
+        return null;//TODO:обробити
     }
 
     @Override
