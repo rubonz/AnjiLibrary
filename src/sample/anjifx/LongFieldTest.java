@@ -1,6 +1,5 @@
 package sample.anjifx;
 
-import com.darkempire.anji.log.Log;
 import com.darkempire.anjifx.scene.chart.AnjiLineChart;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -30,6 +29,6 @@ public class LongFieldTest extends Application {
         vBox.getChildren().add(chart);
         primaryStage.setScene(new Scene(vBox));
         primaryStage.show();
-        chart.lookupAll("*").forEach(c -> Log.log(Log.debugIndex, c));
+        ((XYChart.Series) chart.getData().get(0)).getData().addAll(new XYChart.Data<>(5, 5));
     }
 }

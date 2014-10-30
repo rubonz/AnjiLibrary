@@ -65,4 +65,24 @@ public interface IColorGenerator {
             return Color.color(r, g, b);
         }
     }
+
+    public static class GrayIncrementGenerator implements IColorGenerator {
+        private double value;
+        private double inc;
+
+        public GrayIncrementGenerator(double value, double inc) {
+            this.value = value;
+            this.inc = inc;
+        }
+
+        @Override
+        public Color getNextColor() {
+            Color c = Color.gray(value);
+            value += inc;
+            if (value > 1) {
+                value = value - Math.floor(value);
+            }
+            return c;
+        }
+    }
 }
