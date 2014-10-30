@@ -1,7 +1,6 @@
 package com.darkempire.anjifx.scene.chart;
 
 import com.darkempire.anji.annotation.AnjiExperimental;
-import com.darkempire.anji.log.Log;
 import com.darkempire.anjifx.beans.property.AnjiColorProperty;
 import com.darkempire.anjifx.dialog.DialogUtil;
 import com.darkempire.anjifx.util.AnjiFXColorUtil;
@@ -18,12 +17,12 @@ import javafx.scene.Node;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -81,7 +80,10 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
                         String colorString = AnjiFXStringConverter.colorToRGBString(tempValue.getValue());
                         while (observable.next()) {
                             for (Data data : observable.getAddedSubList()) {
-                                data.getNode().setStyle(String.format("-fx-background-color:%s,white;", colorString));
+                                Node node = data.getNode();
+                                node.setStyle(String.format("-fx-background-color:%s,white;", colorString));
+                                Tooltip tooltip = new Tooltip('(' + data.getXValue().toString() + ";y=" + data.getYValue().toString() + ')');
+                                Tooltip.install(node, tooltip);
                             }
                         }
                     });
@@ -175,7 +177,8 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
     private void updateStyle() {
         int size = colorValues.size();
         for (int i = 0; i < size; i++) {
-            Color c = colorValues.get(getData().get(i)).getValue();
+            Series s = getData().get(i);
+            Color c = colorValues.get(s).getValue();
             if (c == null) {
                 continue;
             }
@@ -184,10 +187,16 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
             for (Node node : lookupAll(".chart-series-line.series" + i)) {
                 node.setStyle(colorString);
             }
-            Set<Node> symbolsSet = lookupAll(".chart-line-symbol.series" + i);
+            ObservableList<Data> dataList = s.getData();
+            int dataSize = dataList.size();
             colorString = String.format("-fx-background-color:%s,white;", rgbString);
-            for (Node node : symbolsSet) {
+            for (Data data : dataList) {
+                Node node = data.getNode();
                 node.setStyle(colorString);
+                if (node.getProperties().get("javafx.scene.control.Tooltip") == null) {
+                    Tooltip tooltip = new Tooltip("x=" + data.getXValue() + ";y=" + data.getYValue() + ";");
+                    Tooltip.install(node, tooltip);
+                }
             }
         }
         int i = 0;
@@ -203,42 +212,6 @@ public class AnjiLineChart<X, Y> extends LineChart<X, Y> {
                     label.getGraphic().setStyle(String.format("-fx-background-color:%s,white;", AnjiFXStringConverter.colorToRGBString(temp)));
                 }
                 i++;
-            }
-        }
-    }
-
-    private void updateStyle(int index, Series series) {
-        Log.log(Log.debugIndex, "Update Style");
-        Color c = colorValues.get(series).getValue();
-        if (c != null) {
-            String rgbString = AnjiFXStringConverter.colorToRGBString(c);
-            String colorString = String.format("-fx-stroke: %s;", rgbString);
-            for (Node node : lookupAll(".chart-series-line.series" + index)) {
-                node.setStyle(colorString);
-            }
-            Set<Node> symbolsSet = lookupAll(".chart-line-symbol.series" + index);
-            colorString = String.format("-fx-background-color:%s,white;", rgbString);
-            for (Node node : symbolsSet) {
-                node.setStyle(colorString);
-            }
-            int i = 0;
-            Node legend = getLegend();//Може бути null тоді, коли getData().size==0
-            if (legend != null) {
-                for (Node node : legend.lookupAll(".label")) {
-                    if (i == index) {
-                        Label label = (Label) node;
-                        Color temp = colorValues.get(getData().get(i)).getValue();
-                        if (temp.getOpacity() == 1) {
-                            label.getGraphic().setStyle(String.format("-fx-background-color:%s;", AnjiFXStringConverter.colorToRGBString(temp)));
-                        } else {
-                            temp = Color.color(temp.getRed(), temp.getGreen(), temp.getBlue(), 1);
-                            label.getGraphic().setStyle(String.format("-fx-background-color:%s,white;", AnjiFXStringConverter.colorToRGBString(temp)));
-                        }
-                        break;
-                    } else {
-                        i++;
-                    }
-                }
             }
         }
     }

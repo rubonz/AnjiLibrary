@@ -1,0 +1,4 @@
+.chart-line-symbol {
+    -fx-background-image: url(../image/test.png);
+    -fx-background-size: 16;
+}
