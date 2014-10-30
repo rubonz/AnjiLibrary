@@ -106,6 +106,7 @@ public class TeXProjectManager {
 
     //TODO:ну хочь якось зкросплатформити
     public void build() throws IOException, TeXCompileException {
+        close();
         Process p = Runtime.getRuntime().exec(pdfLatexRun, null, projectDirectory);
         Scanner in = new Scanner(p.getInputStream());
         while (in.hasNextLine()) {
